@@ -1,0 +1,5 @@
+{
+  "status": "200",
+  "BASE_URL": "https://local.ctsp.kedacom.com/dolphin-release",
+  "AJAX_TIMEOUT": "10000"
+}
