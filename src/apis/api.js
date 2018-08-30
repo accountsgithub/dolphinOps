@@ -30,7 +30,16 @@ let API = {
     LOGIN_OUT: '/oauth2/logout',
 
     //项目主列表
-    PROJECT_LIST: '/project/list.do'
+    PROJECT_LIST: '/project/list.do',
+
+    // 启动
+    PROJECT_START: '/project/start',
+    // 历史查询
+    PROJECT_HISTORYLIST: '/project/deploy/list.do',
+    // 实例数查询
+    PROJECT_EXAMPLELIST: '/project/instance/list.do',
+    // 版本切换
+    PROJECT_CHANGEVERSION: '/project/deploy'
 }
 
 // if (process.env.NODE_ENV === 'development') {

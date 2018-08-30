@@ -14,6 +14,20 @@ export const constantRouterMap = [
         name: 'projectMgt',
         hidden: true
     },
+    // 详情
+    {
+        path: '/detailed',
+        component: resolve => require(['@/views/layout/Layout'], resolve),
+        hidden: true,
+        children: [
+            {
+                path: '/detailedList/:id',
+                name: 'detailedList',
+                component: resolve => require(['@/views/projectMgt/DetailedList'], resolve),
+                meta: {...meta, title: '详细信息'}
+            }
+        ]
+    },
     // 404
     { path: '/404',
         component: resolve => require(['@/views/404'], resolve),

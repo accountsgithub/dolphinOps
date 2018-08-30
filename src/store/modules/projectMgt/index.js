@@ -9,6 +9,14 @@ const state = {
         total: 0,
         totalPages: 0,
         pagerCount: 6
+    },
+    searchList: [],
+    listPaging: {
+        pageNo: 1,
+        pageSize: 10,
+        total: 0,
+        totalPages: 0,
+        pagerCount: 6
     }
 }
 

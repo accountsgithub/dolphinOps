@@ -29,7 +29,7 @@
             <!-- header start -->
             <template slot="header">
                 <span class="header__title">项目列表</span>
-                <el-button >导入部署包</el-button>
+                <el-button @click="importDialog">导入部署包</el-button>
             </template>
             <!-- header end -->
 
@@ -70,16 +70,16 @@
                         prop="path"
                         label="外部路径">
                         <template slot-scope="scope">
-                            <a>{{scope.row.path}}</a>
+                            <a v-for="(path,index) in scope.row.path" :key="index" :href="openPage(path)">{{path}}</a>
                         </template>
                     </el-table-column>
                     <el-table-column
-                        fixed="right"
+                        align="center"
                         label="操作">
-                        <template>
-                            <el-button type="text">查看详情</el-button>
-                            <el-button type="text">变更</el-button>
-                            <el-button type="text">启动</el-button>
+                        <template slot-scope="scope">
+                            <a class="tableActionStyle" @click="dialogInfo(scope.row.id)">查看详情</a>
+                            <a class="tableActionStyle" @click="dialogChange(scope.row.id)">变更</a>
+                            <a class="tableActionStyle" @click="beginDeploy(scope.row)">启动</a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -100,6 +100,27 @@
             </template>
             <!-- pagination end -->
         </list-panel>
+        <el-dialog title="导入部署包"
+                   :visible.sync="dialogExpoVisible"
+                   :before-close="beforeClose"
+                   width="600px">
+            <el-upload
+                class="upload-demo"
+                drag
+                :before-upload="beforeAvatarUpload"
+                :on-success="handleSuccess"
+                :on-exceed="onexceed"
+                :limit="1"
+                name="pack"
+                :action="url">
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                <div class="el-upload__tip" slot="tip">只能上传rar/zip文件，且不超过10M</div>
+            </el-upload>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="beforeClose" class="dialogButtonW">取消</el-button>
+            </span>
+        </el-dialog>
     </div>
 
 </template>
@@ -111,20 +132,110 @@ import {MEMORY_SIZE} from '@/constants'
 export default {
     data() {
         return {
+            // import begin
+            dialogExpoVisible: false,
+            url: `${this.g_Config.BASE_URL}/project/import.do`,
+            exportData: {},
+            fileList: [],
+            defaultUploadList: [],
+            // import end
             searchCriteria: {
                 name: '',
                 pageNo: 0,
                 pageSize: 10
+            },
+            // 启动
+            startForm: {
+                projectId: '',
+                instance: '',
+                memory: ''
             }
         }
     },
     methods: {
-        ...mapActions(['getProjectList']),
+        ...mapActions(['getProjectList', 'getProjectStart']),
 
+        openPage(path) {
+            window.open(path)
+        },
+        // import begin
+        importDialog() {
+            this.dialogExpoVisible = true
+        },
+
+        // 详情
+        dialogInfo(id) {
+            this.$router.push({name: 'detailedList', params: {id: id}})
+        },
+        // 变更
+        dialogChange(id) {
+            console.log(id)
+        },
+        // 启动
+        beginDeploy(val) {
+            this.$confirm('是否确认启动项目？', '确认启动', {
+                confirmButtonText: '确认',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '正在启动请稍后'
+                })
+                console.log(val)
+                this.startForm.projectId = val.id
+                this.startForm.instance = val.instanceNumber
+                this.startForm.memory = val.memorySize
+                let params = Object.assign(this.startForm)
+                this.getProjectStart(params).then(res => {
+                    if (res.data.result.status == '200') {
+                        this.searchProject()
+                    }
+                })
+            }).catch(e => {
+                console.log(e)
+            })
+        },
+        beforeAvatarUpload(file) {
+            const isZip = file.type === 'application/zip'
+            const isLtM = file.size / 1024 / 1024 < 10
+            if (!isZip) {
+                this.$message.error('上传头像图片只能是 rar/zip 格式!')
+            }
+            if (!isLtM) {
+                this.$message.error('上传头像图片大小不能超过 10MB!')
+            }
+            return isZip && isLtM;
+        },
+        beforeClose(done) {
+            this.defaultUploadList = []
+            done()
+        },
+        submitUpload() {
+            this.$refs.upload.submit()
+        },
         searchProject() {
             const params = this.searchCriteria
             this.getProjectList(params)
         },
+        handleSuccess(file) {
+            if (file.status == '200') {
+                this.$message({
+                    message: '导入成功！',
+                    type: 'success'
+                })
+                this.dialogExpoVisible = false
+                this.defaultUploadList = []
+            }
+        },
+        onexceed() {
+            this.$message({
+                message: '只允许上传一个文件！',
+                type: 'warning'
+            })
+        },
+        // import end
 
         reset() {
             this.searchCriteria = {
@@ -153,7 +264,9 @@ export default {
 
     computed: {
         ...mapState({
-            list: state => state.project.elements,
+            list: (state) => {
+                return state.project.elements
+            },
             paging: state => state.project.paging
         })
     },
@@ -168,10 +281,22 @@ export default {
 
 <style lang="scss">
     @import '~@/styles/common.scss';
+
+    .tableActionStyle{
+        font-family:PingFangSC-Medium;
+        font-size:12px;
+        color:#016ad5;
+        letter-spacing:0.86px;
+        text-align:left;
+        margin-right: 10px;
+    }
     .projectDropDown {
         font-size: 12px !important;
         border: 1px solid $dropDown-border-color !important;
         border-radius:4px;
         padding: 4px 12px;
+    }
+    .el-upload-dragger{
+        width: 560px;
     }
 </style>

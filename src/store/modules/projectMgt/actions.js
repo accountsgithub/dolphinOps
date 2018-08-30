@@ -9,5 +9,34 @@ export default {
             .then(response => response.data)
             .then(({result}) => {commit(TYPES.GET_PROJECT_LIST, result)})
             .catch(error => Promise.reject(error))
+    },
+    // 启动
+    getProjectStart({commit}, params) {
+        return axios.post(API.PROJECT_START, params)
+            .then(response => response.data)
+            .then(({result}) => {commit(TYPES.GET_PROJECT_START, result)})
+            .catch(error => Promise.reject(error))
+    },
+    //历史查询
+    getHistoryList({commit}, params) {
+        return axios.post(API.PROJECT_HISTORYLIST, params)
+            .then(response => response.data)
+            .then(({result}) => {commit(TYPES.GET_PROJECT_HISTORYLIST, result)})
+            .catch(error => Promise.reject(error))
+    },
+
+    //实例数查询
+    getExampleList({commit}, params) {
+        return axios.get(API.PROJECT_EXAMPLELIST, {params})
+            .then(response => response.data)
+            .then(({result}) => {commit(TYPES.GET_PROJECT_EXAMPLELIST, result)})
+            .catch(error => Promise.reject(error))
+    },
+    // 切换版本
+    changeVersion({commit}, params) {
+        return axios.get(API.PROJECT_CHANGEVERSION, {params})
+            .then(response => response.data)
+            .then(({result}) => {commit(TYPES.GET_PROJECT_CHANGEVERSION, result)})
+            .catch(error => Promise.reject(error))
     }
 }

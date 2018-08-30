@@ -21,3 +21,11 @@ export const SYNC_SET_SELECTED_BASE_IMAGED_ID = 'SYNC_SET_SELECTED_BASE_IMAGED_I
 export const SYNC_INIT_STEP = 'SYNC_INIT_STEP';
 export const SYNC_SHOW_DEPLOY_LOG = 'SYNC_SHOW_DEPLOY_LOG';
 
+// 启动
+export const GET_PROJECT_START = 'getProjectStart'
+// 历史查询
+export const GET_PROJECT_HISTORYLIST = 'getHistoryList'
+// 实例数查询
+export const GET_PROJECT_EXAMPLELIST = 'getExampleList'
+// 版本切换
+export const GET_PROJECT_CHANGEVERSION = 'changeVersion'
