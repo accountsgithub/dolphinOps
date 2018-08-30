@@ -32,6 +32,9 @@ let API = {
     //项目主列表
     PROJECT_LIST: '/project/list.do',
 
+    //变更
+    PROJECT_ENV_CONFIG: 'project/config',
+
     // 启动
     PROJECT_START: '/project/start',
     // 历史查询

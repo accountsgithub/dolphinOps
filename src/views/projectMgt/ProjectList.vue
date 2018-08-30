@@ -70,7 +70,7 @@
                         prop="path"
                         label="外部路径">
                         <template slot-scope="scope">
-                            <a v-for="(path,index) in scope.row.path" :key="index" :href="openPage(path)">{{path}}</a>
+                            <a class="pathHerf" :href="getPath(scope.row.path)" target="_blank">{{getPath(scope.row.path)}}</a>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -78,7 +78,7 @@
                         label="操作">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" @click="dialogInfo(scope.row.id)">查看详情</a>
-                            <a class="tableActionStyle" @click="dialogChange(scope.row.id)">变更</a>
+                            <a class="tableActionStyle" @click="dialogChange(scope.row)">变更</a>
                             <a class="tableActionStyle" @click="beginDeploy(scope.row)">启动</a>
                         </template>
                     </el-table-column>
@@ -121,6 +121,111 @@
                 <el-button @click="beforeClose" class="dialogButtonW">取消</el-button>
             </span>
         </el-dialog>
+        <el-dialog
+            title="环境配置-编辑"
+            top="30vh"
+            width="600px"
+            :visible.sync="envConfigDialog">
+            <el-form
+                size="small"
+                label-width="100px"
+                style="margin-top: -25px"
+                :rules="rules"
+                :model="envConfigForm">
+                <el-tabs>
+                    <el-tab-pane label="基础信息">
+                        <el-form-item label="实例数" prop="instanceNumber">
+                            <el-input
+                                placeholder="请输入实例数"
+                                v-model="envConfigForm.instanceNumber">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="内存(单位MB)" prop="memorySize">
+                            <el-select
+                                style="width:100%"
+                                v-model="envConfigForm.memorySize"
+                                placeholder="请选择">
+                                <el-option
+                                    v-for="item in options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"/>
+                            </el-select>
+                        </el-form-item>
+                    </el-tab-pane>
+                    <!-- 环境变量 -->
+                    <el-tab-pane label="环境变量" style="text-align: center">
+                        <el-table :data="envConfigForm.envVariables" width="100%" highlight-current-row stripe>
+                            <el-table-column property="label" label="变量">
+                                <template slot-scope="scope">
+                                    <el-input size="small"
+                                              v-if="scope.row.isNew"
+                                              v-model="scope.row.key"
+                                              placeholder="请输入内容"></el-input>
+                                    <span v-if="!scope.row.isNew">{{scope.row.key}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column property="value" label="值">
+                                <template slot-scope="scope">
+                                    <el-input size="small"
+                                              v-if="scope.row.isNew"
+                                              v-model="scope.row.value"
+                                              placeholder="请输入内容"></el-input>
+                                    <span v-if="!scope.row.isNew">{{scope.row.value}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column>
+                                <template slot-scope="scope">
+                                    <el-button size="mini" @click="deleteItem(scope.row, 'envVariables')">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <el-button class="addRowBtn" icon="el-icon-plus" size="mini" @click="addNewItem('envVariables')">添加环境变量</el-button>
+                    </el-tab-pane>
+                    <el-tab-pane label="IP别名" style="text-align: center">
+                        <el-table :data="envConfigForm.ipAlias" width="100%" highlight-current-row stripe>
+                            <el-table-column property="label" label="变量">
+                                <template slot-scope="scope">
+                                    <el-input size="small"
+                                              v-if="scope.row.isNew"
+                                              v-model="scope.row.key"
+                                              placeholder="请输入内容"></el-input>
+                                    <span v-if="!scope.row.isNew">{{scope.row.key}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column property="value" label="IP">
+                                <template slot-scope="scope">
+                                    <el-input size="small"
+                                              v-if="scope.row.isNew"
+                                              v-model="scope.row.value"
+                                              placeholder="请输入IP"></el-input>
+                                    <span v-if="!scope.row.isNew">{{scope.row.value}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column property="value" label="别名备注">
+                                <template slot-scope="scope">
+                                    <el-input size="small"
+                                              v-if="scope.row.isNew"
+                                              v-model="scope.row.desc"
+                                              placeholder="请输入别名备注"></el-input>
+                                    <span v-if="!scope.row.isNew">{{scope.row.desc}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column>
+                                <template slot-scope="scope">
+                                    <el-button size="mini" @click="deleteItem(scope.row, 'ipAlias')">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <el-button class="addRowBtn" icon="el-icon-plus" size="mini" @click="addNewItem('ipAlias')">添加环境变量</el-button>
+                    </el-tab-pane>
+                </el-tabs>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="envConfigDialog = false">取消</el-button>
+                <el-button type="primary" @click="saveEnvConfig">保存</el-button>
+            </span>
+        </el-dialog>
     </div>
 
 </template>
@@ -129,11 +234,24 @@
 import {mapState, mapActions} from 'vuex'
 import { mappingValue} from '@/utils'
 import {MEMORY_SIZE} from '@/constants'
+
 export default {
+
     data() {
+        const NumberApply = (rule, value, callback) => {
+            if (value === '' || !value) {
+                callback(new Error('请输入实例数'));
+            } else if (!/^\d+$/.test(value)) {
+                callback(new Error('实例数必须是正整数'));
+            } else {
+                callback();
+            }
+        };
+
         return {
             // import begin
             dialogExpoVisible: false,
+            envConfigDialog: false,
             url: `${this.g_Config.BASE_URL}/project/import.do`,
             exportData: {},
             fileList: [],
@@ -149,14 +267,32 @@ export default {
                 projectId: '',
                 instance: '',
                 memory: ''
-            }
+            },
+            options: MEMORY_SIZE,
+            envConfigForm: {
+                instanceNumber: '',
+                memorySize: '',
+                envVariables: [],
+                ipAlias: []
+            },
+            rules: {
+                instanceNumber: [
+                    { required: true, message: '请输入实例数', trigger: 'blur' },
+                    { validator: NumberApply, trigger: 'blur' }
+                ],
+                memorySize: [
+                    { required: true, message: '请输入内存大小', trigger: 'blur' },
+                ],
+            },
         }
     },
     methods: {
-        ...mapActions(['getProjectList', 'getProjectStart']),
+        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv']),
 
-        openPage(path) {
-            window.open(path)
+        getPath(path) {
+            if (path && /\[(.*)\]?/g.test(path)) {
+                return JSON.parse(path)[0]
+            }
         },
         // import begin
         importDialog() {
@@ -168,8 +304,13 @@ export default {
             this.$router.push({name: 'detailedList', params: {id: id}})
         },
         // 变更
-        dialogChange(id) {
-            console.log(id)
+        dialogChange(record) {
+            this.envConfigDialog = true
+            this.envConfigForm.instanceNumber = record.instanceNumber
+            this.envConfigForm.memorySize = record.memorySize
+            const test = '[{"key": "1","value":"1.1.1.1","desc":"2222"}]' //eslint-disable-line
+            debugger
+            this.envConfigForm.ipAlias = JSON.parse(test)
         },
         // 启动
         beginDeploy(val) {
@@ -247,12 +388,14 @@ export default {
         },
 
         handleSizeChange(pageSize) {
+            debugger
             const params = Object.assign({}, this.searchCriteria, {pageSize})
             this.$set(this.searchCriteria, 'pageSize', pageSize)
             this.getProjectList(params)
         },
 
         handlePageChange(pageNo) {
+            debugger
             const params = Object.assign({}, this.searchCriteria, {pageNo: pageNo - 1})
             this.getProjectList(params)
         },
@@ -260,6 +403,18 @@ export default {
         mappingMemory(value) {
             return mappingValue(value)(MEMORY_SIZE)
         },
+
+        addNewItem(prop) {
+            this.envConfigForm[prop].push({isNew: true})
+        },
+
+        deleteItem(row, prop) {
+            this.envConfigForm[prop] = this.envConfigForm[prop].filter(item => item != row);
+        },
+
+        saveEnvConfig() {
+            console.log(222)
+        }
     },
 
     computed: {
@@ -298,5 +453,12 @@ export default {
     }
     .el-upload-dragger{
         width: 560px;
+    }
+    .pathHerf {
+        color: #016ad5 !important;
+    }
+
+    .addRowBtn {
+        margin-top: 18px;
     }
 </style>

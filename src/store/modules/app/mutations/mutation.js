@@ -24,13 +24,5 @@ export default {
 
     [TYPES.MODEL_STATUS](state, payload) {
         state.dialog = payload
-    },
-
-    [TYPES.GET_PERMISSIONS](state, payload) {
-        state.permissions = payload
-    },
-
-    [TYPES.GET_MENU_PERMISSIONS](state, payload) {
-        state.menuPermissions = payload
     }
 }

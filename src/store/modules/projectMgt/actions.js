@@ -10,6 +10,13 @@ export default {
             .then(({result}) => {commit(TYPES.GET_PROJECT_LIST, result)})
             .catch(error => Promise.reject(error))
     },
+
+    async saveEnv({commit}, params) {
+        const env = await axios.post(API.PROJECT_ENV_CONFIG, params)
+            .then(response => response.data)
+            .catch(error => Promise.reject(error))
+        commit(TYPES.GET_PROJECT_ENV_CONFIG, env)
+    },
     // 启动
     getProjectStart({commit}, params) {
         return axios.post(API.PROJECT_START, params)

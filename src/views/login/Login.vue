@@ -33,6 +33,7 @@
 <script>
 import { mapActions } from 'vuex'
 import {getCookie, setCookie, delCookie} from '@/utils'
+import router from '@/router'
 export default {
     name: 'Login',
     data() {
@@ -88,7 +89,7 @@ export default {
                                 delCookie('PW')
                             }
 
-                            window.location.href = './#/projectMgt/index'
+                            router.push('projectMgt/index')
                         })
 
                 } else {

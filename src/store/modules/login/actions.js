@@ -5,7 +5,6 @@ import axios from 'axios'
 export default {
 
     async login({commit}, params) {
-        debugger
         const bodyFormData = new FormData();
         bodyFormData.append('username', params.username);
         bodyFormData.append('password', params.password);
