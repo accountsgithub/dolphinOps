@@ -285,7 +285,7 @@ export default {
                 envVariables: [],
                 ipAlias: []
             },
-            statusArray: ['已停止','运行中','待部署','启动中','故障','初始 ','系统崩溃'],
+            statusArray: ['已停止','运行中','待部署','启动中','故障','初始','系统崩溃'],
             rules: {
                 instanceNumber: [
                     { required: true, message: '请输入实例数', trigger: 'blur' },
