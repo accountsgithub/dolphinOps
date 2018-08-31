@@ -103,6 +103,7 @@
         <el-dialog title="导入部署包"
                    :visible.sync="dialogExpoVisible"
                    :before-close="beforeClose"
+                   @close="clearItem"
                    width="600px">
             <el-upload
                 class="upload-demo"
@@ -111,6 +112,7 @@
                 :on-success="handleSuccess"
                 :on-exceed="onexceed"
                 :limit="1"
+                :file-list="fileList"
                 name="pack"
                 :action="url">
                 <i class="el-icon-upload"></i>
@@ -340,7 +342,7 @@ export default {
         },
         beforeAvatarUpload(file) {
             const isZip = file.type === 'application/zip'
-            const isLtM = file.size / 1024 / 1024 < 10
+            const isLtM = file.size / 1024 / 1024 < 100
             if (!isZip) {
                 this.$message.error('上传头像图片只能是 rar/zip 格式!')
             }
@@ -350,8 +352,11 @@ export default {
             return isZip && isLtM;
         },
         beforeClose(done) {
-            this.defaultUploadList = []
+            this.fileList = []
             done()
+        },
+        clearItem() {
+            this.fileList = []
         },
         submitUpload() {
             this.$refs.upload.submit()
@@ -367,7 +372,12 @@ export default {
                     type: 'success'
                 })
                 this.dialogExpoVisible = false
-                this.defaultUploadList = []
+                this.fileList = []
+            } else {
+                this.$message({
+                    message: '导入失败！',
+                    type: 'error'
+                })
             }
         },
         onexceed() {
