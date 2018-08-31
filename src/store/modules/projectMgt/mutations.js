@@ -26,5 +26,7 @@ export default {
             searchList: payload.data,
             listPaging: {pageNo, pageSize, total}
         })
-    }
+    },
+    // 上传部署包信息保存
+    [TYPES.GET_PROJECT_UPLOAD_CONFIG]() {}
 }

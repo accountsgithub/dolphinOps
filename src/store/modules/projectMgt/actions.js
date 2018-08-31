@@ -19,6 +19,13 @@ export default {
             return Promise.reject(error)
         }
     },
+    // 上传部署包保存
+    saveUplaod({commit}, params) {
+        return axios.post(API.PROJECT_UPLOAD_CONFIG, params)
+            .then(response => response.data)
+            .then(({result}) => {commit(TYPES.GET_PROJECT_UPLOAD_CONFIG, result)})
+            .catch(error => Promise.reject(error))
+    },
     // 启动
     getProjectStart({commit}, params) {
         return axios.post(API.PROJECT_START, params)

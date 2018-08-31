@@ -35,6 +35,9 @@ let API = {
     //变更
     PROJECT_ENV_CONFIG: 'project/config',
 
+    //上传部署信息保存
+    PROJECT_UPLOAD_CONFIG: 'project/import/confirm',
+
     // 启动
     PROJECT_START: '/project/start',
     // 历史查询

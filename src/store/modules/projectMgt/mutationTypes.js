@@ -3,6 +3,9 @@ export const GET_PROJECT_ENV_CONFIG= 'GET_PROJECT_ENV_CONFIG';
 
 // 启动
 export const GET_PROJECT_START = 'getProjectStart'
+
+// 上传部署包信息保存
+export const GET_PROJECT_UPLOAD_CONFIG = 'saveUplaod'
 // 历史查询
 export const GET_PROJECT_HISTORYLIST = 'getHistoryList'
 // 实例数查询

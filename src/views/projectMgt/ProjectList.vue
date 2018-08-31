@@ -139,6 +139,17 @@
                 :model="envConfigForm">
                 <el-tabs>
                     <el-tab-pane label="基础信息">
+                        <el-form-item label="上传类型" v-if="dialogType == 'upload'">
+                            <div class="uploadType">
+                                <div class="uploadField" :class="{active: envConfigForm.uploadType === 0}" @click="handelUploadType(0)">
+                                    BUG修复
+                                </div>
+                                <div class="uploadField" :class="{active: envConfigForm.uploadType === 1}" @click="handelUploadType(1)">
+                                    版本发布
+                                </div>
+                            </div>
+                        </el-form-item>
+
                         <el-form-item label="实例数" prop="instanceNumber">
                             <el-input
                                 placeholder="请输入实例数"
@@ -156,6 +167,14 @@
                                     :label="item.label"
                                     :value="item.label"/>
                             </el-select>
+                        </el-form-item>
+
+                        <el-form-item label="审核人" v-if="dialogType == 'upload'">
+                            <el-input disabled v-model="envConfigForm.auditor">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="版本说明" prop="desc" v-if="dialogType == 'upload'">
+                            <el-input type="textarea" v-model="envConfigForm.desc"></el-input>
                         </el-form-item>
                     </el-tab-pane>
                     <!-- 环境变量 -->
@@ -261,6 +280,7 @@ export default {
         };
 
         return {
+            dialogType: 'upload',
             // import begin
             dialogExpoVisible: false,
             envConfigDialog: false,
@@ -283,12 +303,18 @@ export default {
                 memory: ''
             },
             options: MEMORY_SIZE,
+            importId: '', //导入部署包importId参数
             envConfigForm: {
                 projectId: '',
                 instanceNumber: '',
                 memorySize: '',
                 envVariables: [],
-                ipAlias: []
+                ipAlias: [],
+
+                // 上传
+                auditor: 'admin',
+                desc: '',
+                uploadType: 0
             },
             statusArray: ['已停止','运行中','待部署','启动中','故障','初始','系统崩溃'],
             rules: {
@@ -299,11 +325,17 @@ export default {
                 memorySize: [
                     { required: true, message: '请输入内存大小', trigger: 'blur' },
                 ],
+                auditor: [
+                    { required: true, message: '请输入审核人', trigger: 'blur' },
+                ],
+                uploadType: [
+                    { required: true, message: '请输入上传类型', trigger: 'blur' },
+                ]
             },
         }
     },
     methods: {
-        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv']),
+        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod']),
 
         getPath(path) {
             if (path && /\[(.*)\]?/g.test(path)) {
@@ -321,8 +353,13 @@ export default {
         },
         // 变更
         dialogChange(record) {
+            this.dialogType = ''
+            this.envConfigForm.version = ''
+            this.envConfigForm.desc = ''
+            this.envConfigForm.uploadType = 0
+
             this.envConfigDialog = true
-            this.envConfigForm.projectId = record.id;
+            this.envConfigForm.projectId = record.id
             this.envConfigForm.instanceNumber = record.instanceNumber
             this.envConfigForm.memorySize = record.memorySize
             this.envConfigForm.envVariables = record.env ? JSON.parse(record.env) : []
@@ -340,7 +377,6 @@ export default {
                     type: 'success',
                     message: '正在启动请稍后！'
                 })
-                this.searchProject()
                 this.startForm.projectId = val.id
                 this.startForm.instance = val.instanceNumber
                 this.startForm.memory = val.memorySize
@@ -390,6 +426,12 @@ export default {
                 })
                 this.dialogExpoVisible = false
                 this.fileList = []
+                this.dialogType = 'upload'
+                if (file.result) {
+                    this.envConfigForm.auditor = file.result.auditorName
+                    this.importId = file.result.id
+                }
+                this.envConfigDialog = true
             } else {
                 this.$message({
                     message: '导入失败！',
@@ -442,21 +484,50 @@ export default {
         closeEnvDialog() {
             this.envConfigDialog = false
             this.$refs['envForm'].resetFields();
+            this.envConfigForm.uploadType = '0'
+        },
+
+        handelUploadType(type) {
+            this.envConfigForm.uploadType = type
         },
 
         saveEnvConfig() {
-            const {instanceNumber, memorySize, envVariables, ipAlias, projectId} = this.envConfigForm
-            const params = {
-                projectId,
-                instance: instanceNumber,
-                memory: memorySize,
-                env: JSON.stringify(envVariables),
-                ipAlias: JSON.stringify(ipAlias),
-                searchParams: this.searchCriteria
+            const {instanceNumber, memorySize, envVariables, ipAlias, projectId, auditor, desc, uploadType} = this.envConfigForm
+            if (this.dialogType == 'upload') {
+                const params = {
+                    importId: this.importId,
+                    auditor,
+                    desc,
+                    uploadType,
+                    instance: instanceNumber,
+                    memory: memorySize,
+                    env: JSON.stringify(envVariables),
+                    ipAlias: JSON.stringify(ipAlias)
+                }
+                this.saveUplaod(params).then(() => {
+                    this.$message({
+                        message: '保存成功！',
+                        type: 'success'
+                    })
+                    this.closeEnvDialog()
+                })
+            } else {
+                const params = {
+                    projectId,
+                    instance: instanceNumber,
+                    memory: memorySize,
+                    env: JSON.stringify(envVariables),
+                    ipAlias: JSON.stringify(ipAlias),
+                    searchParams: this.searchCriteria
+                }
+                this.saveEnv(params).then(() => {
+                    this.$message({
+                        message: '保存成功！',
+                        type: 'success'
+                    })
+                    this.closeEnvDialog()
+                })
             }
-            this.saveEnv(params).then(() => {
-                this.closeEnvDialog()
-            })
         }
     },
 
@@ -465,7 +536,8 @@ export default {
             list: (state) => {
                 return state.project.elements
             },
-            paging: state => state.project.paging
+            paging: state => state.project.paging,
+            auditor: 'admin'
         })
     },
 
@@ -506,5 +578,31 @@ export default {
     }
     .noWrap {
         white-space: nowrap !important;
+    }
+
+    // 上传类型button
+    .uploadType {
+        display: flex;
+        height: 30px;
+        line-height: 1px;
+        align-items: center;
+        .uploadField {
+            text-align: center;
+            font-family:PingFangSC-Medium;
+            font-size:12px;
+            color: #606266;
+            letter-spacing:0;
+            border: 1px solid #dcdfe6;;
+            border-radius: 4px;
+            width: 78px;
+            height: 30px;
+            line-height: 28px;
+            cursor: pointer;
+            margin-right: 20px;
+            &:hover, &.active {
+                border-color: #409EFF;
+                color: #409EFF;
+            }
+        }
     }
 </style>

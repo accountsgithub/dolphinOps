@@ -17,7 +17,9 @@ const state = {
         total: 0,
         totalPages: 0,
         pagerCount: 6
-    }
+    },
+    // 审核人
+    auditor: ''
 }
 
 export default {
