@@ -97,7 +97,17 @@
             background: #fc5555;
         }
     }
-    .el_state_dot.status-cancel {
+    .el_state_dot.status-default {
+        &:before {
+            background: #b5b5b5;
+        }
+    }
+    .el_state_dot.status-begin {
+        &:before {
+            background: #0000FF;
+        }
+    }
+    .el_state_dot.status-error {
         &:before {
             background: #fb4646;
         }

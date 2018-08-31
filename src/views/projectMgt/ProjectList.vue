@@ -51,7 +51,11 @@
                         width="180"/>
                     <el-table-column
                         prop="state"
-                        label="运行状态"/>
+                        label="运行状态">
+                        <template slot-scope="scope">
+                            <tableStatus :statusType="statusArray[+scope.row.state]"></tableStatus>
+                        </template>
+                    </el-table-column>
                     <el-table-column
                         prop="instanceNumber"
                         label="实例数"/>
@@ -100,6 +104,7 @@
         <el-dialog title="导入部署包"
                    :visible.sync="dialogExpoVisible"
                    :before-close="beforeClose"
+                   @close="clearItem"
                    width="600px">
             <el-upload
                 class="upload-demo"
@@ -108,6 +113,8 @@
                 :on-success="handleSuccess"
                 :on-exceed="onexceed"
                 :limit="1"
+                with-credentials
+                :file-list="fileList"
                 name="pack"
                 :action="url">
                 <i class="el-icon-upload"></i>
@@ -235,8 +242,12 @@
 import {mapState, mapActions} from 'vuex'
 import { mappingValue} from '@/utils'
 import {MEMORY_SIZE} from '@/constants'
+import tableStatus from '@/components/Status'
 
 export default {
+    components: {
+        tableStatus
+    },
 
     data() {
         const NumberApply = (rule, value, callback) => {
@@ -256,6 +267,8 @@ export default {
             url: `${this.g_Config.BASE_URL}/project/import.do`,
             exportData: {},
             fileList: [],
+            tempPS: 10,
+            tempPN: 0,
             defaultUploadList: [],
             // import end
             searchCriteria: {
@@ -277,6 +290,7 @@ export default {
                 envVariables: [],
                 ipAlias: []
             },
+            statusArray: ['已停止','运行中','待部署','启动中','故障','初始','系统崩溃'],
             rules: {
                 instanceNumber: [
                     { required: true, message: '请输入实例数', trigger: 'blur' },
@@ -324,8 +338,9 @@ export default {
             }).then(() => {
                 this.$message({
                     type: 'success',
-                    message: '正在启动请稍后'
+                    message: '正在启动请稍后！'
                 })
+                this.searchProject()
                 this.startForm.projectId = val.id
                 this.startForm.instance = val.instanceNumber
                 this.startForm.memory = val.memorySize
@@ -335,13 +350,16 @@ export default {
                         this.searchProject()
                     }
                 })
-            }).catch(e => {
-                console.log(e)
+            }).catch(() => {
+                this.$message({
+                    type: 'error',
+                    message: '启动失败！'
+                })
             })
         },
         beforeAvatarUpload(file) {
             const isZip = file.type === 'application/zip'
-            const isLtM = file.size / 1024 / 1024 < 10
+            const isLtM = file.size / 1024 / 1024 < 100
             if (!isZip) {
                 this.$message.error('上传头像图片只能是 rar/zip 格式!')
             }
@@ -351,8 +369,11 @@ export default {
             return isZip && isLtM;
         },
         beforeClose(done) {
-            this.defaultUploadList = []
+            this.fileList = []
             done()
+        },
+        clearItem() {
+            this.fileList = []
         },
         submitUpload() {
             this.$refs.upload.submit()
@@ -368,7 +389,12 @@ export default {
                     type: 'success'
                 })
                 this.dialogExpoVisible = false
-                this.defaultUploadList = []
+                this.fileList = []
+            } else {
+                this.$message({
+                    message: '导入失败！',
+                    type: 'error'
+                })
             }
         },
         onexceed() {
@@ -389,12 +415,14 @@ export default {
         },
 
         handleSizeChange(pageSize) {
+            this.tempPS = pageSize
             const params = Object.assign({}, this.searchCriteria, {pageSize})
             this.$set(this.searchCriteria, 'pageSize', pageSize)
             this.getProjectList(params)
         },
 
         handlePageChange(pageNo) {
+            this.tempPN = pageNo-1
             const params = Object.assign({}, this.searchCriteria, {pageNo: pageNo - 1})
             this.getProjectList(params)
         },
