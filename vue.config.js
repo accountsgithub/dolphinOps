@@ -17,7 +17,7 @@ module.exports = {
     // where to put static assets (js/css/img/font/...)
     assetsDir: 'static',
 
-    // whether to use eslint-loader for lint on save.
+    //whether to use eslint-loader for lint on save.
     // valid values: true | false | 'error'
     // when set to 'error', lint errors will cause compilation to fail.
     lintOnSave: 'error',

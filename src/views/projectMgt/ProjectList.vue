@@ -51,7 +51,12 @@
                         width="180"/>
                     <el-table-column
                         prop="state"
-                        label="运行状态"/>
+                        label="运行状态">
+                        <template slot-scope="scope">
+                            scope.row.status
+                            <tableStatus :statusType="statusArray[+scope.row.status]"></tableStatus>
+                        </template>
+                    </el-table-column>
                     <el-table-column
                         prop="instanceNumber"
                         label="实例数"/>
@@ -236,8 +241,12 @@
 import {mapState, mapActions} from 'vuex'
 import { mappingValue} from '@/utils'
 import {MEMORY_SIZE} from '@/constants'
+import tableStatus from '@/components/Status'
 
 export default {
+    components: {
+        tableStatus
+    },
 
     data() {
         const NumberApply = (rule, value, callback) => {
@@ -277,6 +286,7 @@ export default {
                 envVariables: [],
                 ipAlias: []
             },
+            statusArray: ['已停止','运行中','待部署','启动中','故障','初始 ','系统崩溃'],
             rules: {
                 instanceNumber: [
                     { required: true, message: '请输入实例数', trigger: 'blur' },
@@ -311,7 +321,6 @@ export default {
             this.envConfigForm.instanceNumber = record.instanceNumber
             this.envConfigForm.memorySize = record.memorySize
             const test = '[{"key": "1","value":"1.1.1.1","desc":"2222"}]' //eslint-disable-line
-            debugger
             this.envConfigForm.ipAlias = JSON.parse(test)
         },
         // 启动
@@ -324,9 +333,8 @@ export default {
             }).then(() => {
                 this.$message({
                     type: 'success',
-                    message: '正在启动请稍后'
+                    message: '正在启动请稍后！'
                 })
-                console.log(val)
                 this.startForm.projectId = val.id
                 this.startForm.instance = val.instanceNumber
                 this.startForm.memory = val.memorySize
@@ -336,8 +344,11 @@ export default {
                         this.searchProject()
                     }
                 })
-            }).catch(e => {
-                console.log(e)
+            }).catch(() => {
+                this.$message({
+                    type: 'error',
+                    message: '启动失败！'
+                })
             })
         },
         beforeAvatarUpload(file) {
@@ -398,14 +409,12 @@ export default {
         },
 
         handleSizeChange(pageSize) {
-            debugger
             const params = Object.assign({}, this.searchCriteria, {pageSize})
             this.$set(this.searchCriteria, 'pageSize', pageSize)
             this.getProjectList(params)
         },
 
         handlePageChange(pageNo) {
-            debugger
             const params = Object.assign({}, this.searchCriteria, {pageNo: pageNo - 1})
             this.getProjectList(params)
         },
@@ -422,9 +431,7 @@ export default {
             this.envConfigForm[prop] = this.envConfigForm[prop].filter(item => item != row);
         },
 
-        saveEnvConfig() {
-            console.log(222)
-        }
+        saveEnvConfig() {}
     },
 
     computed: {
