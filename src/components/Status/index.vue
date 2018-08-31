@@ -12,9 +12,6 @@
 <script>
 export default {
     name: 'index',
-    props: ['statusType'],
-    mounted() {
-        console.log(this.statusType)
-    }
+    props: ['statusType']
 }
 </script>

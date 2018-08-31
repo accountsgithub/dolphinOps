@@ -53,8 +53,7 @@
                         prop="state"
                         label="运行状态">
                         <template slot-scope="scope">
-                            scope.row.status
-                            <tableStatus :statusType="statusArray[+scope.row.status]"></tableStatus>
+                            <tableStatus :statusType="statusArray[+scope.row.state]"></tableStatus>
                         </template>
                     </el-table-column>
                     <el-table-column
