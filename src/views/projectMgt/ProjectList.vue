@@ -116,6 +116,7 @@
                 :on-success="handleSuccess"
                 :on-exceed="onexceed"
                 :limit="1"
+                with-credentials
                 :file-list="fileList"
                 name="pack"
                 :action="url">
@@ -265,6 +266,8 @@ export default {
             url: `${this.g_Config.BASE_URL}/project/import.do`,
             exportData: {},
             fileList: [],
+            tempPS: 10,
+            tempPN: 0,
             defaultUploadList: [],
             // import end
             searchCriteria: {
@@ -334,6 +337,7 @@ export default {
                     type: 'success',
                     message: '正在启动请稍后！'
                 })
+                this.searchProject()
                 this.startForm.projectId = val.id
                 this.startForm.instance = val.instanceNumber
                 this.startForm.memory = val.memorySize
@@ -408,12 +412,14 @@ export default {
         },
 
         handleSizeChange(pageSize) {
+            this.tempPS = pageSize
             const params = Object.assign({}, this.searchCriteria, {pageSize})
             this.$set(this.searchCriteria, 'pageSize', pageSize)
             this.getProjectList(params)
         },
 
         handlePageChange(pageNo) {
+            this.tempPN = pageNo-1
             const params = Object.assign({}, this.searchCriteria, {pageNo: pageNo - 1})
             this.getProjectList(params)
         },
