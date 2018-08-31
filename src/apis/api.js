@@ -27,7 +27,7 @@ axios.interceptors.response.use(response => {
 
 let API = {
     LOGIN: '/oauth/password',
-    LOGIN_OUT: '/oauth2/logout',
+    LOGIN_OUT: '/user/logout',
 
     //项目主列表
     PROJECT_LIST: '/project/list.do',

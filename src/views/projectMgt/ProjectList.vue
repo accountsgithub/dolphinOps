@@ -8,19 +8,16 @@
                 :model="searchCriteria"
                 class="formPanel"
                 label-width="80px">
-                <div class="searchCriteriaContent">
-                    <el-form-item label="项目名称">
-                        <el-input
-                            v-model="searchCriteria.name"
-                            placeholder="项目名称"/>
-                    </el-form-item>
-                </div>
+                <el-form-item label="项目名称">
+                    <el-input
+                        v-model="searchCriteria.name"
+                        placeholder="项目名称"/>
+                </el-form-item>
                 <el-form-item>
                     <el-button
                         type="primary"
-                        icon="el-icon-search"
-                        @click="searchProject">搜索</el-button>
-                    <el-button @click="reset">重置</el-button>
+                        @click="searchProject" class="tableLastButtonStyleB icon iconfont icon-ic-search">搜索</el-button>
+                    <el-button @click="reset" class="tableLastButtonStyleW icon iconfont icon-ic-refresh" style="margin-right: -10px;">重置</el-button>
                 </el-form-item>
             </el-form>
         </search-panel>
@@ -29,7 +26,7 @@
             <!-- header start -->
             <template slot="header">
                 <span class="header__title">项目列表</span>
-                <el-button @click="importDialog">导入部署包</el-button>
+                <el-button @click="importDialog" class="tableLastButtonStyleW icon iconfont icon-ic-import">导入部署包</el-button>
             </template>
             <!-- header end -->
 
@@ -552,6 +549,7 @@ export default {
 <style lang="scss">
     @import '~@/styles/common.scss';
 
+    // 操作标签样式
     .tableActionStyle{
         font-family:PingFangSC-Medium;
         font-size:12px;
@@ -560,6 +558,7 @@ export default {
         text-align:left;
         margin-right: 10px;
     }
+
     .projectDropDown {
         font-size: 12px !important;
         border: 1px solid $dropDown-border-color !important;

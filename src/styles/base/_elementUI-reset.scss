@@ -166,4 +166,38 @@
     }
 
 }
+// 按键白色
+.tableLastButtonStyleW{
+    font-family:PingFangSC-Semibold;
+    font-size:12px;
+    color:#666666;
+    background:#f9fbfd;
+    border:1px solid #e7e9f0;
+    border-radius:4px;
+    padding: 0 10px 0 10px;
+    height:32px;
+    margin-left: 10px;
+    & > span{
+        margin-left: 5px;
+    }
+}
+// 按键蓝色
+.tableLastButtonStyleB{
+    font-family:PingFangSC-Semibold;
+    font-size:12px;
+    color: #ffffff;
+    background:#016ad5;
+    border:1px solid #e7e9f0;
+    border-radius:4px;
+    padding: 0 10px 0 10px;
+    height:32px;
+    margin-left: 10px;
+    & > span{
+        margin-left: 5px;
+    }
+}
 
+// element按键样式
+.el-button {
+    padding: 0 10px!important;
+}

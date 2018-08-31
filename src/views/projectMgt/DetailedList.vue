@@ -64,21 +64,19 @@
                             :model="searchCriteria"
                             class="formPanel"
                             label-width="80px">
-                            <div class="searchCriteriaContent">
-                                <el-form-item label="人员">
-                                    <el-input
-                                        v-model="searchCriteria.creatorName"/>
-                                </el-form-item>
-                            </div>
+                            <el-form-item label="人员">
+                                <el-input
+                                    v-model="searchCriteria.creatorName"/>
+                            </el-form-item>
+
                             <el-form-item>
                                 <el-button
                                     type="primary"
                                     icon="el-icon-search"
-                                    @click="searchListMethod()">搜索</el-button>
+                                    @click="searchListMethod()" class="tableLastButtonStyleB" style="margin-right: -20px;">搜索</el-button>
                             </el-form-item>
                         </el-form>
                     </search-panel>
-
                     <list-panel>
                         <!-- main start -->
                         <template slot="main">
@@ -269,18 +267,6 @@ export default {
         font-weight: 800;
         margin-left: 21px;
     }
-    .tableLastButtonStyleW{
-         font-family:PingFangSC-Semibold;
-         font-size:12px;
-         color:#016ad5;
-         background:#ffffff;
-         border:1px solid #c2defb;
-         border-radius:4px;
-         padding: 0 10px 0 10px;
-         height:24px;
-         margin-left: 10px;
-         margin-top: 23px;
-     }
     .tableActionStyle{
         font-family:PingFangSC-Medium;
         font-size:12px;
@@ -288,5 +274,8 @@ export default {
         letter-spacing:0.86px;
         text-align:left;
         margin-right: 10px;
+    }
+    /deep/.mainContainer__header {
+        padding: 0!important;
     }
 </style>
