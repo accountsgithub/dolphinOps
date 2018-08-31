@@ -59,9 +59,6 @@
                     <el-table-column
                         prop="memorySize"
                         label="内存（MB）">
-                        <template slot-scope="scope">
-                            {{ mappingMemory(+scope.row.memorySize) }}
-                        </template>
                     </el-table-column>
                     <el-table-column
                         prop="version"
@@ -131,6 +128,7 @@
                 label-width="100px"
                 style="margin-top: -25px"
                 :rules="rules"
+                ref="envForm"
                 :model="envConfigForm">
                 <el-tabs>
                     <el-tab-pane label="基础信息">
@@ -149,7 +147,7 @@
                                     v-for="item in options"
                                     :key="item.value"
                                     :label="item.label"
-                                    :value="item.value"/>
+                                    :value="item.label"/>
                             </el-select>
                         </el-form-item>
                     </el-tab-pane>
@@ -161,8 +159,8 @@
                                     <el-input size="small"
                                               v-if="scope.row.isNew"
                                               v-model="scope.row.key"
-                                              placeholder="请输入内容"></el-input>
-                                    <span v-if="!scope.row.isNew">{{scope.row.key}}</span>
+                                              placeholder="请输入变量"></el-input>
+                                    <span v-if="!scope.row.isNew" >{{scope.row.key}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column property="value" label="值">
@@ -170,8 +168,11 @@
                                     <el-input size="small"
                                               v-if="scope.row.isNew"
                                               v-model="scope.row.value"
-                                              placeholder="请输入内容"></el-input>
-                                    <span v-if="!scope.row.isNew">{{scope.row.value}}</span>
+                                              placeholder="请输入值"></el-input>
+                                    <el-tooltip placement="top-start" effect="light">
+                                        <div slot="content" style="width: 300px; white-space: nowrap; word-break: break-word">{{scope.row.value}}</div>
+                                        <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.value}}</span>
+                                    </el-tooltip>
                                 </template>
                             </el-table-column>
                             <el-table-column>
@@ -184,12 +185,12 @@
                     </el-tab-pane>
                     <el-tab-pane label="IP别名" style="text-align: center">
                         <el-table :data="envConfigForm.ipAlias" width="100%" highlight-current-row stripe>
-                            <el-table-column property="label" label="变量">
+                            <el-table-column property="label" label="IP别名">
                                 <template slot-scope="scope">
                                     <el-input size="small"
                                               v-if="scope.row.isNew"
                                               v-model="scope.row.key"
-                                              placeholder="请输入内容"></el-input>
+                                              placeholder="请输入IP别名"></el-input>
                                     <span v-if="!scope.row.isNew">{{scope.row.key}}</span>
                                 </template>
                             </el-table-column>
@@ -222,7 +223,7 @@
                 </el-tabs>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="envConfigDialog = false">取消</el-button>
+                <el-button @click="closeEnvDialog">取消</el-button>
                 <el-button type="primary" @click="saveEnvConfig">保存</el-button>
             </span>
         </el-dialog>
@@ -270,6 +271,7 @@ export default {
             },
             options: MEMORY_SIZE,
             envConfigForm: {
+                projectId: '',
                 instanceNumber: '',
                 memorySize: '',
                 envVariables: [],
@@ -306,11 +308,11 @@ export default {
         // 变更
         dialogChange(record) {
             this.envConfigDialog = true
+            this.envConfigForm.projectId = record.id;
             this.envConfigForm.instanceNumber = record.instanceNumber
             this.envConfigForm.memorySize = record.memorySize
-            const test = '[{"key": "1","value":"1.1.1.1","desc":"2222"}]' //eslint-disable-line
-            debugger
-            this.envConfigForm.ipAlias = JSON.parse(test)
+            this.envConfigForm.envVariables = record.env ? JSON.parse(record.env) : []
+            this.envConfigForm.ipAlias = record.ipAlias ? JSON.parse(record.ipAlias) : []
         },
         // 启动
         beginDeploy(val) {
@@ -324,7 +326,6 @@ export default {
                     type: 'success',
                     message: '正在启动请稍后'
                 })
-                console.log(val)
                 this.startForm.projectId = val.id
                 this.startForm.instance = val.instanceNumber
                 this.startForm.memory = val.memorySize
@@ -388,14 +389,12 @@ export default {
         },
 
         handleSizeChange(pageSize) {
-            debugger
             const params = Object.assign({}, this.searchCriteria, {pageSize})
             this.$set(this.searchCriteria, 'pageSize', pageSize)
             this.getProjectList(params)
         },
 
         handlePageChange(pageNo) {
-            debugger
             const params = Object.assign({}, this.searchCriteria, {pageNo: pageNo - 1})
             this.getProjectList(params)
         },
@@ -412,8 +411,24 @@ export default {
             this.envConfigForm[prop] = this.envConfigForm[prop].filter(item => item != row);
         },
 
+        closeEnvDialog() {
+            this.envConfigDialog = false
+            this.$refs['envForm'].resetFields();
+        },
+
         saveEnvConfig() {
-            console.log(222)
+            const {instanceNumber, memorySize, envVariables, ipAlias, projectId} = this.envConfigForm
+            const params = {
+                projectId,
+                instance: instanceNumber,
+                memory: memorySize,
+                env: JSON.stringify(envVariables),
+                ipAlias: JSON.stringify(ipAlias),
+                searchParams: this.searchCriteria
+            }
+            this.saveEnv(params).then(() => {
+                this.closeEnvDialog()
+            })
         }
     },
 
@@ -460,5 +475,8 @@ export default {
 
     .addRowBtn {
         margin-top: 18px;
+    }
+    .noWrap {
+        white-space: nowrap !important;
     }
 </style>

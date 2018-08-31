@@ -11,11 +11,13 @@ export default {
             .catch(error => Promise.reject(error))
     },
 
-    async saveEnv({commit}, params) {
-        const env = await axios.post(API.PROJECT_ENV_CONFIG, params)
-            .then(response => response.data)
-            .catch(error => Promise.reject(error))
-        commit(TYPES.GET_PROJECT_ENV_CONFIG, env)
+    async saveEnv({dispatch}, params) {
+        try {
+            await axios.post(API.PROJECT_ENV_CONFIG, params).then(response => response.data)
+            await dispatch('getProjectList', params.searchParams)
+        } catch (error) {
+            return Promise.reject(error)
+        }
     },
     // 启动
     getProjectStart({commit}, params) {
