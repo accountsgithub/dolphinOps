@@ -573,6 +573,7 @@ export default {
     }
 
     .addRowBtn {
+        padding: 7px 15px !important;
         margin-top: 18px;
     }
     .noWrap {

@@ -90,10 +90,18 @@
                                 <el-table-column
                                     prop="uploadMode"
                                     label="发布方式"
-                                    width="180"/>
+                                    width="180">
+                                    <template slot-scope="scope">
+                                        {{ mappingUploadMode(+scope.row.uploadMode) }}
+                                    </template>
+                                </el-table-column>
                                 <el-table-column
                                     prop="uploadType"
-                                    label="发布类型"/>
+                                    label="发布类型">
+                                    <template slot-scope="scope">
+                                        {{ mappingUploadType(+scope.row.uploadType) }}
+                                    </template>
+                                </el-table-column>
                                 <el-table-column
                                     prop="statusLabel"
                                     label="状态"/>
@@ -102,8 +110,10 @@
                                     label="创建人">
                                 </el-table-column>
                                 <el-table-column
+                                    :formatter="formatterUpdatedTime"
                                     prop="createTime"
-                                    label="部署时间"/>
+                                    label="部署时间">
+                                </el-table-column>
                                 <el-table-column
                                     align="center"
                                     label="操作">
@@ -137,6 +147,9 @@
 
 <script>
 import {mapActions, mapState} from 'vuex'
+import {DATE_FORMAT} from '@/constants'
+import { mappingValue } from '@/utils'
+import {UPLOAD_MODE, UPLOAD_TYPE} from '@/constants'
 export default {
     name: 'DetailedList',
     data() {
@@ -244,7 +257,19 @@ export default {
         // 下载日志
         downloadHref(podName) {
             return `${this.g_Config.BASE_URL}/project/downloadLog/${podName}.text`
-        }
+        },
+
+        formatterUpdatedTime(row) {
+            return moment(row.updateTime).format(DATE_FORMAT)
+        },
+
+        mappingUploadMode(value) {
+            return mappingValue(value)(UPLOAD_MODE)
+        },
+
+        mappingUploadType(value) {
+            return mappingValue(value)(UPLOAD_TYPE)
+        },
     },
     computed: {
         ...mapState({
