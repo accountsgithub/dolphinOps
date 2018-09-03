@@ -62,11 +62,11 @@ export const MEMORY_SIZE = [
 
 export const UPLOAD_MODE = [
     {
-        label: '在线发布(在线)',
+        label: '在线发布',
         value: 0
     },
     {
-        label: '手动导入(离线)',
+        label: '手动导入',
         value: 1
     }
 ]
