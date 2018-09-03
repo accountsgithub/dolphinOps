@@ -15,22 +15,19 @@
                                 stripe>
                                 <el-table-column
                                     prop="podName"
-                                    label="podName"
-                                    width="300"/>
+                                    label="podName"/>
                                 <el-table-column
                                     prop="ip"
-                                    label="Ip"
-                                    width="300"/>
+                                    label="Ip"/>
                                 <el-table-column
                                     prop="port"
-                                    label="端口"
-                                    width="300"/>
+                                    label="端口"/>
                                 <el-table-column
                                     prop="node"
-                                    label="node"
-                                    width="300"/>
+                                    label="node"/>
                                 <el-table-column
                                     align="center"
+                                    fixed="right"
                                     label="操作">
                                     <template slot-scope="scope">
                                         <a class="tableActionStyle" :href="downloadHref(scope.row.podName)" target="_blank">下载日志</a>
