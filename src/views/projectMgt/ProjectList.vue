@@ -72,7 +72,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                        align="center"
+                        fixed="right"
                         label="操作">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" @click="dialogInfo(scope.row.id)">查看详情</a>
