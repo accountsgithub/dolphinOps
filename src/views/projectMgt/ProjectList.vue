@@ -311,7 +311,8 @@ export default {
                 // 上传
                 auditor: 'admin',
                 desc: '',
-                uploadType: 0
+                uploadType: 0,
+                interval: null,
             },
             statusArray: ['已停止','运行中','待部署','启动中','故障','初始','系统崩溃'],
             rules: {
@@ -542,7 +543,13 @@ export default {
     mounted() {
         const params = this.searchCriteria
         this.getProjectList(params)
-    }
+        this.interval = setInterval(this.getProjectList.bind(this, params),15000);
+    },
+
+    destroyed() {
+        clearInterval(this.interval)
+    },
+
 }
 </script>
 
