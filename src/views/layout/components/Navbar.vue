@@ -23,7 +23,7 @@
                 slot="dropdown"
                 class="user-dropdown">
                 <el-dropdown-item command="logout">
-                    <span>LogOut</span>
+                    <span>登出</span>
                 </el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
@@ -65,8 +65,6 @@ export default {
         handleCommand(command) {
             if (command === 'logout') {
                 this.logout().then(() => {
-                    localStorage.removeItem('token')
-                    localStorage.removeItem('user')
                     this.$router.push('/login')
                 })
             }
