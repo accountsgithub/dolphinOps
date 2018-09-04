@@ -48,6 +48,7 @@
                         width="180"/>
                     <el-table-column
                         prop="state"
+                        width="180"
                         label="运行状态">
                         <template slot-scope="scope">
                             <tableStatus :statusType="statusArray[+scope.row.state]"></tableStatus>
@@ -55,14 +56,17 @@
                     </el-table-column>
                     <el-table-column
                         prop="instanceNumber"
+                        width="80"
                         label="实例数"/>
 
                     <el-table-column
                         prop="memorySize"
+                        width="100"
                         label="内存（MB）">
                     </el-table-column>
                     <el-table-column
                         prop="version"
+                        width="100"
                         label="当前版本"/>
                     <el-table-column
                         prop="path"
@@ -180,10 +184,12 @@
                         <el-table :data="envConfigForm.envVariables" width="100%" highlight-current-row stripe>
                             <el-table-column property="label" label="变量">
                                 <template slot-scope="scope">
-                                    <el-input size="small"
-                                              v-if="scope.row.isNew"
-                                              v-model="scope.row.key"
-                                              placeholder="请输入变量"></el-input>
+                                    <el-form-item prop="countName" class="VF-style">
+                                        <el-input size="small"
+                                                  v-if="scope.row.isNew"
+                                                  v-model="scope.row.key"
+                                                  placeholder="请输入变量" class="validate-text"></el-input>
+                                    </el-form-item>
                                     <span v-if="!scope.row.isNew" >{{scope.row.key}}</span>
                                 </template>
                             </el-table-column>
@@ -192,7 +198,7 @@
                                     <el-input size="small"
                                               v-if="scope.row.isNew"
                                               v-model="scope.row.value"
-                                              placeholder="请输入值"></el-input>
+                                              placeholder="请输入值" class="validate-style"></el-input>
                                     <el-tooltip placement="top-start" effect="light">
                                         <div slot="content" style="width: 300px; white-space: nowrap; word-break: break-word">{{scope.row.value}}</div>
                                         <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.value}}</span>
@@ -201,7 +207,7 @@
                             </el-table-column>
                             <el-table-column>
                                 <template slot-scope="scope">
-                                    <el-button size="mini" @click="deleteItem(scope.row, 'envVariables')">删除</el-button>
+                                    <el-button size="mini" @click="deleteItem(scope.row, 'envVariables')" class="validate-style">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -288,6 +294,15 @@ export default {
             }
         };
 
+        //变量验证
+        const nameValidate = (rule, value, callback) => {
+            if (value != '' && /^[A-Za-z_][A-Za-z0-9_]$/.test(value)) {
+                callback(new Error('格式不正确！'))
+            } else {
+                callback();
+            }
+        }
+
         return {
             dialogType: 'upload',
             // import begin
@@ -343,6 +358,9 @@ export default {
                 ],
                 IP: [
                     { validator: IPValidate, trigger: 'blur' }
+                ],
+                countName: [
+                    { validator: nameValidate, trigger: 'blur' }
                 ]
             },
         }
@@ -391,7 +409,7 @@ export default {
                     type: 'success',
                     message: '正在部署请稍后！'
                 })
-                let params = Object.assign({name: val.id})
+                let params = Object.assign({id: val.id})
                 this.getProjectDeploy(params).then(res => {
                     if (res.data.result.status == '200') {
                         this.searchProject()
@@ -445,7 +463,7 @@ export default {
                     type: 'success',
                     message: '正在停止请稍后！'
                 })
-                let params = Object.assign({name: val.name})
+                let params = Object.assign({name: val.mark})
                 this.getProjectStop(params).then(res => {
                     if (res.data.result.status == '200') {
                         this.searchProject()
