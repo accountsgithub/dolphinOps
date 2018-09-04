@@ -607,8 +607,8 @@ export default {
                     } else {
                         const params = {
                             projectId,
-                            instanceNumber: instanceNumber,
-                            memorySize: memorySize,
+                            instance: instanceNumber,
+                            memory: memorySize,
                             env: JSON.stringify(envVariables),
                             ipAlias: JSON.stringify(ipAlias),
                             searchParams: this.searchCriteria
