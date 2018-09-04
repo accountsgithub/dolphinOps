@@ -36,7 +36,7 @@
                     :data="list"
                     class="list"
                     highlight-current-row
-                    style="width: 100%;height: 63vh;overflow-y: auto;"
+                    style="width: 100%"
                     stripe>
                     <el-table-column
                         prop="name"
@@ -72,7 +72,6 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                        fixed="right"
                         label="操作">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" @click="dialogInfo(scope.row.id)" v-if="scope.row.state != '4' && scope.row.state != '5'">查看详情</a>
@@ -220,8 +219,8 @@
                                 </template>
                             </el-table-column>
                             <el-table-column property="value" label="IP">
-                                <template slot-scope="scope" class="VF-style">
-                                    <el-form-item prop="IP">
+                                <template slot-scope="scope" >
+                                    <el-form-item prop="IP" class="VF-style">
                                         <el-input size="small"
                                                   v-if="scope.row.isNew"
                                                   v-model="scope.row.value"
@@ -398,8 +397,8 @@ export default {
                         this.searchProject()
                     }
                 })
-            }).catch((e) => {
-                console.log(e)
+            }).catch((
+            ) => {
                 this.$message({
                     message: '操作已取消！'
                 })
@@ -452,8 +451,7 @@ export default {
                         this.searchProject()
                     }
                 })
-            }).catch((e) => {
-                console.log(e)
+            }).catch(() => {
                 this.$message({
                     message: '操作已取消！'
                 })
@@ -668,6 +666,16 @@ export default {
         white-space: nowrap !important;
     }
 
+    @include e(body) {
+        padding: 0 30px;
+        .list {
+            padding: 0 30px;
+            &.el-table::before {
+                height: 0 !important;
+            }
+        }
+    }
+
     // 验证样式
     .validate-style {
         margin-bottom: 18px;
@@ -677,8 +685,8 @@ export default {
         width: 120px;
     }
     .VF-style {
-        /deep/.el-form-item--small .el-form-item__error {
-            margin-left: -100px!important;
+        /deep/ .el-form-item__error {
+            left: -100px!important;
         }
     }
 
