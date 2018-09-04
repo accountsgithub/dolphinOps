@@ -189,6 +189,7 @@ export default {
     mounted() {
         this.searchListMethod()
     },
+    /*eslint-disable*/
     methods: {
         openTerminal(podName) {
             this.dialogVisible = true
@@ -268,7 +269,6 @@ export default {
 
             //term实时监控输入的数据，并且websocket把实时数据发送给后台
             term.on('data', (data) => {
-                debugger
                 // 订阅返回消息无响应时用到的临时写
                 if (escape(data) == '%7F') {
                     term.write(unescape('%08%20%08'))
@@ -286,7 +286,7 @@ export default {
             })
             //屏幕将要在哪里展示，就是屏幕展示的地方
             term.open(document.getElementById('container-terminal'))
-            
+
             this.sendInput('\n')
         },
         sendInput(input) {
