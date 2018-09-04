@@ -277,6 +277,15 @@ export default {
             }
         };
 
+        // IP验证
+        const IPValidate = (rule, value, callback) => {
+            if (!/^\d+$/.test(value)) {
+                callback(new Error('实例数必须是正整数'));
+            } else {
+                callback();
+            }
+        };
+
         return {
             dialogType: 'upload',
             // import begin
@@ -290,7 +299,7 @@ export default {
             defaultUploadList: [],
             // import end
             searchCriteria: {
-                name: '',
+                name: '冒烟',
                 pageNo: 0,
                 pageSize: 10
             },
@@ -329,6 +338,9 @@ export default {
                 ],
                 uploadType: [
                     { required: true, message: '请输入上传类型', trigger: 'blur' },
+                ],
+                IP: [
+                    { validator: IPValidate, trigger: 'blur' }
                 ]
             },
         }
@@ -426,10 +438,10 @@ export default {
                 isZip = fileType === 'rar'
             }
             if (!isZip) {
-                this.$message.error('上传头像图片只能是 rar/zip 格式!')
+                this.$message.error('上传文件类型只能是 rar/zip 格式!')
             }
             if (!isLtM) {
-                this.$message.error('上传头像图片大小不能超过 100MB!')
+                this.$message.error('上传文件大小不能超过 100MB!')
             }
             return isZip && isLtM;
         },
@@ -522,42 +534,46 @@ export default {
         },
 
         saveEnvConfig() {
-            const {instanceNumber, memorySize, envVariables, ipAlias, projectId, auditor, desc, uploadType} = this.envConfigForm
-            if (this.dialogType == 'upload') {
-                const params = {
-                    importId: this.importId,
-                    auditor,
-                    desc,
-                    uploadType,
-                    instance: instanceNumber,
-                    memory: memorySize,
-                    env: JSON.stringify(envVariables),
-                    ipAlias: JSON.stringify(ipAlias)
+            this.$refs['envForm'].validate((valid) => {
+                if (valid) {
+                    const {instanceNumber, memorySize, envVariables, ipAlias, projectId, auditor, desc, uploadType} = this.envConfigForm
+                    if (this.dialogType == 'upload') {
+                        const params = {
+                            importId: this.importId,
+                            auditor,
+                            desc,
+                            uploadType,
+                            instance: instanceNumber,
+                            memory: memorySize,
+                            env: JSON.stringify(envVariables),
+                            ipAlias: JSON.stringify(ipAlias)
+                        }
+                        this.saveUplaod(params).then(() => {
+                            this.$message({
+                                message: '保存成功！',
+                                type: 'success'
+                            })
+                            this.closeEnvDialog()
+                        })
+                    } else {
+                        const params = {
+                            projectId,
+                            instance: instanceNumber,
+                            memory: memorySize,
+                            env: JSON.stringify(envVariables),
+                            ipAlias: JSON.stringify(ipAlias),
+                            searchParams: this.searchCriteria
+                        }
+                        this.saveEnv(params).then(() => {
+                            this.$message({
+                                message: '保存成功！',
+                                type: 'success'
+                            })
+                            this.closeEnvDialog()
+                        })
+                    }
                 }
-                this.saveUplaod(params).then(() => {
-                    this.$message({
-                        message: '保存成功！',
-                        type: 'success'
-                    })
-                    this.closeEnvDialog()
-                })
-            } else {
-                const params = {
-                    projectId,
-                    instance: instanceNumber,
-                    memory: memorySize,
-                    env: JSON.stringify(envVariables),
-                    ipAlias: JSON.stringify(ipAlias),
-                    searchParams: this.searchCriteria
-                }
-                this.saveEnv(params).then(() => {
-                    this.$message({
-                        message: '保存成功！',
-                        type: 'success'
-                    })
-                    this.closeEnvDialog()
-                })
-            }
+            })
         }
     },
 
