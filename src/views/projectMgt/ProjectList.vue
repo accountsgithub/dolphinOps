@@ -299,7 +299,7 @@ export default {
             defaultUploadList: [],
             // import end
             searchCriteria: {
-                name: '冒烟',
+                name: '',
                 pageNo: 0,
                 pageSize: 10
             },
