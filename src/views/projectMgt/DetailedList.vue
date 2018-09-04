@@ -30,6 +30,7 @@
                                     fixed="right"
                                     label="操作">
                                     <template slot-scope="scope">
+                                        <!-- <a class="tableActionStyle" @click.prevent="openTerminal(scope.row.podName)">终端</a> -->
                                         <a class="tableActionStyle" :href="downloadHref(scope.row.podName)" target="_blank">下载日志</a>
                                         <a class="tableActionStyle" v-if="scope.row.monitorUrl != '<no value>'" :href="scope.row.monitorUrl" target="_blank">监控</a>
                                     </template>
@@ -142,6 +143,12 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
+        <el-dialog class="terminal-dialog" title="终端"
+                   :visible.sync="dialogVisible"
+                   @close="closeTerminal"
+                   width="960px">
+            <div id="container-terminal"></div>
+        </el-dialog>
     </div>
 </template>
 
@@ -150,6 +157,14 @@ import {mapActions, mapState} from 'vuex'
 import {DATE_FORMAT} from '@/constants'
 import { mappingValue } from '@/utils'
 import {UPLOAD_MODE, UPLOAD_TYPE} from '@/constants'
+import * as fit from 'xterm/lib/addons/fit/fit'
+import * as attach from 'xterm/lib/addons/attach/attach'
+import { Terminal } from 'xterm'
+require('xterm/dist/xterm.css')
+Terminal.applyAddon(fit)
+Terminal.applyAddon(attach)
+let term
+let cmdStr
 export default {
     name: 'DetailedList',
     data() {
@@ -166,13 +181,128 @@ export default {
                 creatorName: '',
                 pageNo: 0,
                 pageSize: 10
-            }
+            },
+            dialogVisible: false,
+            websocket: null
         }
     },
     mounted() {
         this.searchListMethod()
     },
     methods: {
+        openTerminal(podName) {
+            this.dialogVisible = true
+            this.$nextTick(() => {
+                this.operate(podName)
+            })
+        },
+        closeTerminal() {
+            this.websocket.send(JSON.stringify({'termId': this.uuid,'type': 'exit'}))
+            this.websocket.close()
+            term.destroy()
+        },
+        operate(podName) {
+            var connectCount=1
+            var wirteData=''
+            var param = podName
+            this.uuid = this.guid()
+
+            this.websocket = new WebSocket(`ws://${this.g_Config.BASE_URL}/webterm`)
+            // this.websocket = new WebSocket(`ws://prod.ctsp.kedacom.com/dolphin-ops/webterm`)
+            this.websocket.onopen = () => {
+                console.log('连接成功')
+                this.websocket.send(JSON.stringify({'pod': param, 'termId': this.uuid, 'type': 'init'}))
+            }
+            this.websocket.onmessage = (res) => {
+                wirteData=res.data
+                var escapeData=escape(wirteData)
+                var atemp=''
+                //判断处理
+                if (connectCount===1) {
+                    this.initTerm()
+                    connectCount=2
+                    term.write(wirteData)
+                }
+                else if (cmdStr==='\t') {
+                    if (escapeData.indexOf('%0D')>-1) {
+                        atemp=escapeData.split('%0D')
+                        if (atemp[atemp.length-1].substring(0,1)!=='%') {
+                            escapeData = escapeData.replace(/%0D/, '')
+                        }
+                        if (escapeData.indexOf('%08') < 0 && escapeData != '%20') {
+                            wirteData = unescape(escapeData.replace(/%20/, ''))
+                        }
+                        else {
+                            wirteData = unescape(escapeData)
+                        }
+                    }
+                    term.write(wirteData)
+                }
+                else if (cmdStr.indexOf('\r')>-1) {
+                    if (escapeData.indexOf('%0D')>-1) {
+                        atemp=escapeData.split('%0D')
+                        if ((atemp[atemp.length-1].substring(0,1))!='%') {
+                            escapeData = escapeData.replace(/%0D/g, '')
+                            wirteData = unescape(escapeData)
+                        }
+                    }
+                    term.write(wirteData)
+                }
+                else if (cmdStr=='\u0003') {
+                    term.write(wirteData)
+                }
+                console.log(escape(wirteData))
+            }
+            this.websocket.onclose=function(e) {
+                console.log(`连接已断开...>>>${e.code}`)
+            }
+        },
+        initTerm() {
+            //new 一个terminal实例，就是数据展示的屏幕和一些见简单设置，包括屏幕的宽度，高度，光标是否闪烁等等
+            term = new Terminal({
+                rows: 28,
+                screenKeys: true,
+                useStyle: true,
+                cursorBlink: true
+            })
+
+            //term实时监控输入的数据，并且websocket把实时数据发送给后台
+            term.on('data', (data) => {
+                debugger
+                // 订阅返回消息无响应时用到的临时写
+                if (escape(data) == '%7F') {
+                    term.write(unescape('%08%20%08'))
+                }
+                else if (data === '\t'||data==='\f'||data=='\u001b[A'||data=='\u001b[B') {
+                    term.write('')
+                }
+                else {
+                    term.write(data)
+                }
+                this.sendInput(data)
+            })
+            term.on('title', () => {
+                document.title = 'dolphin-web-term'
+            })
+            //屏幕将要在哪里展示，就是屏幕展示的地方
+            term.open(document.getElementById('container-terminal'))
+            
+            this.sendInput('\n')
+        },
+        sendInput(input) {
+            cmdStr=input
+            if (cmdStr!='\u001b[A'&&cmdStr!='\u001b[B') {
+                this.websocket.send(JSON.stringify({'cmd': input, 'termId': this.uuid,'type': 'cmd'}))
+            }
+        },
+        guid() {
+            function s4() {
+                return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+            }
+            return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()} ${s4()}${s4()}`
+        },
         ...mapActions(['getHistoryList', 'getExampleList', 'changeVersion']),
         // 历史查询
         searchListMethod() {
@@ -271,7 +401,7 @@ export default {
         },
     },
     computed: {
-        ...mapState({
+        ...mapState ({
             searchList: state => state.project.searchList,
             listPaging: state => state.project.listPaging
         })
