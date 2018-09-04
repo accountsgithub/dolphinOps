@@ -38,6 +38,9 @@ let API = {
     //上传部署信息保存
     PROJECT_UPLOAD_CONFIG: 'project/import/confirm',
 
+    // 开始部署
+    PROJECT_DEPLOY: '/project/deploy/exec',
+
     // 启动
     PROJECT_START: '/project/start',
 

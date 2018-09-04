@@ -19,17 +19,28 @@ router.beforeEach((to, from, next) => {
             next();  //如果是登录页面路径，就直接next()
         } else {
             next('/login');//不然就跳转到登录；
+            NProgress.done();
         }
     }
     NProgress.start()
+    const token = localStorage.getItem('token')
+    // const hasPermissions = store.getters.permission && !_.isEmpty(store.getters.permission)
     // 验证当前路由所有的匹配中是否需要有登陆验证的
     // 是滞已经登录的
     // 是否已经分配到权限
-    if (!to.matched.some(r => r.meta.requiresAuth)) {
+    if (!to.matched.some(r => r.meta.requiresAuth)
+        || _.isEmpty(token)|| !token ) {
         redirectToLogin(to.path)
     }
 
-    next()
+    //查看权限
+    if (token) {
+        next();
+    }
+
+    if (to.redirectedFrom === '/') {
+        next('/projectMgt/index');
+    }
 })
 
 router.afterEach(() => {NProgress.done();});

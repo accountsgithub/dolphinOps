@@ -26,6 +26,15 @@ export default {
             .then(({result}) => {commit(TYPES.GET_PROJECT_UPLOAD_CONFIG, result)})
             .catch(error => Promise.reject(error))
     },
+
+    // 开始部署
+    getProjectDeploy({commit}, params) {
+        return axios.get(API.PROJECT_DEPLOY, {params})
+            .then(response => response.data)
+            .then(({result}) => {commit(TYPES.GET_PROJECT_DEPLOY, result)})
+            .catch(error => Promise.reject(error))
+    },
+
     // 启动
     getProjectStart({commit}, params) {
         return axios.post(API.PROJECT_START, params)
@@ -36,7 +45,7 @@ export default {
 
     // 停止
     getProjectStop({commit}, params) {
-        return axios.post(API.PROJECT_STOP, params)
+        return axios.get(API.PROJECT_STOP, {params})
             .then(response => response.data)
             .then(({result}) => {commit(TYPES.GET_PROJECT_STOP, result)})
             .catch(error => Promise.reject(error))

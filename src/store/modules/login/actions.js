@@ -15,6 +15,7 @@ export default {
             .then(response => response.data.result)
             .catch(error => Promise.reject(error))
         if (token) {
+            localStorage.setItem('token', JSON.stringify(token))
             commit(TYPES.POST_LOGIN, true)
         }
     },

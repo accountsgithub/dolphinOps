@@ -1,6 +1,9 @@
 export const GET_PROJECT_LIST = 'GET_PROJECT_LIST';
 export const GET_PROJECT_ENV_CONFIG= 'GET_PROJECT_ENV_CONFIG';
 
+//开始部署
+export const GET_PROJECT_DEPLOY = 'getProjectDeploy'
+
 // 启动
 export const GET_PROJECT_START = 'getProjectStart'
 

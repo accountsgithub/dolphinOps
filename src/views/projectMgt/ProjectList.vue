@@ -36,7 +36,7 @@
                     :data="list"
                     class="list"
                     highlight-current-row
-                    style="width: 100%;height: 63vh;overflow-y: auto;"
+                    style="width: 100%"
                     stripe>
                     <el-table-column
                         prop="name"
@@ -48,6 +48,7 @@
                         width="180"/>
                     <el-table-column
                         prop="state"
+                        width="180"
                         label="运行状态">
                         <template slot-scope="scope">
                             <tableStatus :statusType="statusArray[+scope.row.state]"></tableStatus>
@@ -55,14 +56,17 @@
                     </el-table-column>
                     <el-table-column
                         prop="instanceNumber"
+                        width="80"
                         label="实例数"/>
 
                     <el-table-column
                         prop="memorySize"
+                        width="100"
                         label="内存（MB）">
                     </el-table-column>
                     <el-table-column
                         prop="version"
+                        width="100"
                         label="当前版本"/>
                     <el-table-column
                         prop="path"
@@ -72,13 +76,13 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                        fixed="right"
                         label="操作">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" @click="dialogInfo(scope.row.id)" v-if="scope.row.state != '4' && scope.row.state != '5'">查看详情</a>
                             <a class="tableActionStyle" @click="dialogChange(scope.row)" v-if="scope.row.state != '4' && scope.row.state != '5'">变更</a>
                             <a class="tableActionStyle" @click="stopDeploy(scope.row)" v-if="scope.row.state == '1'">停止</a>
-                            <a class="tableActionStyle" @click="beginDeploy(scope.row)" v-else-if="scope.row.state != '1' && scope.row.state != '3'">启动</a>
+                            <a class="tableActionStyle" @click="startUp(scope.row)" v-else-if="scope.row.state != '1' && scope.row.state != '3'">启动</a>
+                            <a class="tableActionStyle" @click="beginDeploy(scope.row)" v-if="scope.row.deployStatus && scope.row.deployStatus == '5'">开始部署</a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -180,10 +184,12 @@
                         <el-table :data="envConfigForm.envVariables" width="100%" highlight-current-row stripe>
                             <el-table-column property="label" label="变量">
                                 <template slot-scope="scope">
-                                    <el-input size="small"
-                                              v-if="scope.row.isNew"
-                                              v-model="scope.row.key"
-                                              placeholder="请输入变量"></el-input>
+                                    <el-form-item prop="countName" class="VF-style">
+                                        <el-input size="small"
+                                                  v-if="scope.row.isNew"
+                                                  v-model="scope.row.key"
+                                                  placeholder="请输入变量" class="validate-text"></el-input>
+                                    </el-form-item>
                                     <span v-if="!scope.row.isNew" >{{scope.row.key}}</span>
                                 </template>
                             </el-table-column>
@@ -192,7 +198,7 @@
                                     <el-input size="small"
                                               v-if="scope.row.isNew"
                                               v-model="scope.row.value"
-                                              placeholder="请输入值"></el-input>
+                                              placeholder="请输入值" class="validate-style"></el-input>
                                     <el-tooltip placement="top-start" effect="light">
                                         <div slot="content" style="width: 300px; white-space: nowrap; word-break: break-word">{{scope.row.value}}</div>
                                         <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.value}}</span>
@@ -201,7 +207,7 @@
                             </el-table-column>
                             <el-table-column>
                                 <template slot-scope="scope">
-                                    <el-button size="mini" @click="deleteItem(scope.row, 'envVariables')">删除</el-button>
+                                    <el-button size="mini" @click="deleteItem(scope.row, 'envVariables')" class="validate-style">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -214,16 +220,18 @@
                                     <el-input size="small"
                                               v-if="scope.row.isNew"
                                               v-model="scope.row.key"
-                                              placeholder="请输入IP别名"></el-input>
+                                              placeholder="请输入IP别名" class="validate-style"></el-input>
                                     <span v-if="!scope.row.isNew">{{scope.row.key}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column property="value" label="IP">
-                                <template slot-scope="scope">
-                                    <el-input size="small"
-                                              v-if="scope.row.isNew"
-                                              v-model="scope.row.value"
-                                              placeholder="请输入IP"></el-input>
+                                <template slot-scope="scope" >
+                                    <el-form-item prop="IP" class="VF-style">
+                                        <el-input size="small"
+                                                  v-if="scope.row.isNew"
+                                                  v-model="scope.row.value"
+                                                  placeholder="请输入IP" class="validate-text"></el-input>
+                                    </el-form-item>
                                     <span v-if="!scope.row.isNew">{{scope.row.value}}</span>
                                 </template>
                             </el-table-column>
@@ -232,13 +240,13 @@
                                     <el-input size="small"
                                               v-if="scope.row.isNew"
                                               v-model="scope.row.desc"
-                                              placeholder="请输入别名备注"></el-input>
+                                              placeholder="请输入别名备注" class="validate-style"></el-input>
                                     <span v-if="!scope.row.isNew">{{scope.row.desc}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column>
                                 <template slot-scope="scope">
-                                    <el-button size="mini" @click="deleteItem(scope.row, 'ipAlias')">删除</el-button>
+                                    <el-button size="mini" @click="deleteItem(scope.row, 'ipAlias')" class="validate-style">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -279,12 +287,21 @@ export default {
 
         // IP验证
         const IPValidate = (rule, value, callback) => {
-            if (!/^\d+$/.test(value)) {
-                callback(new Error('实例数必须是正整数'));
+            if (value !='' && /^((25[0-5]|2[0-4]\\d|[1]{1}\\d{1}\\d{1}|[1-9]{1}\\d{1}|\\d{1})($|(?!\\.$)\\.)){4}$/.test(value)) {
+                callback(new Error('IP格式不正确！'));
             } else {
                 callback();
             }
         };
+
+        //变量验证
+        const nameValidate = (rule, value, callback) => {
+            if (value != '' && /^[A-Za-z_][A-Za-z0-9_]$/.test(value)) {
+                callback(new Error('格式不正确！'))
+            } else {
+                callback();
+            }
+        }
 
         return {
             dialogType: 'upload',
@@ -299,7 +316,7 @@ export default {
             defaultUploadList: [],
             // import end
             searchCriteria: {
-                name: '冒烟',
+                name: '',
                 pageNo: 0,
                 pageSize: 10
             },
@@ -341,12 +358,15 @@ export default {
                 ],
                 IP: [
                     { validator: IPValidate, trigger: 'blur' }
+                ],
+                countName: [
+                    { validator: nameValidate, trigger: 'blur' }
                 ]
             },
         }
     },
     methods: {
-        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod']),
+        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy']),
 
         getPath(path) {
             if (path && /\[(.*)\]?/g.test(path)) {
@@ -376,8 +396,35 @@ export default {
             this.envConfigForm.envVariables = record.env ? JSON.parse(record.env) : []
             this.envConfigForm.ipAlias = record.ipAlias ? JSON.parse(record.ipAlias) : []
         },
-        // 启动
+
+        //开始部署
         beginDeploy(val) {
+            this.$confirm('是否确认部署项目？', '确认部署', {
+                confirmButtonText: '确认',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '正在部署请稍后！'
+                })
+                let params = Object.assign({id: val.id})
+                this.getProjectDeploy(params).then(res => {
+                    if (res.data.result.status == '200') {
+                        this.searchProject()
+                    }
+                })
+            }).catch((
+            ) => {
+                this.$message({
+                    message: '操作已取消！'
+                })
+            })
+        },
+
+        // 启动
+        startUp(val) {
             this.$confirm('是否确认启动项目？', '确认启动', {
                 confirmButtonText: '确认',
                 cancelButtonText: '取消',
@@ -416,7 +463,7 @@ export default {
                     type: 'success',
                     message: '正在停止请稍后！'
                 })
-                let params = Object.assign({name: val.name})
+                let params = Object.assign({name: val.mark})
                 this.getProjectStop(params).then(res => {
                     if (res.data.result.status == '200') {
                         this.searchProject()
@@ -430,7 +477,7 @@ export default {
         },
 
         beforeAvatarUpload(file) {
-            let isZip = file.type === 'application/zip'
+            let isZip = file.type.indexOf('zip') !== -1 || file.type.indexOf('rar') !== -1
             const isLtM = file.size / 1024 / 1024 < 100
             if (file.type == '' && file.name) {
                 let arrayTemp = file.name.split('.')
@@ -471,6 +518,8 @@ export default {
                 this.dialogType = 'upload'
                 if (file.result) {
                     this.envConfigForm.auditor = file.result.auditorName
+                    this.envConfigForm.instanceNumber = file.result.instanceNumber
+                    this.envConfigForm.memorySize = file.result.memorySize
                     this.importId = file.result.id
                 }
                 this.envConfigDialog = true
@@ -601,7 +650,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     @import '~@/styles/common.scss';
 
     // 操作标签样式
@@ -620,7 +669,7 @@ export default {
         border-radius:4px;
         padding: 4px 12px;
     }
-    .el-upload-dragger{
+    /deep/ .el-upload-dragger{
         width: 560px;
     }
     .pathHerf {
@@ -633,6 +682,30 @@ export default {
     }
     .noWrap {
         white-space: nowrap !important;
+    }
+
+    @include e(body) {
+        padding: 0 30px;
+        .list {
+            padding: 0 30px;
+            &.el-table::before {
+                height: 0 !important;
+            }
+        }
+    }
+
+    // 验证样式
+    .validate-style {
+        margin-bottom: 18px;
+    }
+    .validate-text {
+        margin-left: -100px;
+        width: 120px;
+    }
+    .VF-style {
+        /deep/ .el-form-item__error {
+            left: -100px!important;
+        }
     }
 
     // 上传类型button

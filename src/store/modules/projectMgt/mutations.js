@@ -9,6 +9,10 @@ export default {
             paging: {pageNo, pageSize, total}
         })
     },
+
+    //开始部署
+    [TYPES.GET_PROJECT_DEPLOY]() {},
+
     // 启动
     [TYPES.GET_PROJECT_START]() {},
 
