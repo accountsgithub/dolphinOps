@@ -477,7 +477,7 @@ export default {
         },
 
         beforeAvatarUpload(file) {
-            let isZip = file.type === 'application/zip'
+            let isZip = file.type.indexOf('zip') !== -1 || file.type.indexOf('rar') !== -1
             const isLtM = file.size / 1024 / 1024 < 100
             if (file.type == '' && file.name) {
                 let arrayTemp = file.name.split('.')
