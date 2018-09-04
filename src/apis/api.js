@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {Message} from 'element-ui'
 import NProgress from 'nprogress'
+import router from '../router'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 axios.defaults.withCredentials = true
@@ -14,6 +15,12 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(response => {
     NProgress.done()
     const {data} = response
+
+    if (data.status == '401') {
+        router.push('/login')
+        return
+    }
+
     if (data.status != '200') {
         Message.error(data.message || '')
         return Promise.reject(data)
