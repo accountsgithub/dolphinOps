@@ -409,7 +409,7 @@ export default {
                     type: 'success',
                     message: '正在部署请稍后！'
                 })
-                let params = Object.assign({id: val.id})
+                let params = Object.assign({id: val.desireDeployId})
                 this.getProjectDeploy(params).then(res => {
                     if (res.data.result.status == '200') {
                         this.searchProject()
