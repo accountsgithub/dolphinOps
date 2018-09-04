@@ -78,7 +78,8 @@
                             <a class="tableActionStyle" @click="dialogInfo(scope.row.id)" v-if="scope.row.state != '4' && scope.row.state != '5'">查看详情</a>
                             <a class="tableActionStyle" @click="dialogChange(scope.row)" v-if="scope.row.state != '4' && scope.row.state != '5'">变更</a>
                             <a class="tableActionStyle" @click="stopDeploy(scope.row)" v-if="scope.row.state == '1'">停止</a>
-                            <a class="tableActionStyle" @click="beginDeploy(scope.row)" v-else-if="scope.row.state != '1' && scope.row.state != '3'">启动</a>
+                            <a class="tableActionStyle" @click="startUp(scope.row)" v-else-if="scope.row.state != '1' && scope.row.state != '3'">启动</a>
+                            <a class="tableActionStyle" @click="beginDeploy(scope.row)" v-if="scope.row.deployStatus && scope.row.deployStatus == '5'">开始部署</a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -214,16 +215,18 @@
                                     <el-input size="small"
                                               v-if="scope.row.isNew"
                                               v-model="scope.row.key"
-                                              placeholder="请输入IP别名"></el-input>
+                                              placeholder="请输入IP别名" class="validate-style"></el-input>
                                     <span v-if="!scope.row.isNew">{{scope.row.key}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column property="value" label="IP">
-                                <template slot-scope="scope">
-                                    <el-input size="small"
-                                              v-if="scope.row.isNew"
-                                              v-model="scope.row.value"
-                                              placeholder="请输入IP"></el-input>
+                                <template slot-scope="scope" class="VF-style">
+                                    <el-form-item prop="IP">
+                                        <el-input size="small"
+                                                  v-if="scope.row.isNew"
+                                                  v-model="scope.row.value"
+                                                  placeholder="请输入IP" class="validate-text"></el-input>
+                                    </el-form-item>
                                     <span v-if="!scope.row.isNew">{{scope.row.value}}</span>
                                 </template>
                             </el-table-column>
@@ -232,13 +235,13 @@
                                     <el-input size="small"
                                               v-if="scope.row.isNew"
                                               v-model="scope.row.desc"
-                                              placeholder="请输入别名备注"></el-input>
+                                              placeholder="请输入别名备注" class="validate-style"></el-input>
                                     <span v-if="!scope.row.isNew">{{scope.row.desc}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column>
                                 <template slot-scope="scope">
-                                    <el-button size="mini" @click="deleteItem(scope.row, 'ipAlias')">删除</el-button>
+                                    <el-button size="mini" @click="deleteItem(scope.row, 'ipAlias')" class="validate-style">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -279,8 +282,8 @@ export default {
 
         // IP验证
         const IPValidate = (rule, value, callback) => {
-            if (!/^\d+$/.test(value)) {
-                callback(new Error('实例数必须是正整数'));
+            if (value !='' && /^((25[0-5]|2[0-4]\\d|[1]{1}\\d{1}\\d{1}|[1-9]{1}\\d{1}|\\d{1})($|(?!\\.$)\\.)){4}$/.test(value)) {
+                callback(new Error('IP格式不正确！'));
             } else {
                 callback();
             }
@@ -346,7 +349,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod']),
+        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy']),
 
         getPath(path) {
             if (path && /\[(.*)\]?/g.test(path)) {
@@ -376,8 +379,35 @@ export default {
             this.envConfigForm.envVariables = record.env ? JSON.parse(record.env) : []
             this.envConfigForm.ipAlias = record.ipAlias ? JSON.parse(record.ipAlias) : []
         },
-        // 启动
+
+        //开始部署
         beginDeploy(val) {
+            this.$confirm('是否确认部署项目？', '确认部署', {
+                confirmButtonText: '确认',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '正在部署请稍后！'
+                })
+                let params = Object.assign({name: val.id})
+                this.getProjectDeploy(params).then(res => {
+                    if (res.data.result.status == '200') {
+                        this.searchProject()
+                    }
+                })
+            }).catch((e) => {
+                console.log(e)
+                this.$message({
+                    message: '操作已取消！'
+                })
+            })
+        },
+
+        // 启动
+        startUp(val) {
             this.$confirm('是否确认启动项目？', '确认启动', {
                 confirmButtonText: '确认',
                 cancelButtonText: '取消',
@@ -422,7 +452,8 @@ export default {
                         this.searchProject()
                     }
                 })
-            }).catch(() => {
+            }).catch((e) => {
+                console.log(e)
                 this.$message({
                     message: '操作已取消！'
                 })
@@ -471,6 +502,8 @@ export default {
                 this.dialogType = 'upload'
                 if (file.result) {
                     this.envConfigForm.auditor = file.result.auditorName
+                    this.envConfigForm.instanceNumber = file.result.instanceNumber
+                    this.envConfigForm.memorySize = file.result.memorySize
                     this.importId = file.result.id
                 }
                 this.envConfigDialog = true
@@ -601,7 +634,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     @import '~@/styles/common.scss';
 
     // 操作标签样式
@@ -620,7 +653,7 @@ export default {
         border-radius:4px;
         padding: 4px 12px;
     }
-    .el-upload-dragger{
+    /deep/ .el-upload-dragger{
         width: 560px;
     }
     .pathHerf {
@@ -633,6 +666,20 @@ export default {
     }
     .noWrap {
         white-space: nowrap !important;
+    }
+
+    // 验证样式
+    .validate-style {
+        margin-bottom: 18px;
+    }
+    .validate-text {
+        margin-left: -100px;
+        width: 120px;
+    }
+    .VF-style {
+        /deep/.el-form-item--small .el-form-item__error {
+            margin-left: -100px!important;
+        }
     }
 
     // 上传类型button
