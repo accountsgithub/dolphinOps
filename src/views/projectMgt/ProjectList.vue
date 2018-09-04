@@ -167,7 +167,7 @@
                                     v-for="item in options"
                                     :key="item.value"
                                     :label="item.label"
-                                    :value="item.value"/>
+                                    :value="item.label"/>
                             </el-select>
                         </el-form-item>
 
@@ -592,8 +592,8 @@ export default {
                             auditor,
                             desc,
                             uploadType,
-                            instance: instanceNumber,
-                            memory: memorySize,
+                            instanceNumber: instanceNumber,
+                            memorySize: memorySize,
                             env: JSON.stringify(envVariables),
                             ipAlias: JSON.stringify(ipAlias)
                         }
@@ -607,8 +607,8 @@ export default {
                     } else {
                         const params = {
                             projectId,
-                            instance: instanceNumber,
-                            memory: memorySize,
+                            instanceNumber: instanceNumber,
+                            memorySize: memorySize,
                             env: JSON.stringify(envVariables),
                             ipAlias: JSON.stringify(ipAlias),
                             searchParams: this.searchCriteria
