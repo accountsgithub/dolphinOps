@@ -197,7 +197,57 @@
     }
 }
 
+// 弹出框按键样式
+.dialogButtonW {
+    background: #ffffff;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    padding: 0 10px;
+    height:32px;
+    font-family: PingFangSC-Semibold;
+    font-size: 14px;
+    color: #606266;
+    letter-spacing: 0;
+    text-align: center;
+    /deep/.el-button{
+        background: #ffffff;
+        border: 1px solid #dcdfe6;
+        border-radius: 4px;
+        padding: 0 10px;
+        height:32px;
+        font-family: PingFangSC-Semibold;
+        font-size: 14px;
+        color: #606266;
+    }
+}
+.dialogButtonB{
+    background:#016ad5;
+    border-radius:4px;
+    padding: 0 10px;
+    height:32px;
+    font-family:PingFangSC-Semibold;
+    font-size:14px;
+    color:#ffffff;
+    letter-spacing:0;
+    text-align:center;
+    /deep/.el-button{
+        background:#016ad5;
+        border-radius:4px;
+        padding: 0 10px;
+        height:32px;
+        font-family:PingFangSC-Semibold;
+        font-size:14px;
+        color:#ffffff;
+    }
+}
+
 // element按键样式
-.el-button {
-    padding: 0 10px!important;
+/deep/.el-button{
+    background:$publicColor;
+    border-radius:4px;
+    padding: 0 10px;
+    height:32px;
+    font-family:PingFangSC-Semibold;
+    font-size:14px;
+    color:#ffffff;
 }

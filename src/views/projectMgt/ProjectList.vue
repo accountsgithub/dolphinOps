@@ -36,7 +36,7 @@
                     :data="list"
                     class="list"
                     highlight-current-row
-                    style="width: 100%"
+                    style="width: 100%;height: 63vh;overflow-y: auto;"
                     stripe>
                     <el-table-column
                         prop="name"
@@ -75,9 +75,10 @@
                         fixed="right"
                         label="操作">
                         <template slot-scope="scope">
-                            <a class="tableActionStyle" @click="dialogInfo(scope.row.id)">查看详情</a>
-                            <a class="tableActionStyle" @click="dialogChange(scope.row)">变更</a>
-                            <a class="tableActionStyle" @click="beginDeploy(scope.row)">启动</a>
+                            <a class="tableActionStyle" @click="dialogInfo(scope.row.id)" v-if="scope.row.state != '4' && scope.row.state != '5'">查看详情</a>
+                            <a class="tableActionStyle" @click="dialogChange(scope.row)" v-if="scope.row.state != '4' && scope.row.state != '5'">变更</a>
+                            <a class="tableActionStyle" @click="stopDeploy(scope.row)" v-if="scope.row.state == '1'">停止</a>
+                            <a class="tableActionStyle" @click="beginDeploy(scope.row)" v-else-if="scope.row.state != '1' && scope.row.state != '3'">启动</a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -116,7 +117,7 @@
                 :action="url">
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                <div class="el-upload__tip" slot="tip">只能上传rar/zip文件，且不超过10M</div>
+                <div class="el-upload__tip" slot="tip">只能上传rar/zip文件，且不超过100M</div>
             </el-upload>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="beforeClose" class="dialogButtonW">取消</el-button>
@@ -386,23 +387,54 @@ export default {
                 })
             }).catch(() => {
                 this.$message({
-                    type: 'error',
-                    message: '启动失败！'
+                    message: '操作已取消！'
                 })
             })
         },
+
+        // 停止
+        stopDeploy(val) {
+            this.$confirm('是否确认停止项目？', '确认停止', {
+                confirmButtonText: '确认',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '正在停止请稍后！'
+                })
+                let params = Object.assign({name: val.name})
+                this.getProjectStop(params).then(res => {
+                    if (res.data.result.status == '200') {
+                        this.searchProject()
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    message: '操作已取消！'
+                })
+            })
+        },
+
         beforeAvatarUpload(file) {
-            const isZip = file.type === 'application/zip'
+            let isZip = file.type === 'application/zip'
             const isLtM = file.size / 1024 / 1024 < 100
+            if (file.type == '' && file.name) {
+                let arrayTemp = file.name.split('.')
+                let fileType = arrayTemp[1]
+                isZip = fileType === 'rar'
+            }
             if (!isZip) {
                 this.$message.error('上传头像图片只能是 rar/zip 格式!')
             }
             if (!isLtM) {
-                this.$message.error('上传头像图片大小不能超过 10MB!')
+                this.$message.error('上传头像图片大小不能超过 100MB!')
             }
             return isZip && isLtM;
         },
         beforeClose(done) {
+            this.dialogExpoVisible = false
             this.fileList = []
             done()
         },

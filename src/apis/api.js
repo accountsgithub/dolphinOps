@@ -40,6 +40,10 @@ let API = {
 
     // 启动
     PROJECT_START: '/project/start',
+
+    // 停止
+    PROJECT_STOP: '/project/delete',
+
     // 历史查询
     PROJECT_HISTORYLIST: '/project/deploy/list.do',
     // 实例数查询

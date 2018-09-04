@@ -73,7 +73,7 @@ export const UPLOAD_MODE = [
 
 export const UPLOAD_TYPE = [
     {
-        label: 'bug修复,',
+        label: 'bug修复',
         value: 0
     },
     {

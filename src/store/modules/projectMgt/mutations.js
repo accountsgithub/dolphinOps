@@ -11,6 +11,10 @@ export default {
     },
     // 启动
     [TYPES.GET_PROJECT_START]() {},
+
+    //停止
+    [TYPES.GET_PROJECT_STOP]() {},
+
     // 历史查询
     [TYPES.GET_PROJECT_HISTORYLIST](state, payload) {
         const {pageNo, pageSize, total} = payload

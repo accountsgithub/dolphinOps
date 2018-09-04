@@ -33,6 +33,15 @@ export default {
             .then(({result}) => {commit(TYPES.GET_PROJECT_START, result)})
             .catch(error => Promise.reject(error))
     },
+
+    // 停止
+    getProjectStop({commit}, params) {
+        return axios.post(API.PROJECT_STOP, params)
+            .then(response => response.data)
+            .then(({result}) => {commit(TYPES.GET_PROJECT_STOP, result)})
+            .catch(error => Promise.reject(error))
+    },
+
     //历史查询
     getHistoryList({commit}, params) {
         return axios.post(API.PROJECT_HISTORYLIST, params)

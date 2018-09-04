@@ -249,8 +249,7 @@ export default {
                 })
             }).catch(() => {
                 this.$message({
-                    type: 'error',
-                    message: '切换版本失败！'
+                    message: '操作已取消！'
                 })
             })
         },
@@ -260,7 +259,7 @@ export default {
         },
 
         formatterUpdatedTime(row) {
-            return moment(row.updateTime).format(DATE_FORMAT)
+            return moment(row.createTime).format(DATE_FORMAT)
         },
 
         mappingUploadMode(value) {
