@@ -30,7 +30,7 @@
                                     fixed="right"
                                     label="操作">
                                     <template slot-scope="scope">
-                                        <!-- <a class="tableActionStyle" @click.prevent="openTerminal(scope.row.podName)">终端</a> -->
+                                         <a class="tableActionStyle" @click.prevent="openTerminal(scope.row.podName)">终端</a>
                                         <a class="tableActionStyle" :href="downloadHref(scope.row.podName)" target="_blank">下载日志</a>
                                         <a class="tableActionStyle" v-if="scope.row.monitorUrl != '<no value>'" :href="scope.row.monitorUrl" target="_blank">监控</a>
                                     </template>
