@@ -316,6 +316,7 @@ export default {
             defaultUploadList: [],
             // import end
             searchCriteria: {
+                mark: '',
                 name: '',
                 pageNo: 0,
                 pageSize: 10
@@ -540,6 +541,7 @@ export default {
 
         reset() {
             this.searchCriteria = {
+                mark: '',
                 name: '',
                 pageNo: 0,
                 pageSize: 10
