@@ -13,6 +13,11 @@
                         v-model="searchCriteria.name"
                         placeholder="项目名称"/>
                 </el-form-item>
+                <el-form-item label="项目标识">
+                    <el-input
+                        v-model="searchCriteria.mark"
+                        placeholder="项目标识"/>
+                </el-form-item>
                 <el-form-item>
                     <el-button
                         type="primary"
