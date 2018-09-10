@@ -1,23 +1,25 @@
 <template>
     <!-- search -->
     <div>
-        <search-panel>
+        <SearchPanel>
             <el-form
                 :inline="true"
                 size="small"
                 :model="searchCriteria"
                 class="formPanel"
                 label-width="80px">
-                <el-form-item label="项目名称">
-                    <el-input
-                        v-model="searchCriteria.name"
-                        placeholder="项目名称"/>
-                </el-form-item>
-                <el-form-item label="项目标识">
-                    <el-input
-                        v-model="searchCriteria.mark"
-                        placeholder="项目标识"/>
-                </el-form-item>
+                <div>
+                    <el-form-item label="项目名称">
+                        <el-input
+                            v-model="searchCriteria.name"
+                            placeholder="项目名称"></el-input>
+                    </el-form-item>
+                    <el-form-item label="项目标识">
+                        <el-input
+                            v-model="searchCriteria.mark"
+                            placeholder="项目标识"></el-input>
+                    </el-form-item>
+                </div>
                 <el-form-item>
                     <el-button
                         type="primary"
@@ -25,7 +27,7 @@
                     <el-button @click="reset" class="tableLastButtonStyleW icon iconfont icon-ic-refresh" style="margin-right: -10px;">重置</el-button>
                 </el-form-item>
             </el-form>
-        </search-panel>
+        </SearchPanel>
 
         <list-panel>
             <!-- header start -->
@@ -273,9 +275,10 @@ import {mapState, mapActions} from 'vuex'
 import { mappingValue} from '@/utils'
 import {MEMORY_SIZE} from '@/constants'
 import tableStatus from '@/components/Status'
-
+import {SearchPanel} from '@/components/layout'
 export default {
     components: {
+        SearchPanel,
         tableStatus
     },
 
@@ -740,4 +743,11 @@ export default {
             }
         }
     }
+
+    .formPanel {
+        width: 100% !important;
+        display: flex;
+        justify-content: space-between;
+    }
+
 </style>
