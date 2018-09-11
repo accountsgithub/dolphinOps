@@ -86,7 +86,7 @@
                         label="操作"
                         width="250">
                         <template slot-scope="scope">
-                            <a class="tableActionStyle" @click="dialogInfo(scope.row.id)" v-if="scope.row.state != '4' && scope.row.state != '5'">查看详情</a>
+                            <a class="tableActionStyle" @click="dialogInfo(scope.row)" v-if="scope.row.state != '4' && scope.row.state != '5'">查看详情</a>
                             <a class="tableActionStyle" @click="dialogChange(scope.row)" v-if="scope.row.state != '4' && scope.row.state != '5'">变更</a>
                             <a class="tableActionStyle" @click="stopDeploy(scope.row)" v-if="scope.row.state == '1'">停止</a>
                             <a class="tableActionStyle" @click="startUp(scope.row)" v-else-if="scope.row.state != '1' && scope.row.state != '3'">启动</a>
@@ -406,8 +406,9 @@ export default {
         },
 
         // 详情
-        dialogInfo(id) {
-            this.$router.push({name: 'detailedList', params: {id: id}})
+        dialogInfo(row) {
+            debugger
+            this.$router.push({name: 'detailedList', params: {id: row.id, proName: row.name}})
         },
         // 变更
         dialogChange(record) {

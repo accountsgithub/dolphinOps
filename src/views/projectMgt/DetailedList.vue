@@ -1,6 +1,6 @@
 <template>
     <div style="background: #ffffff">
-        <div style="border-bottom: 1px #edeff4 solid;height: 46px;line-height: 46px;"><span class="title-style">综合平台技术框架</span></div>
+        <div style="border-bottom: 1px #edeff4 solid;height: 46px;line-height: 46px;"><span class="title-style">{{proName}}</span></div>
         <div style="margin-top: 8px">
             <el-tabs type="border-card" @tab-click="tabChange">
                 <el-tab-pane label="实例数列表">
@@ -169,6 +169,7 @@ export default {
     name: 'DetailedList',
     data() {
         return {
+            proName: this.$route.params.proName,
             titleText: '',
             tabType: '0',
             searchExample: {

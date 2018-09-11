@@ -21,7 +21,7 @@ export const constantRouterMap = [
         hidden: true,
         children: [
             {
-                path: '/detailedList/:id',
+                path: '/detailedList/:id/:proName',
                 name: 'detailedList',
                 component: resolve => require(['@/views/projectMgt/DetailedList'], resolve),
                 meta: {...meta, title: '详细信息'}
