@@ -430,6 +430,7 @@ export default {
         whiteIpConfig(row) {
             this.whiteIpDialog=true
             this.whiteIpFrom.projectId=row.id
+            this.whiteIpFrom.whiteList=row.whiteList
         },
 
         saveWhiteIp() {
@@ -444,12 +445,7 @@ export default {
                         message: '添加成功！'
                     })
                     this.whiteIpDialog=false
-                }).catch(res => {
-                    this.$message({
-                        type: 'error',
-                        message: res.result
-                    })
-                });
+                })
         },
         //开始部署
         beginDeploy(val) {
