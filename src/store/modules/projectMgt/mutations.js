@@ -36,5 +36,8 @@ export default {
         })
     },
     // 上传部署包信息保存
-    [TYPES.GET_PROJECT_UPLOAD_CONFIG]() {}
+    [TYPES.GET_PROJECT_UPLOAD_CONFIG]() {},
+
+    //保存白名单
+    [TYPES.GET_WHITE_IP_SETTING]() {}
 }

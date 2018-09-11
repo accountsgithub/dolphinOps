@@ -83,13 +83,15 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                        label="操作">
+                        label="操作"
+                        width="250">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" @click="dialogInfo(scope.row.id)" v-if="scope.row.state != '4' && scope.row.state != '5'">查看详情</a>
                             <a class="tableActionStyle" @click="dialogChange(scope.row)" v-if="scope.row.state != '4' && scope.row.state != '5'">变更</a>
                             <a class="tableActionStyle" @click="stopDeploy(scope.row)" v-if="scope.row.state == '1'">停止</a>
                             <a class="tableActionStyle" @click="startUp(scope.row)" v-else-if="scope.row.state != '1' && scope.row.state != '3'">启动</a>
                             <a class="tableActionStyle" @click="beginDeploy(scope.row)" v-if="scope.row.deployStatus && scope.row.deployStatus == '5'">开始部署</a>
+                            <a class="tableActionStyle" @click="whiteIpConfig(scope.row)">白名单设置</a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -133,6 +135,17 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="beforeClose" class="dialogButtonW">取消</el-button>
             </span>
+        </el-dialog>
+        <el-dialog title="添加白名单" :visible.sync="whiteIpDialog" width="600px">
+            <el-form :model="whiteIpFrom" label-width="100px">
+                <el-form-item label="地址:">
+                    <el-input v-model="whiteIpFrom.whiteList" auto-complete="off" placeholder="请填写白名单地址,多个地址请用逗号 (',') 分隔"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="whiteIpDialog = false">取 消</el-button>
+                <el-button type="primary" @click="saveWhiteIp">确 定</el-button>
+            </div>
         </el-dialog>
         <el-dialog
             title="环境配置-编辑"
@@ -316,6 +329,7 @@ export default {
             // import begin
             dialogExpoVisible: false,
             envConfigDialog: false,
+            whiteIpDialog: false,
             url: `${this.g_Config.BASE_URL}/project/import.do`,
             exportData: {},
             fileList: [],
@@ -350,6 +364,10 @@ export default {
                 uploadType: 0,
                 interval: null,
             },
+            whiteIpFrom: {
+                projectId: '',
+                whiteList: ''
+            },
             statusArray: ['已停止','运行中','待部署','启动中','故障','初始','系统崩溃'],
             rules: {
                 instanceNumber: [
@@ -375,7 +393,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy']),
+        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy', 'setWhiteIp']),
 
         getPath(path) {
             if (path && /\[(.*)\]?/g.test(path)) {
@@ -406,6 +424,32 @@ export default {
             this.envConfigForm.ipAlias = record.ipAlias ? JSON.parse(record.ipAlias) : []
         },
 
+
+        //白名单设置
+        whiteIpConfig(row) {
+            this.whiteIpDialog=true
+            this.whiteIpFrom.projectId=row.id
+        },
+
+        saveWhiteIp() {
+            const params = {
+                projectId: this.whiteIpFrom.projectId,
+                whiteList: this.whiteIpFrom.whiteList
+            }
+            this.setWhiteIp(params)
+                .then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '添加成功！'
+                    })
+                    this.whiteIpDialog=false
+                }).catch(res => {
+                    this.$message({
+                        type: 'error',
+                        message: res.result
+                    })
+                });
+        },
         //开始部署
         beginDeploy(val) {
             this.$confirm('是否确认部署项目？', '确认部署', {

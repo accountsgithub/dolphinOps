@@ -59,7 +59,9 @@ let API = {
     // 实例数查询
     PROJECT_EXAMPLELIST: '/project/instance/list.do',
     // 版本切换
-    PROJECT_CHANGEVERSION: '/project/deploy'
+    PROJECT_CHANGEVERSION: '/project/deploy',
+    //白名单设置
+    WHITE_IP_SETTING: '/project/white_set'
 }
 
 // if (process.env.NODE_ENV === 'development') {

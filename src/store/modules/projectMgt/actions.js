@@ -26,6 +26,13 @@ export default {
             .then(({result}) => {commit(TYPES.GET_PROJECT_UPLOAD_CONFIG, result)})
             .catch(error => Promise.reject(error))
     },
+    // 白名单设置
+    setWhiteIp({commit},params) {
+        return axios.get(API.WHITE_IP_SETTING ,{params})
+            .then(response => response.data)
+            .then(({result}) => {commit(TYPES.GET_WHITE_IP_SETTING,result)})
+            .catch(error => Promise.reject(error))
+    },
 
     // 开始部署
     getProjectDeploy({commit}, params) {

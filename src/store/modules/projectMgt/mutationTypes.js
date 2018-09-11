@@ -18,3 +18,5 @@ export const GET_PROJECT_HISTORYLIST = 'getHistoryList'
 export const GET_PROJECT_EXAMPLELIST = 'getExampleList'
 // 版本切换
 export const GET_PROJECT_CHANGEVERSION = 'changeVersion'
+// 白名单设置
+export const GET_WHITE_IP_SETTING= 'whiteIp'
