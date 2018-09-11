@@ -91,7 +91,7 @@
                             <a class="tableActionStyle" @click="stopDeploy(scope.row)" v-if="scope.row.state == '1'">停止</a>
                             <a class="tableActionStyle" @click="startUp(scope.row)" v-else-if="scope.row.state != '1' && scope.row.state != '3'">启动</a>
                             <a class="tableActionStyle" @click="beginDeploy(scope.row)" v-if="scope.row.deployStatus && scope.row.deployStatus == '5'">开始部署</a>
-                            <a class="tableActionStyle" @click="whiteIpConfig(scope.row)">白名单设置</a>
+                            <a class="tableActionStyle" v-if="ifprod" @click="whiteIpConfig(scope.row)">白名单设置</a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -390,6 +390,16 @@ export default {
                     { validator: nameValidate, trigger: 'blur' }
                 ]
             },
+            basePath: '',
+            ifprod: false
+        }
+    },
+    created: function() {
+        var location = (`${window.location}`).split('/');
+        var path= location[2];
+        this.basePath=path;
+        if (path.indexOf('prod')!==-1) {
+            this.ifprod=true;
         }
     },
     methods: {
@@ -407,7 +417,6 @@ export default {
 
         // 详情
         dialogInfo(row) {
-            debugger
             this.$router.push({name: 'detailedList', params: {id: row.id, proName: row.name}})
         },
         // 变更
@@ -430,6 +439,7 @@ export default {
         whiteIpConfig(row) {
             this.whiteIpDialog=true
             this.whiteIpFrom.projectId=row.id
+            this.whiteIpFrom.whiteList=row.whiteList
         },
 
         saveWhiteIp() {
@@ -444,12 +454,7 @@ export default {
                         message: '添加成功！'
                     })
                     this.whiteIpDialog=false
-                }).catch(res => {
-                    this.$message({
-                        type: 'error',
-                        message: res.result
-                    })
-                });
+                })
         },
         //开始部署
         beginDeploy(val) {
