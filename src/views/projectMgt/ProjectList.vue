@@ -417,7 +417,6 @@ export default {
 
         // 详情
         dialogInfo(row) {
-            debugger
             this.$router.push({name: 'detailedList', params: {id: row.id, proName: row.name}})
         },
         // 变更
