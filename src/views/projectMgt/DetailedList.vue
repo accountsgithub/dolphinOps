@@ -155,14 +155,16 @@
 <script>
 import {mapActions, mapState} from 'vuex'
 import {DATE_FORMAT} from '@/constants'
-import { mappingValue } from '@/utils'
+import { mappingValue, trim } from '@/utils'
 import {UPLOAD_MODE, UPLOAD_TYPE} from '@/constants'
 import * as fit from 'xterm/lib/addons/fit/fit'
 import * as attach from 'xterm/lib/addons/attach/attach'
+import * as search from 'xterm/lib/addons/search/search'
 import { Terminal } from 'xterm'
 require('xterm/dist/xterm.css')
 Terminal.applyAddon(fit)
 Terminal.applyAddon(attach)
+Terminal.applyAddon(search)
 let term
 let cmdStr
 export default {
@@ -184,11 +186,16 @@ export default {
                 pageSize: 10
             },
             dialogVisible: false,
-            websocket: null
+            websocket: null,
+            commondStr: ''
         }
     },
     mounted() {
         this.searchListMethod()
+        window.addEventListener('resize', this.resizeScreen, false)
+    },
+    resizeScreen() {
+        term.fit()
     },
     /*eslint-disable*/
     methods: {
@@ -252,6 +259,9 @@ export default {
                 }
                 else if (cmdStr=='\u0003') {
                     term.write(wirteData)
+                } 
+                else {
+                    term.write(wirteData)
                 }
                 console.log(escape(wirteData))
             }
@@ -270,18 +280,24 @@ export default {
 
             //term实时监控输入的数据，并且websocket把实时数据发送给后台
             term.on('data', (data) => {
-                // 订阅返回消息无响应时用到的临时写
-                if (escape(data) == '%7F') {
-                    term.write(unescape('%08%20%08'))
-                }
-                else if (data === '\t'||data==='\f'||data=='\u001b[A'||data=='\u001b[B') {
-                    term.write('')
-                }
-                else {
-                    term.write(data)
+                if (escape(data) !== '%7F' && data !== '\t' || data !=='\f' || data !=='\u001b[A' || data !=='\u001b[B') {
+                   this.commondStr += data
                 }
                 this.sendInput(data)
             })
+            term.attachCustomKeyEventHandler( (e) => {
+                const commondStr = trim(this.commondStr)
+                if (e.keyCode == 13) {
+                  console.log('enter')
+                  if (commondStr.startsWith('sz')) {
+                      console.log('download file')
+                  } else {
+                      this.sendInput('\n')
+                  }       
+                  this.commondStr = ''       
+                  return false
+                }
+            });
             term.on('title', () => {
                 document.title = 'dolphin-web-term'
             })

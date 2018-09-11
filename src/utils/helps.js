@@ -8,7 +8,7 @@ export const capitalizeEveryWord = str => str.replace(/\b[a-z]/g, char => char.t
  * @returns Object 下拉数据
  */
 export const generatedOptions = (labelProp = 'label', valueProp = 'value') => (originSource) => {
-    return Object.keys(originSource).map(key => ({[labelProp]: key, [valueProp]: originSource[key]}))
+    return Object.keys(originSource).map(key => ({ [labelProp]: key, [valueProp]: originSource[key] }))
 }
 
 /**
@@ -50,4 +50,11 @@ export const delCookie = (name) => {
     if (cval != null) {
         document.cookie = name + '=' + cval + ';expires=' + exp.toGMTString()//eslint-disable-line
     }
+}
+
+export const trim = (str) => {
+    if (Object.prototype.toString.call(str) === '[object String]') {
+        return str.trim()
+    }
+    return str
 }
