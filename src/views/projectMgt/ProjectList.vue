@@ -395,9 +395,8 @@ export default {
         }
     },
     created: function() {
-        var location = ('http://dev.ctsp.kedacom.com/dolphin-ops/#/projectMgt/index').split('/');
+        var location = (`${window.location}`).split('/');
         var path= location[2];
-        console.log(path)
         this.basePath=path;
         if (path.indexOf('prod')!==-1) {
             this.ifprod=true;
