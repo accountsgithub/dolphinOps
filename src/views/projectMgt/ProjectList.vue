@@ -91,7 +91,7 @@
                             <a class="tableActionStyle" @click="stopDeploy(scope.row)" v-if="scope.row.state == '1'">停止</a>
                             <a class="tableActionStyle" @click="startUp(scope.row)" v-else-if="scope.row.state != '1' && scope.row.state != '3'">启动</a>
                             <a class="tableActionStyle" @click="beginDeploy(scope.row)" v-if="scope.row.deployStatus && scope.row.deployStatus == '5'">开始部署</a>
-                            <a class="tableActionStyle" @click="whiteIpConfig(scope.row)">白名单设置</a>
+                            <a class="tableActionStyle" v-if="ifprod" @click="whiteIpConfig(scope.row)">白名单设置</a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -390,6 +390,17 @@ export default {
                     { validator: nameValidate, trigger: 'blur' }
                 ]
             },
+            basePath: '',
+            ifprod: false
+        }
+    },
+    created: function() {
+        var location = ('http://dev.ctsp.kedacom.com/dolphin-ops/#/projectMgt/index').split('/');
+        var path= location[2];
+        console.log(path)
+        this.basePath=path;
+        if (path.indexOf('prod')!==-1) {
+            this.ifprod=true;
         }
     },
     methods: {
