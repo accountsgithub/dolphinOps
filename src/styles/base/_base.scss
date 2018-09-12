@@ -38,6 +38,10 @@ html {
     background: #0AD682 !important;
 }
 
+#nprogress .spinner {
+    display: none;
+}
+
 //滚动条
 .info-style {
     height: 160px;
