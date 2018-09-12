@@ -280,22 +280,31 @@ export default {
 
             //term实时监控输入的数据，并且websocket把实时数据发送给后台
             term.on('data', (data) => {
-                if (escape(data) !== '%7F' && data !== '\t' || data !=='\f' || data !=='\u001b[A' || data !=='\u001b[B') {
+                if (escape(data) !== '%7F' ||data !=='\u001b[A' || data !=='\u001b[B') {
                    this.commondStr += data
                 }
                 this.sendInput(data)
             })
             term.attachCustomKeyEventHandler( (e) => {
-                const commondStr = trim(this.commondStr)
+                // console.log('commnd: ' + this.commondStr + 'length: ' + this.commondStr.length)
+                let commondStr = ''
                 if (e.keyCode == 13) {
+                  commondStr =  trim(this.commondStr)
                   console.log('enter')
                   if (commondStr.startsWith('sz')) {
                       console.log('download file')
+                      return false
                   } else {
-                      this.sendInput('\n')
+                    //   this.sendInput('\n')
+                      this.commondStr = ''     
+                      return true
                   }       
-                  this.commondStr = ''       
-                  return false
+                  
+                } else if (e.keyCode == 8) {
+                    commondStr = this.commondStr
+                    if (commondStr.length > 0) {
+                        this.commondStr = commondStr.substring(0, commondStr.length -2)
+                    }
                 }
             });
             term.on('title', () => {
@@ -304,7 +313,7 @@ export default {
             //屏幕将要在哪里展示，就是屏幕展示的地方
             term.open(document.getElementById('container-terminal'))
 
-            this.sendInput('\n')
+            // this.sendInput('\n')
         },
         sendInput(input) {
             cmdStr=input
