@@ -290,16 +290,13 @@ export default {
                 let commondStr = ''
                 if (e.keyCode == 13) {
                   commondStr =  trim(this.commondStr)
-                  console.log('enter')
                   if (commondStr.startsWith('sz')) {
                       console.log('download file')
                       return false
                   } else {
-                    //   this.sendInput('\n')
                       this.commondStr = ''     
                       return true
                   }       
-                  
                 } else if (e.keyCode == 8) {
                     commondStr = this.commondStr
                     if (commondStr.length > 0) {
