@@ -88,7 +88,6 @@ export default {
                                 delCookie('username')
                                 delCookie('PW')
                             }
-
                             router.push('projectMgt/index')
                         })
 

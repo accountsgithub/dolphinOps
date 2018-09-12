@@ -11,6 +11,23 @@ export default {
             .catch(error => Promise.reject(error))
     },
 
+    async getCurrentProject() {
+        const params = {
+            name: '',
+            mark: '',
+            pageNo: 0,
+            pageSize: 10
+        }
+        return axios.get(API.PROJECT_LIST, {params}).then(response => {
+            if (response.data && response.data.code === '0' && response.data.result ) {
+                const list = response.data.result.data
+                return list && list.length > 0 ? list[8] : {}
+            } else {
+                Promise.resolve({})
+            }
+        }).catch(error => Promise.reject(error))
+    },
+
     async saveEnv({dispatch}, params) {
         try {
             await axios.post(API.PROJECT_ENV_CONFIG, params).then(response => response.data)

@@ -1,6 +1,35 @@
 <template>
     <div style="background: #ffffff">
-        <div style="border-bottom: 1px #edeff4 solid;height: 46px;line-height: 46px;"><span class="title-style">{{proName}}</span></div>
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span class="title-style">{{proName}}</span>
+                <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+            </div>
+            <el-row :gutter="20">
+                <el-form>
+                    <el-col :span="6">
+                        <el-form-item label="实例数:">
+                            {{project.instanceNumber}}
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="内存（MB）:">
+                            {{project.memorySize}}
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="当前版本：">
+                            {{project.version}}
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="外部路径：">
+                            <a class="pathHerf" :href="getPath(project.path)" target="_blank">{{getPath(project.path)}}</a>
+                        </el-form-item>
+                    </el-col>
+                </el-form>
+            </el-row>
+        </el-card>
         <div style="margin-top: 8px">
             <el-tabs type="border-card" @tab-click="tabChange">
                 <el-tab-pane label="实例数列表">
@@ -171,6 +200,7 @@ export default {
     name: 'DetailedList',
     data() {
         return {
+            project: {},
             proName: this.$route.params.proName,
             titleText: '',
             tabType: '0',
@@ -190,7 +220,21 @@ export default {
             commondStr: ''
         }
     },
-    mounted() {
+    async mounted() {
+        // project
+        if (JSON.parse(localStorage.getItem('token')) === 'admin') {
+            const project = await this.getCurrentProject({
+                name: '',
+                mark: '',
+                pageNo: 0,
+                pageSize: 10
+            })
+            console.log(project)
+            this.searchExample['projectId'] = project.id
+            this.searchCriteria['projectId'] = project.id
+            this.proName =  project.name
+            this.project = project
+        }
         this.searchListMethod()
         window.addEventListener('resize', this.resizeScreen, false)
     },
@@ -199,6 +243,11 @@ export default {
     },
     /*eslint-disable*/
     methods: {
+        getPath(path) {
+            if (path && /\[(.*)\]?/g.test(path)) {
+                return JSON.parse(path)[0]
+            }
+        },
         openTerminal(podName) {
             this.dialogVisible = true
             this.$nextTick(() => {
@@ -326,7 +375,7 @@ export default {
             }
             return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()} ${s4()}${s4()}`
         },
-        ...mapActions(['getHistoryList', 'getExampleList', 'changeVersion']),
+        ...mapActions(['getHistoryList', 'getExampleList', 'changeVersion','getCurrentProject']),
         // 历史查询
         searchListMethod() {
             if (this.tabType == '0') {
@@ -439,7 +488,6 @@ export default {
         color:#3a3a3a;
         letter-spacing:0;
         font-weight: 800;
-        margin-left: 21px;
     }
     .tableActionStyle{
         font-family:PingFangSC-Medium;
@@ -451,5 +499,8 @@ export default {
     }
     /deep/.mainContainer__header {
         padding: 0!important;
+    }
+    .pathHerf {
+        color: #016ad5 !important;
     }
 </style>

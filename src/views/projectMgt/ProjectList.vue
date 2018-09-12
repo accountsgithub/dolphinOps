@@ -12,11 +12,13 @@
                     <el-form-item label="项目名称">
                         <el-input
                             v-model="searchCriteria.name"
+                            @keyup.enter.native="searchProject"
                             placeholder="项目名称"></el-input>
                     </el-form-item>
                     <el-form-item label="项目标识">
                         <el-input
                             v-model="searchCriteria.mark"
+                            @keyup.enter.native="searchProject"
                             placeholder="项目标识"></el-input>
                     </el-form-item>
                 </div>
@@ -130,7 +132,7 @@
                 :action="url">
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                <div class="el-upload__tip" slot="tip">只能上传rar/zip文件，且不超过100M</div>
+                <div class="el-upload__tip" slot="tip">只能上传rar/zip文件，且不超过200M</div>
             </el-upload>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="beforeClose" class="dialogButtonW">取消</el-button>
@@ -537,7 +539,7 @@ export default {
 
         beforeAvatarUpload(file) {
             let isZip = file.type.indexOf('zip') !== -1 || file.type.indexOf('rar') !== -1
-            const isLtM = file.size / 1024 / 1024 < 100
+            const isLtM = file.size / 1024 / 1024 < 200
             if (file.type == '' && file.name) {
                 let arrayTemp = file.name.split('.')
                 let fileType = arrayTemp[1]
@@ -547,7 +549,7 @@ export default {
                 this.$message.error('上传文件类型只能是 rar/zip 格式!')
             }
             if (!isLtM) {
-                this.$message.error('上传文件大小不能超过 100MB!')
+                this.$message.error('上传文件大小不能超过 200MB!')
             }
             return isZip && isLtM;
         },
@@ -705,8 +707,7 @@ export default {
 
     destroyed() {
         clearInterval(this.interval)
-    },
-
+    }
 }
 </script>
 

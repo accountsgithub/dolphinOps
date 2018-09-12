@@ -42,7 +42,18 @@ export const constantRouterMap = [
             {
                 path: 'index',
                 name: 'projectManagement',
-                component: resolve => require(['@/views/projectMgt/ProjectList'], resolve),
+                component: resolve => {
+                    try {
+                        if (JSON.parse(localStorage.getItem('token')) === 'admin') {
+                            return require(['@/views/projectMgt/DetailedList'], resolve)
+                        } else {
+                            return require(['@/views/projectMgt/ProjectList'], resolve)
+                        }
+                    }
+                    catch (err) {
+                        return require(['@/views/projectMgt/ProjectList'], resolve)
+                    }
+                },
                 meta: {...meta, title: '项目管理', icon: 'project'}
             }
         ]
