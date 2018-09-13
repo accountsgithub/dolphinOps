@@ -1,0 +1,62 @@
+<template>
+    <el-dialog title="添加白名单" :visible.sync="dialogVisible" width="600px">
+        <el-form :model="whiteIpFrom" label-width="100px">
+            <el-form-item label="地址:">
+                <el-input v-model="whiteIpFrom.whiteList" auto-complete="off" placeholder="请填写白名单地址,多个地址请用逗号 (',') 分隔"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="cancelWhiteIp">取 消</el-button>
+            <el-button type="primary" @click="saveWhiteIp">确 定</el-button>
+        </div>
+    </el-dialog>
+</template>
+<script>
+import { mapActions } from 'vuex'
+export default {
+    name: 'WhiteList',
+    props: {
+        whiteIpDialog: {
+            type: Boolean
+        },
+        whiteIpFrom: {
+            type: Object
+        }
+    },
+    computed: {
+        dialogVisible: {
+            get() {
+                return this.whiteIpDialog
+            },
+            set() {
+                this.$emit('update:close')
+            }
+        }
+    },
+    methods: {
+        ...mapActions(['setWhiteIp']),
+        cancelWhiteIp() {
+            this.$emit('update:close')
+        },
+        saveWhiteIp() {
+            const params = {
+                projectId: this.whiteIpFrom.projectId,
+                whiteList: this.whiteIpFrom.whiteList
+            }
+            this.setWhiteIp(params)
+                .then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '添加成功！'
+                    })
+                    this.$emit('update:close')
+                    location.reload()
+                    // location.href = location.href
+                })
+        }
+    }
+}
+</script>
+<style lang="scss" scoped>
+
+</style>

@@ -44,7 +44,7 @@ export const constantRouterMap = [
                 name: 'projectManagement',
                 component: resolve => {
                     try {
-                        if (JSON.parse(localStorage.getItem('token')) === 'admin') {
+                        if (JSON.parse(localStorage.getItem('token')) === 'project') {
                             return require(['@/views/projectMgt/DetailedList'], resolve)
                         } else {
                             return require(['@/views/projectMgt/ProjectList'], resolve)

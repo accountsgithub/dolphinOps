@@ -11,17 +11,11 @@ export default {
             .catch(error => Promise.reject(error))
     },
 
-    async getCurrentProject() {
-        const params = {
-            name: '',
-            mark: '',
-            pageNo: 0,
-            pageSize: 10
-        }
+    async getCurrentProject(data, params) {
         return axios.get(API.PROJECT_LIST, {params}).then(response => {
             if (response.data && response.data.code === '0' && response.data.result ) {
                 const list = response.data.result.data
-                return list && list.length > 0 ? list[8] : {}
+                return list && list.length > 0 ? list[0] : {}
             } else {
                 Promise.resolve({})
             }
@@ -31,7 +25,9 @@ export default {
     async saveEnv({dispatch}, params) {
         try {
             await axios.post(API.PROJECT_ENV_CONFIG, params).then(response => response.data)
-            await dispatch('getProjectList', params.searchParams)
+            if (params.isAdmin === '1') {
+                await dispatch('getProjectList', params.searchParams)
+            }
         } catch (error) {
             return Promise.reject(error)
         }
@@ -52,26 +48,29 @@ export default {
     },
 
     // 开始部署
-    getProjectDeploy({commit}, params) {
+    getProjectDeploy(data, params) {
         return axios.get(API.PROJECT_DEPLOY, {params})
-            .then(response => response.data)
-            .then(({result}) => {commit(TYPES.GET_PROJECT_DEPLOY, result)})
+            .then(response => {
+                return response.data
+            })
             .catch(error => Promise.reject(error))
     },
 
     // 启动
-    getProjectStart({commit}, params) {
+    getProjectStart(data, params) {
         return axios.post(API.PROJECT_START, params)
-            .then(response => response.data)
-            .then(({result}) => {commit(TYPES.GET_PROJECT_START, result)})
+            .then(response => {
+                return response.data
+            })
             .catch(error => Promise.reject(error))
     },
 
     // 停止
-    getProjectStop({commit}, params) {
+    getProjectStop(data, params) {
         return axios.get(API.PROJECT_STOP, {params})
-            .then(response => response.data)
-            .then(({result}) => {commit(TYPES.GET_PROJECT_STOP, result)})
+            .then(response => {
+                return response.data
+            })
             .catch(error => Promise.reject(error))
     },
 

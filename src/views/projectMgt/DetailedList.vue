@@ -2,8 +2,22 @@
     <div style="background: #ffffff">
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <span class="title-style">{{proName}}</span>
-                <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+                <div class="title-style">
+                    {{proName}}
+                    <span v-if="project.stateTxt == '已停止'" class="prj-status">{{project.stateTxt}}</span>
+                    <span v-else-if="project.stateTxt == '运行中'" class="prj-status prj-status-agree">{{project.stateTxt}}</span>
+                    <span v-else-if="project.stateTxt == '故障'" class="prj-status prj-status-back">{{project.stateTxt}}</span>
+                    <span v-else-if="project.stateTxt == '初始'" class="prj-status prj-status-default">{{project.stateTxt}}</span>
+                    <span v-else-if="project.stateTxt == '启动中'" class="prj-status prj-status-begin">{{project.stateTxt}}</span>
+                    <span v-else-if="project.stateTxt == '系统崩溃'" class="prj-status prj-status-error">{{project.stateTxt}}</span>
+                    
+                    <el-button class="prj-btn import-btn" type="primary" @click="importDialog" icon="el-icon-upload">导入部署包</el-button>
+                    <el-button class="prj-btn" type="default" @click="startUp" v-if="project.state !== 1 && project.state !== 3">启动</el-button>
+                    <el-button class="prj-btn" type="default" @click="stopDeploy(project)" v-if="project.state === 1">停止</el-button>
+                    <el-button class="prj-btn" type="default" @click="beginDeploy(project)" v-if="project.deployStatus && project.deployStatus === 5">开始部署</el-button>
+                    <el-button class="prj-btn" type="default" @click="whiteIpConfig(project)" v-if="ifprod">白名单设置</el-button>
+                    <el-button class="prj-btn" type="default" @click="dialogChange" v-if="project.state !== 4 && project.state !== 3">变更</el-button>
+                </div>
             </div>
             <el-row :gutter="20">
                 <el-form>
@@ -178,6 +192,28 @@
                    width="960px">
             <div id="container-terminal"></div>
         </el-dialog>
+        <env-modify
+            v-on:update:close="envDialogOnClose"
+            v-on:add:item="addNewItem"
+            v-on:delete:item="deleteItem"
+            v-on:update:uploadType="handelUploadType"
+            :onClose="envDialogOnClose"
+            :envConfigDialog.sync="envConfigDialog" 
+            :envConfigForm.sync="envConfigForm" 
+            :dialogType.sync="dialogType" 
+            :importId.sync="importId" 
+            isAdmin="0">
+        </env-modify>
+        <import-package 
+            v-on:update:close="handleImportDialogClose"
+            v-on:env:dialog:open="handleEnvDialogOpen"
+            :dialogExpoVisible.sync="dialogExpoVisible">
+        </import-package>
+        <white-list
+            v-on:update:close="handleWhiteIpDialogClose"
+            :whiteIpDialog.sync="whiteIpDialog"
+            :whiteIpFrom.sync="whiteIpFrom"
+        ></white-list>
     </div>
 </template>
 
@@ -186,6 +222,9 @@ import {mapActions, mapState} from 'vuex'
 import {DATE_FORMAT} from '@/constants'
 import { mappingValue, trim } from '@/utils'
 import {UPLOAD_MODE, UPLOAD_TYPE} from '@/constants'
+import EnvModify from './part/EnvModify'
+import ImportPackage from './part/ImportPackage'
+import WhiteList from './part/WhiteList'
 import * as fit from 'xterm/lib/addons/fit/fit'
 import * as attach from 'xterm/lib/addons/attach/attach'
 import * as search from 'xterm/lib/addons/search/search'
@@ -198,6 +237,11 @@ let term
 let cmdStr
 export default {
     name: 'DetailedList',
+    components: {
+        'env-modify': EnvModify,
+        'import-package': ImportPackage,
+        'white-list': WhiteList
+    },
     data() {
         return {
             project: {},
@@ -217,23 +261,55 @@ export default {
             },
             dialogVisible: false,
             websocket: null,
-            commondStr: ''
+            commondStr: '',
+            envConfigForm: {
+                projectId: '',
+                instanceNumber: '',
+                memorySize: '',
+                envVariables: [],
+                ipAlias: [],
+
+                // 上传
+                auditor: 'admin',
+                desc: '',
+                uploadType: 0,
+                interval: null,
+            },
+            envConfigDialog: false,
+            importId: '',
+            dialogType: 'upload',
+            dialogExpoVisible: false,
+            whiteIpFrom: {
+                projectId: '',
+                whiteList: ''
+            },
+            whiteIpDialog: false,
+            ifprod: false
+        }
+    },
+    created: function() {
+        var location = (`${window.location}`).split('/');
+        var path= location[2];
+        this.basePath=path;
+        if (path.indexOf('prod')!==-1) {
+            this.ifprod=true;
         }
     },
     async mounted() {
         // project
-        if (JSON.parse(localStorage.getItem('token')) === 'admin') {
+        if (JSON.parse(localStorage.getItem('token')) === 'project') {
             const project = await this.getCurrentProject({
                 name: '',
                 mark: '',
                 pageNo: 0,
                 pageSize: 10
             })
-            console.log(project)
             this.searchExample['projectId'] = project.id
             this.searchCriteria['projectId'] = project.id
             this.proName =  project.name
             this.project = project
+        } else {
+            this.getProject()
         }
         this.searchListMethod()
         window.addEventListener('resize', this.resizeScreen, false)
@@ -358,8 +434,6 @@ export default {
             })
             //屏幕将要在哪里展示，就是屏幕展示的地方
             term.open(document.getElementById('container-terminal'))
-
-            // this.sendInput('\n')
         },
         sendInput(input) {
             cmdStr=input
@@ -375,7 +449,7 @@ export default {
             }
             return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()} ${s4()}${s4()}`
         },
-        ...mapActions(['getHistoryList', 'getExampleList', 'changeVersion','getCurrentProject']),
+        ...mapActions(['getHistoryList', 'getExampleList', 'changeVersion','getCurrentProject','getProjectStart','getProjectStop','getProjectDeploy']),
         // 历史查询
         searchListMethod() {
             if (this.tabType == '0') {
@@ -389,14 +463,12 @@ export default {
         // 历史重置
         reset() {
             this.searchCriteria = {
-                projectId: this.$route.params.id,
+                projectId: this.project ? this.project.id :this.$route.params.id,
                 creatorName: '',
                 pageNo: 0,
                 pageSize: 10
             }
         },
-
-
         // 切换tab
         tabChange(val) {
             this.tabType = val.index
@@ -471,6 +543,150 @@ export default {
         mappingUploadType(value) {
             return mappingValue(value)(UPLOAD_TYPE)
         },
+        async getProject() {
+            const project = await this.getCurrentProject({
+                projectId: this.project.id || this.$route.params.id,
+                name: '',
+                mark: '',
+                pageNo: 0,
+                pageSize: 10
+            })
+            this.project = project ? project : {}
+        },
+        //开始部署
+        beginDeploy(val) {
+            this.$confirm('是否确认部署项目？', '确认部署', {
+                confirmButtonText: '确认',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '正在部署请稍后！'
+                })
+                let params = Object.assign({id: val.desireDeployId})
+                this.getProjectDeploy(params).then(res => {
+                    if (res.status === 200) {
+                        this.getProject()
+                    }
+                })
+            }).catch((
+            ) => {
+                this.$message({
+                    message: '操作已取消！'
+                })
+            })
+        },
+        // 启动
+        startUp(val) {
+            const _this = this
+            const params = {
+                projectId: this.project.id,
+                instance: this.project.instanceNumber,
+                memory: this.project.memorySize
+            }
+            this.$confirm('是否确认启动项目？', '确认启动', {
+                confirmButtonText: '确认',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '正在启动请稍后！'
+                })
+                this.getProjectStart(params).then(res => {
+                    if (res.status === 200) {
+                        this.getProject()
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    message: '操作已取消！'
+                })
+            })
+        },
+        // 停止
+        stopDeploy(val) {
+            const _this = this
+            this.$confirm('是否确认停止项目？', '确认停止', {
+                confirmButtonText: '确认',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '正在停止请稍后！'
+                })
+                let params = Object.assign({name: val.mark})
+                this.getProjectStop(params).then(res => {
+                    if (res.status === 200) {
+                        this.getProject()
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    message: '操作已取消！'
+                })
+            })
+        },
+        //白名单设置
+        whiteIpConfig(row) {
+            this.whiteIpDialog=true
+            this.whiteIpFrom.projectId=row.id
+            this.whiteIpFrom.whiteList=row.whiteList
+        },
+        handleWhiteIpDialogClose() {
+             this.whiteIpDialog=false
+        },
+        // 变更
+        dialogChange(record) {
+            this.dialogType = ''
+            this.envConfigForm.version = ''
+            this.envConfigForm.desc = ''
+            this.envConfigForm.uploadType = 0
+
+            this.envConfigDialog = true
+            this.envConfigForm.projectId = this.project.id
+            this.envConfigForm.instanceNumber = this.project.instanceNumber
+            this.envConfigForm.memorySize = this.project.memorySize
+            this.envConfigForm.envVariables = this.project.env ? JSON.parse(this.project.env) : []
+            this.envConfigForm.ipAlias = this.project.ipAlias ? JSON.parse(this.project.ipAlias) : []
+        },
+        // 变更取消
+        envDialogOnClose(){
+            this.envConfigDialog = false;
+            this.envConfigForm.uploadType = '0';
+        },
+        addNewItem(prop){
+            this.envConfigForm[prop].push({ isNew: true });
+        },
+        deleteItem(row, prop){
+            this.envConfigForm[prop] = this.envConfigForm[prop].filter(
+                item => item != row
+            );
+        },
+        handelUploadType(type){
+            this.envConfigForm.uploadType = type;
+        },
+        importDialog() {
+            this.dialogExpoVisible = true;
+        },
+        handleImportDialogClose() {
+            this.dialogExpoVisible = false;
+        },
+        handleEnvDialogOpen(file) {
+            if (file.result) {
+                this.envConfigForm.auditor = file.result.auditorName
+                this.envConfigForm.instanceNumber = file.result.instanceNumber
+                this.envConfigForm.memorySize = file.result.memorySize
+                this.importId = file.result.id
+            }
+            this.dialogType = 'upload'
+            this.envConfigDialog = true
+        }
     },
     computed: {
         ...mapState ({
@@ -502,5 +718,36 @@ export default {
     }
     .pathHerf {
         color: #016ad5 !important;
+    }
+    .prj-status {
+        display: inline-block;
+        margin-left: 9px;
+        padding: 0 7px;
+        border-radius:2px;
+        font-size:12px;
+        color:#ffffff;
+        letter-spacing:0;
+        text-align:left;
+    }
+    .prj-status-agree {
+        background: #0dcf5f;
+    }
+    .prj-status-back {
+         background: #fc5555;
+    }
+    .prj-status-default {
+         background: #b5b5b5;
+    }
+    .prj-status-begin {
+         background: #0000FF;
+    }
+    .prj-status-error {
+        background: #fb4646;
+    }
+    .prj-btn {
+        float: right;
+    }
+    .import-btn {
+        margin-left: 10px;
     }
 </style>

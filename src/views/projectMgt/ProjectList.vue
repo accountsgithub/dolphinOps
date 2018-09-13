@@ -88,11 +88,11 @@
                         label="操作"
                         width="250">
                         <template slot-scope="scope">
-                            <a class="tableActionStyle" @click="dialogInfo(scope.row)" v-if="scope.row.state != '4' && scope.row.state != '5'">查看详情</a>
-                            <a class="tableActionStyle" @click="dialogChange(scope.row)" v-if="scope.row.state != '4' && scope.row.state != '5'">变更</a>
-                            <a class="tableActionStyle" @click="stopDeploy(scope.row)" v-if="scope.row.state == '1'">停止</a>
-                            <a class="tableActionStyle" @click="startUp(scope.row)" v-else-if="scope.row.state != '1' && scope.row.state != '3'">启动</a>
-                            <a class="tableActionStyle" @click="beginDeploy(scope.row)" v-if="scope.row.deployStatus && scope.row.deployStatus == '5'">开始部署</a>
+                            <a class="tableActionStyle" @click="dialogInfo(scope.row)" v-if="scope.row.state !== 4 && scope.row.state !== 5">查看详情</a>
+                            <a class="tableActionStyle" @click="dialogChange(scope.row)" v-if="scope.row.state !== 4 && scope.row.state !== 5">变更</a>
+                            <a class="tableActionStyle" @click="stopDeploy(scope.row)" v-if="scope.row.state === 1">停止</a>
+                            <a class="tableActionStyle" @click="startUp(scope.row)" v-else-if="scope.row.state !== 1 && scope.row.state !== 3">启动</a>
+                            <a class="tableActionStyle" @click="beginDeploy(scope.row)" v-if="scope.row.deployStatus && scope.row.deployStatus === 5">开始部署</a>
                             <a class="tableActionStyle" v-if="ifprod" @click="whiteIpConfig(scope.row)">白名单设置</a>
                         </template>
                     </el-table-column>
@@ -114,227 +114,56 @@
             </template>
             <!-- pagination end -->
         </list-panel>
-        <el-dialog title="导入部署包"
-                   :visible.sync="dialogExpoVisible"
-                   :before-close="beforeClose"
-                   @close="clearItem"
-                   width="600px">
-            <el-upload
-                class="upload-demo"
-                drag
-                :before-upload="beforeAvatarUpload"
-                :on-success="handleSuccess"
-                :on-exceed="onexceed"
-                :limit="1"
-                with-credentials
-                :file-list="fileList"
-                name="pack"
-                :action="url">
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                <div class="el-upload__tip" slot="tip">只能上传rar/zip文件，且不超过200M</div>
-            </el-upload>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="beforeClose" class="dialogButtonW">取消</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog title="添加白名单" :visible.sync="whiteIpDialog" width="600px">
-            <el-form :model="whiteIpFrom" label-width="100px">
-                <el-form-item label="地址:">
-                    <el-input v-model="whiteIpFrom.whiteList" auto-complete="off" placeholder="请填写白名单地址,多个地址请用逗号 (',') 分隔"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="whiteIpDialog = false">取 消</el-button>
-                <el-button type="primary" @click="saveWhiteIp">确 定</el-button>
-            </div>
-        </el-dialog>
-        <el-dialog
-            title="环境配置-编辑"
-            top="30vh"
-            width="600px"
-            :visible.sync="envConfigDialog">
-            <el-form
-                size="small"
-                label-width="100px"
-                style="margin-top: -25px"
-                :rules="rules"
-                ref="envForm"
-                :model="envConfigForm">
-                <el-tabs>
-                    <el-tab-pane label="基础信息">
-                        <el-form-item label="上传类型" v-if="dialogType == 'upload'">
-                            <div class="uploadType">
-                                <div class="uploadField" :class="{active: envConfigForm.uploadType === 0}" @click="handelUploadType(0)">
-                                    BUG修复
-                                </div>
-                                <div class="uploadField" :class="{active: envConfigForm.uploadType === 1}" @click="handelUploadType(1)">
-                                    版本发布
-                                </div>
-                            </div>
-                        </el-form-item>
-
-                        <el-form-item label="实例数" prop="instanceNumber">
-                            <el-input
-                                placeholder="请输入实例数"
-                                v-model="envConfigForm.instanceNumber">
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item label="内存(单位MB)" prop="memorySize">
-                            <el-select
-                                style="width:100%"
-                                v-model="envConfigForm.memorySize"
-                                placeholder="请选择">
-                                <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.label"/>
-                            </el-select>
-                        </el-form-item>
-
-                        <el-form-item label="审核人" v-if="dialogType == 'upload'">
-                            <el-input disabled v-model="envConfigForm.auditor">
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item label="版本说明" prop="desc" v-if="dialogType == 'upload'">
-                            <el-input type="textarea" v-model="envConfigForm.desc"></el-input>
-                        </el-form-item>
-                    </el-tab-pane>
-                    <!-- 环境变量 -->
-                    <el-tab-pane label="环境变量" style="text-align: center">
-                        <el-table :data="envConfigForm.envVariables" width="100%" highlight-current-row stripe>
-                            <el-table-column property="label" label="变量">
-                                <template slot-scope="scope">
-                                    <el-form-item prop="countName" class="VF-style">
-                                        <el-input size="small"
-                                                  v-if="scope.row.isNew"
-                                                  v-model="scope.row.key"
-                                                  placeholder="请输入变量" class="validate-text"></el-input>
-                                    </el-form-item>
-                                    <span v-if="!scope.row.isNew" >{{scope.row.key}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column property="value" label="值">
-                                <template slot-scope="scope">
-                                    <el-input size="small"
-                                              v-if="scope.row.isNew"
-                                              v-model="scope.row.value"
-                                              placeholder="请输入值" class="validate-style"></el-input>
-                                    <el-tooltip placement="top-start" effect="light">
-                                        <div slot="content" style="width: 300px; white-space: nowrap; word-break: break-word">{{scope.row.value}}</div>
-                                        <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.value}}</span>
-                                    </el-tooltip>
-                                </template>
-                            </el-table-column>
-                            <el-table-column>
-                                <template slot-scope="scope">
-                                    <el-button size="mini" @click="deleteItem(scope.row, 'envVariables')" class="validate-style">删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <el-button class="addRowBtn" icon="el-icon-plus" size="mini" @click="addNewItem('envVariables')">添加环境变量</el-button>
-                    </el-tab-pane>
-                    <el-tab-pane label="IP别名" style="text-align: center">
-                        <el-table :data="envConfigForm.ipAlias" width="100%" highlight-current-row stripe>
-                            <el-table-column property="label" label="IP别名">
-                                <template slot-scope="scope">
-                                    <el-input size="small"
-                                              v-if="scope.row.isNew"
-                                              v-model="scope.row.key"
-                                              placeholder="请输入IP别名" class="validate-style"></el-input>
-                                    <span v-if="!scope.row.isNew">{{scope.row.key}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column property="value" label="IP">
-                                <template slot-scope="scope" >
-                                    <el-form-item prop="IP" class="VF-style">
-                                        <el-input size="small"
-                                                  v-if="scope.row.isNew"
-                                                  v-model="scope.row.value"
-                                                  placeholder="请输入IP" class="validate-text"></el-input>
-                                    </el-form-item>
-                                    <span v-if="!scope.row.isNew">{{scope.row.value}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column property="value" label="别名备注">
-                                <template slot-scope="scope">
-                                    <el-input size="small"
-                                              v-if="scope.row.isNew"
-                                              v-model="scope.row.desc"
-                                              placeholder="请输入别名备注" class="validate-style"></el-input>
-                                    <span v-if="!scope.row.isNew">{{scope.row.desc}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column>
-                                <template slot-scope="scope">
-                                    <el-button size="mini" @click="deleteItem(scope.row, 'ipAlias')" class="validate-style">删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <el-button class="addRowBtn" icon="el-icon-plus" size="mini" @click="addNewItem('ipAlias')">添加环境变量</el-button>
-                    </el-tab-pane>
-                </el-tabs>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="closeEnvDialog">取消</el-button>
-                <el-button type="primary" @click="saveEnvConfig">保存</el-button>
-            </span>
-        </el-dialog>
+        <env-modify
+            v-on:update:close="envDialogOnClose"
+            v-on:add:item="addNewItem"
+            v-on:delete:item="deleteItem"
+            v-on:update:uploadType="handelUploadType"
+            :onClose="envDialogOnClose"
+            :envConfigDialog.sync="envConfigDialog" 
+            :envConfigForm.sync="envConfigForm" 
+            :dialogType.sync="dialogType" 
+            :importId.sync="importId" 
+            isAdmin="0">
+        </env-modify>
+        <import-package 
+            v-on:update:close="handleImportDialogClose"
+            v-on:env:dialog:open="handleEnvDialogOpen"
+            :dialogExpoVisible.sync="dialogExpoVisible">
+        </import-package>
+        <white-list
+            v-on:update:close="handleWhiteIpDialogClose"
+            :whiteIpDialog.sync="whiteIpDialog"
+            :whiteIpFrom.sync="whiteIpFrom"
+        ></white-list>
     </div>
 
 </template>
 
 <script>
 import {mapState, mapActions} from 'vuex'
-import { mappingValue} from '@/utils'
-import {MEMORY_SIZE} from '@/constants'
 import tableStatus from '@/components/Status'
 import {SearchPanel} from '@/components/layout'
+import EnvModify from './part/EnvModify'
+import ImportPackage from './part/ImportPackage'
+import WhiteList from './part/WhiteList'
 export default {
     components: {
         SearchPanel,
-        tableStatus
+        tableStatus,
+        'env-modify': EnvModify,
+        'import-package': ImportPackage,
+        'white-list': WhiteList
     },
 
     data() {
-        const NumberApply = (rule, value, callback) => {
-            if (value === '' || !value) {
-                callback(new Error('请输入实例数'));
-            } else if (!/^\d+$/.test(value)) {
-                callback(new Error('实例数必须是正整数'));
-            } else {
-                callback();
-            }
-        };
-
-        // IP验证
-        const IPValidate = (rule, value, callback) => {
-            if (value !='' && /^((25[0-5]|2[0-4]\\d|[1]{1}\\d{1}\\d{1}|[1-9]{1}\\d{1}|\\d{1})($|(?!\\.$)\\.)){4}$/.test(value)) {
-                callback(new Error('IP格式不正确！'));
-            } else {
-                callback();
-            }
-        };
-
-        //变量验证
-        const nameValidate = (rule, value, callback) => {
-            if (value != '' && /^[A-Za-z_][A-Za-z0-9_]$/.test(value)) {
-                callback(new Error('格式不正确！'))
-            } else {
-                callback();
-            }
-        }
-
         return {
             dialogType: 'upload',
             // import begin
             dialogExpoVisible: false,
             envConfigDialog: false,
             whiteIpDialog: false,
-            url: `${this.g_Config.BASE_URL}/project/import.do`,
             exportData: {},
-            fileList: [],
             tempPS: 10,
             tempPN: 0,
             defaultUploadList: [],
@@ -351,7 +180,6 @@ export default {
                 instance: '',
                 memory: ''
             },
-            options: MEMORY_SIZE,
             importId: '', //导入部署包importId参数
             envConfigForm: {
                 projectId: '',
@@ -371,27 +199,6 @@ export default {
                 whiteList: ''
             },
             statusArray: ['已停止','运行中','待部署','启动中','故障','初始','系统崩溃'],
-            rules: {
-                instanceNumber: [
-                    { required: true, message: '请输入实例数', trigger: 'blur' },
-                    { validator: NumberApply, trigger: 'blur' }
-                ],
-                memorySize: [
-                    { required: true, message: '请输入内存大小', trigger: 'blur' },
-                ],
-                auditor: [
-                    { required: true, message: '请输入审核人', trigger: 'blur' },
-                ],
-                uploadType: [
-                    { required: true, message: '请输入上传类型', trigger: 'blur' },
-                ],
-                IP: [
-                    { validator: IPValidate, trigger: 'blur' }
-                ],
-                countName: [
-                    { validator: nameValidate, trigger: 'blur' }
-                ]
-            },
             basePath: '',
             ifprod: false
         }
@@ -412,14 +219,36 @@ export default {
                 return JSON.parse(path)[0]
             }
         },
-        // import begin
-        importDialog() {
-            this.dialogExpoVisible = true
-        },
-
         // 详情
         dialogInfo(row) {
             this.$router.push({name: 'detailedList', params: {id: row.id, proName: row.name}})
+        },
+        submitUpload() {
+            this.$refs.upload.submit()
+        },
+        searchProject() {
+            const params = this.searchCriteria
+            this.getProjectList(params)
+        },
+        reset() {
+            this.searchCriteria = {
+                mark: '',
+                name: '',
+                pageNo: 0,
+                pageSize: 10
+            }
+            this.getProjectList(this.searchCriteria)
+        },
+        handleSizeChange(pageSize) {
+            this.tempPS = pageSize
+            const params = Object.assign({}, this.searchCriteria, {pageSize})
+            this.$set(this.searchCriteria, 'pageSize', pageSize)
+            this.getProjectList(params)
+        },
+        handlePageChange(pageNo) {
+            const params = Object.assign({}, this.searchCriteria, {pageNo: pageNo - 1})
+            this.$set(this.searchCriteria, 'pageNo', pageNo-1)
+            this.getProjectList(params)
         },
         // 变更
         dialogChange(record) {
@@ -435,28 +264,36 @@ export default {
             this.envConfigForm.envVariables = record.env ? JSON.parse(record.env) : []
             this.envConfigForm.ipAlias = record.ipAlias ? JSON.parse(record.ipAlias) : []
         },
-
-
-        //白名单设置
-        whiteIpConfig(row) {
-            this.whiteIpDialog=true
-            this.whiteIpFrom.projectId=row.id
-            this.whiteIpFrom.whiteList=row.whiteList
+        // 变更取消
+        envDialogOnClose() {
+            this.envConfigDialog = false;
+            this.envConfigForm.uploadType = '0';
+        },
+        addNewItem(prop) {
+            this.envConfigForm[prop].push({isNew: true})
         },
 
-        saveWhiteIp() {
-            const params = {
-                projectId: this.whiteIpFrom.projectId,
-                whiteList: this.whiteIpFrom.whiteList
+        deleteItem(row, prop) {
+            this.envConfigForm[prop] = this.envConfigForm[prop].filter(item => item != row);
+        },
+        handelUploadType(type) {
+            this.envConfigForm.uploadType = type
+        },
+        importDialog() {
+            this.dialogExpoVisible = true;
+        },
+        handleImportDialogClose() {
+            this.dialogExpoVisible = false;
+        },
+        handleEnvDialogOpen(file) {
+            if (file.result) {
+                this.envConfigForm.auditor = file.result.auditorName
+                this.envConfigForm.instanceNumber = file.result.instanceNumber
+                this.envConfigForm.memorySize = file.result.memorySize
+                this.importId = file.result.id
             }
-            this.setWhiteIp(params)
-                .then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '添加成功！'
-                    })
-                    this.whiteIpDialog=false
-                })
+            this.dialogType = 'upload'
+            this.envConfigDialog = true
         },
         //开始部署
         beginDeploy(val) {
@@ -472,7 +309,7 @@ export default {
                 })
                 let params = Object.assign({id: val.desireDeployId})
                 this.getProjectDeploy(params).then(res => {
-                    if (res.data.result.status == '200') {
+                    if (res.status === 200) {
                         this.searchProject()
                     }
                 })
@@ -501,7 +338,7 @@ export default {
                 this.startForm.memory = val.memorySize
                 let params = Object.assign(this.startForm)
                 this.getProjectStart(params).then(res => {
-                    if (res.data.result.status == '200') {
+                    if (res.status === 200) {
                         this.searchProject()
                     }
                 })
@@ -526,7 +363,7 @@ export default {
                 })
                 let params = Object.assign({name: val.mark})
                 this.getProjectStop(params).then(res => {
-                    if (res.data.result.status == '200') {
+                    if (res.status === 200) {
                         this.searchProject()
                     }
                 })
@@ -536,155 +373,14 @@ export default {
                 })
             })
         },
-
-        beforeAvatarUpload(file) {
-            let isZip = file.type.indexOf('zip') !== -1 || file.type.indexOf('rar') !== -1
-            const isLtM = file.size / 1024 / 1024 < 200
-            if (file.type == '' && file.name) {
-                let arrayTemp = file.name.split('.')
-                let fileType = arrayTemp[1]
-                isZip = fileType === 'rar'
-            }
-            if (!isZip) {
-                this.$message.error('上传文件类型只能是 rar/zip 格式!')
-            }
-            if (!isLtM) {
-                this.$message.error('上传文件大小不能超过 200MB!')
-            }
-            return isZip && isLtM;
+        //白名单设置
+        whiteIpConfig(row) {
+            this.whiteIpDialog=true
+            this.whiteIpFrom.projectId=row.id
+            this.whiteIpFrom.whiteList=row.whiteList
         },
-        beforeClose(done) {
-            this.dialogExpoVisible = false
-            this.fileList = []
-            done()
-        },
-        clearItem() {
-            this.fileList = []
-        },
-        submitUpload() {
-            this.$refs.upload.submit()
-        },
-        searchProject() {
-            const params = this.searchCriteria
-            this.getProjectList(params)
-        },
-        handleSuccess(file) {
-            if (file.status == '200') {
-                this.$message({
-                    message: '导入成功！',
-                    type: 'success'
-                })
-                this.dialogExpoVisible = false
-                this.fileList = []
-                this.dialogType = 'upload'
-                if (file.result) {
-                    this.envConfigForm.auditor = file.result.auditorName
-                    this.envConfigForm.instanceNumber = file.result.instanceNumber
-                    this.envConfigForm.memorySize = file.result.memorySize
-                    this.importId = file.result.id
-                }
-                this.envConfigDialog = true
-            } else {
-                this.$message({
-                    message: '导入失败！',
-                    type: 'error'
-                })
-            }
-        },
-        onexceed() {
-            this.$message({
-                message: '只允许上传一个文件！',
-                type: 'warning'
-            })
-        },
-        // import end
-
-        reset() {
-            this.searchCriteria = {
-                mark: '',
-                name: '',
-                pageNo: 0,
-                pageSize: 10
-            }
-            this.getProjectList(this.searchCriteria)
-        },
-
-        handleSizeChange(pageSize) {
-            this.tempPS = pageSize
-            const params = Object.assign({}, this.searchCriteria, {pageSize})
-            this.$set(this.searchCriteria, 'pageSize', pageSize)
-            this.getProjectList(params)
-        },
-
-        handlePageChange(pageNo) {
-            this.tempPN = pageNo-1
-            const params = Object.assign({}, this.searchCriteria, {pageNo: pageNo - 1})
-            this.getProjectList(params)
-        },
-
-        mappingMemory(value) {
-            return mappingValue(value)(MEMORY_SIZE)
-        },
-
-        addNewItem(prop) {
-            this.envConfigForm[prop].push({isNew: true})
-        },
-
-        deleteItem(row, prop) {
-            this.envConfigForm[prop] = this.envConfigForm[prop].filter(item => item != row);
-        },
-
-        closeEnvDialog() {
-            this.envConfigDialog = false
-            this.$refs['envForm'].resetFields();
-            this.envConfigForm.uploadType = '0'
-        },
-
-        handelUploadType(type) {
-            this.envConfigForm.uploadType = type
-        },
-
-        saveEnvConfig() {
-            this.$refs['envForm'].validate((valid) => {
-                if (valid) {
-                    const {instanceNumber, memorySize, envVariables, ipAlias, projectId, auditor, desc, uploadType} = this.envConfigForm
-                    if (this.dialogType == 'upload') {
-                        const params = {
-                            importId: this.importId,
-                            auditor,
-                            desc,
-                            uploadType,
-                            instanceNumber: instanceNumber,
-                            memorySize: memorySize,
-                            env: JSON.stringify(envVariables),
-                            ipAlias: JSON.stringify(ipAlias)
-                        }
-                        this.saveUplaod(params).then(() => {
-                            this.$message({
-                                message: '保存成功！',
-                                type: 'success'
-                            })
-                            this.closeEnvDialog()
-                        })
-                    } else {
-                        const params = {
-                            projectId,
-                            instance: instanceNumber,
-                            memory: memorySize,
-                            env: JSON.stringify(envVariables),
-                            ipAlias: JSON.stringify(ipAlias),
-                            searchParams: this.searchCriteria
-                        }
-                        this.saveEnv(params).then(() => {
-                            this.$message({
-                                message: '保存成功！',
-                                type: 'success'
-                            })
-                            this.closeEnvDialog()
-                        })
-                    }
-                }
-            })
+        handleWhiteIpDialogClose() {
+            this.whiteIpDialog=false
         }
     },
 
@@ -700,9 +396,13 @@ export default {
 
 
     mounted() {
-        const params = this.searchCriteria
+        const _this = this
+        let params = this.searchCriteria
         this.getProjectList(params)
-        this.interval = setInterval(this.getProjectList.bind(this, params),15000);
+        this.interval = setInterval(() => {
+            params = _this.searchCriteria
+            _this.getProjectList(params)
+        },15000);
     },
 
     destroyed() {
@@ -766,32 +466,6 @@ export default {
     .VF-style {
         /deep/ .el-form-item__error {
             left: -100px!important;
-        }
-    }
-
-    // 上传类型button
-    .uploadType {
-        display: flex;
-        height: 30px;
-        line-height: 1px;
-        align-items: center;
-        .uploadField {
-            text-align: center;
-            font-family:PingFangSC-Medium;
-            font-size:12px;
-            color: #606266;
-            letter-spacing:0;
-            border: 1px solid #dcdfe6;;
-            border-radius: 4px;
-            width: 78px;
-            height: 30px;
-            line-height: 28px;
-            cursor: pointer;
-            margin-right: 20px;
-            &:hover, &.active {
-                border-color: #409EFF;
-                color: #409EFF;
-            }
         }
     }
 
