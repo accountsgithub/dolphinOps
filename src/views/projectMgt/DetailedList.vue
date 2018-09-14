@@ -189,7 +189,7 @@
         <el-dialog class="terminal-dialog" title="终端"
                    :visible.sync="dialogVisible"
                    @close="closeTerminal"
-                   width="960px">
+                   width="800px">
             <div id="container-terminal"></div>
         </el-dialog>
         <env-modify
@@ -219,6 +219,7 @@
 
 <script>
 import {mapActions, mapState} from 'vuex'
+import API from '@/apis/api'
 import {DATE_FORMAT} from '@/constants'
 import { mappingValue, trim } from '@/utils'
 import {UPLOAD_MODE, UPLOAD_TYPE} from '@/constants'
@@ -262,6 +263,7 @@ export default {
             dialogVisible: false,
             websocket: null,
             commondStr: '',
+            absPath: '',
             envConfigForm: {
                 projectId: '',
                 instanceNumber: '',
@@ -284,7 +286,8 @@ export default {
                 whiteList: ''
             },
             whiteIpDialog: false,
-            ifprod: false
+            ifprod: false,
+            currentPodName: ''
         }
     },
     created: function() {
@@ -326,6 +329,7 @@ export default {
         },
         openTerminal(podName) {
             this.dialogVisible = true
+            this.currentPodName = podName
             this.$nextTick(() => {
                 this.operate(podName)
             })
@@ -333,12 +337,15 @@ export default {
         closeTerminal() {
             this.websocket.send(JSON.stringify({'termId': this.uuid,'type': 'exit'}))
             this.websocket.close()
+            this.commondStr = ''
+            this.currentPodName = ''
             term.destroy()
         },
         operate(podName) {
-            var connectCount=1
-            var wirteData=''
-            var param = podName
+            const _this = this
+            let connectCount=1
+            let wirteData=''
+            let param = podName
             this.uuid = this.guid()
 
             this.websocket = new WebSocket(`${this.g_Config.WEBSOCKET_URL}/webterm`)
@@ -349,8 +356,8 @@ export default {
             }
             this.websocket.onmessage = (res) => {
                 wirteData=res.data
-                var escapeData=escape(wirteData)
-                var atemp=''
+                let escapeData=escape(wirteData)
+                let atemp=''
                 //判断处理
                 if (connectCount===1) {
                     this.initTerm()
@@ -388,7 +395,10 @@ export default {
                 else {
                     term.write(wirteData)
                 }
-                console.log(escape(wirteData))
+                // 获取路径为后面 sz 下载使用
+                if (wirteData.indexOf(_this.currentPodName) !== -1 && wirteData.indexOf('@') !== -1  && wirteData.indexOf(':') !== -1 ) {
+                    _this.absPath = wirteData
+                }
             }
             this.websocket.onclose=function(e) {
                 console.log(`连接已断开...>>>${e.code}`)
@@ -411,22 +421,31 @@ export default {
                 this.sendInput(data)
             })
             term.attachCustomKeyEventHandler( (e) => {
-                // console.log('commnd: ' + this.commondStr + 'length: ' + this.commondStr.length)
                 let commondStr = ''
                 if (e.keyCode == 13) {
-                  commondStr =  trim(this.commondStr)
-                  if (commondStr.startsWith('sz')) {
-                      console.log('download file')
-                      return false
-                  } else {
-                      this.commondStr = ''     
-                      return true
-                  }       
+                    commondStr =  trim(this.commondStr)
+                    // sz 开头执行下载操作
+                    if (commondStr.startsWith('sz')) {
+                        let path = this.absPath.indexOf(':') === -1 ? '' : this.absPath.split(':')[1]
+                        let fileName = commondStr.length > 2 ? commondStr.substring(2, commondStr.length) : ''
+                        path = trim(path).substring(0, path.length - 2)
+                        fileName = trim(fileName)
+                        this.downloadFile(`${this.g_Config.BASE_URL}${API.WEBTERMLOG}?podName=${this.currentPodName}&filePath=${path}/${fileName}`)
+                        this.commondStr = '' 
+                        return true
+                    } else {
+                        this.commondStr = ''     
+                        return true
+                    }       
                 } else if (e.keyCode == 8) {
-                    commondStr = this.commondStr
-                    if (commondStr.length > 0) {
-                        this.commondStr = commondStr.substring(0, commondStr.length -2)
+                    let str = this.commondStr
+                    console.log(this.commondStr,this.commondStr.length)
+                    console.log('substr', str.substr(0, this.commondStr.length - 1),str.substr(0, this.commondStr.length - 1).length)
+                    if (str.length > 0) {
+                        this.commondStr = str.substr(0, str.length - 1)
                     }
+                    this.sendInput(unescape('%7F'))
+                    return false
                 }
             });
             term.on('title', () => {
@@ -686,6 +705,12 @@ export default {
             }
             this.dialogType = 'upload'
             this.envConfigDialog = true
+        },
+        downloadFile(url = '') {
+            var a = document.createElement("a");
+            a.target='_blank';
+            a.href = url;
+            a.click();
         }
     },
     computed: {
