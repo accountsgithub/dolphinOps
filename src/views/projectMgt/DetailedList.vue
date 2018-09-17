@@ -316,6 +316,9 @@ export default {
         }
         this.searchListMethod()
         window.addEventListener('resize', this.resizeScreen, false)
+        window.onbeforeunload = () => {
+            this.closeTerminal()
+        }
     },
     resizeScreen() {
         term.fit()
@@ -365,19 +368,22 @@ export default {
                     term.write(wirteData)
                 }
                 else if (cmdStr==='\t') {
-                    if (escapeData.indexOf('%0D')>-1) {
-                        atemp=escapeData.split('%0D')
-                        if (atemp[atemp.length-1].substring(0,1)!=='%') {
+                    if (escapeData.indexOf('%') !== -1) {
+                        if (escapeData.indexOf('%0D') !== -1) {
                             escapeData = escapeData.replace(/%0D/, '')
                         }
-                        if (escapeData.indexOf('%08') < 0 && escapeData != '%20') {
-                            wirteData = unescape(escapeData.replace(/%20/, ''))
+                        if (escapeData.indexOf('%08') !== -1 && escapeData != '%20') {
+                            escapeData = escapeData.replace(/%20/, '')
                         }
-                        else {
-                            wirteData = unescape(escapeData)
+                        if (escapeData.indexOf('%07') !== -1) {
+                            escapeData = escapeData.replace(/%07/, '')
                         }
+                        wirteData = unescape(escapeData)
                     }
                     term.write(wirteData)
+                    if (this.commondStr.indexOf('sz') !== -1) {
+                        this.commondStr = trim(this.commondStr) + trim(unescape(escapeData))
+                    }
                 }
                 else if (cmdStr.indexOf('\r')>-1) {
                     if (escapeData.indexOf('%0D')>-1) {
@@ -428,7 +434,7 @@ export default {
                     if (commondStr.startsWith('sz')) {
                         let path = this.absPath.indexOf(':') === -1 ? '' : this.absPath.split(':')[1]
                         let fileName = commondStr.length > 2 ? commondStr.substring(2, commondStr.length) : ''
-                        path = trim(path).substring(0, path.length - 2)
+                        path = path.replace(/[#|\s]/g, '')
                         fileName = trim(fileName)
                         this.downloadFile(`${this.g_Config.BASE_URL}${API.WEBTERMLOG}?podName=${this.currentPodName}&filePath=${path}/${fileName}`)
                         this.commondStr = '' 
@@ -439,8 +445,6 @@ export default {
                     }       
                 } else if (e.keyCode == 8) {
                     let str = this.commondStr
-                    console.log(this.commondStr,this.commondStr.length)
-                    console.log('substr', str.substr(0, this.commondStr.length - 1),str.substr(0, this.commondStr.length - 1).length)
                     if (str.length > 0) {
                         this.commondStr = str.substr(0, str.length - 1)
                     }
