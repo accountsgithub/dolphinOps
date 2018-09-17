@@ -421,7 +421,7 @@ export default {
 
             //term实时监控输入的数据，并且websocket把实时数据发送给后台
             term.on('data', (data) => {
-                if (escape(data) !== '%7F' ||data !=='\u001b[A' || data !=='\u001b[B') {
+                if (escape(data) !== '%7F' && escape(data) !== '%1B%5BD' && escape(data) !== escape('\u001b[A') && escape(data) !== escape('\u001b[B')) {
                    this.commondStr += data
                 }
                 this.sendInput(data)
@@ -460,7 +460,7 @@ export default {
         },
         sendInput(input) {
             cmdStr=input
-            if (cmdStr!='\u001b[A'&&cmdStr!='\u001b[B') {
+            if (escape(cmdStr)!= escape('\u001b[A') && escape(cmdStr)!= escape('\u001b[B')) {
                 this.websocket.send(JSON.stringify({'cmd': input, 'termId': this.uuid,'type': 'cmd'}))
             }
         },
