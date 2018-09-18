@@ -53,15 +53,12 @@
                 </el-tab-pane>
                 <!-- 环境变量 -->
                 <el-tab-pane label="环境变量" style="text-align: center">
-                    <el-table :data="envConfigForm.envVariables" width="100%" highlight-current-row stripe>
+                    <el-table id="envTab" :data="envConfigForm.envVariables" width="100%" max-height="300" highlight-current-row stripe>
                         <el-table-column property="label" label="变量">
                             <template slot-scope="scope">
-                                <el-form-item prop="countName" class="VF-style">
-                                    <el-input size="small"
-                                              v-if="scope.row.isNew"
-                                              v-model="scope.row.key"
-                                              placeholder="请输入变量" class="validate-text"></el-input>
-                                </el-form-item>
+                                <!-- <el-form-item prop="countName"> -->
+                                <el-input size="small" v-if="scope.row.isNew" v-model="scope.row.key" placeholder="请输入变量" class="validate-style"></el-input>
+                                <!-- </el-form-item> -->
                                 <span v-if="!scope.row.isNew" >{{scope.row.key}}</span>
                             </template>
                         </el-table-column>
@@ -77,16 +74,16 @@
                                 </el-tooltip>
                             </template>
                         </el-table-column>
-                        <el-table-column>
+                        <el-table-column property="value" width="50" label="操作">
                             <template slot-scope="scope">
-                                <el-button size="mini" @click="deleteItem(scope.row, 'envVariables')" class="validate-style">删除</el-button>
+                                <a href="javascript:;" class="del" @click="deleteItem(scope.row, 'envVariables')" >删除</a>
                             </template>
                         </el-table-column>
                     </el-table>
                     <el-button class="addRowBtn" icon="el-icon-plus" size="mini" @click="addNewItem('envVariables')">添加环境变量</el-button>
                 </el-tab-pane>
                 <el-tab-pane label="IP别名" style="text-align: center">
-                    <el-table :data="envConfigForm.ipAlias" width="100%" highlight-current-row stripe>
+                    <el-table :data="envConfigForm.ipAlias" width="100%" max-height="300" highlight-current-row stripe>
                         <el-table-column property="label" label="IP别名">
                             <template slot-scope="scope">
                                 <el-input size="small"
@@ -116,9 +113,9 @@
                                 <span v-if="!scope.row.isNew">{{scope.row.desc}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column>
+                        <el-table-column property="value" label="操作">
                             <template slot-scope="scope">
-                                <el-button size="mini" @click="deleteItem(scope.row, 'ipAlias')" class="validate-style">删除</el-button>
+                                <a href="javascript:;" class="del" @click="deleteItem(scope.row, 'ipAlias')" >删除</a>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -168,29 +165,6 @@ export default {
                 callback();
             }
         };
-
-        // IP验证
-        const IPValidate = (rule, value, callback) => {
-            if (
-                value != '' &&
-                /^((25[0-5]|2[0-4]\\d|[1]{1}\\d{1}\\d{1}|[1-9]{1}\\d{1}|\\d{1})($|(?!\\.$)\\.)){4}$/.test(
-                    value
-                )
-            ) {
-                callback(new Error('IP格式不正确！'));
-            } else {
-                callback();
-            }
-        };
-
-        //变量验证
-        const nameValidate = (rule, value, callback) => {
-            if (value != '' && /^[A-Za-z_][A-Za-z0-9_]$/.test(value)) {
-                callback(new Error('格式不正确！'));
-            } else {
-                callback();
-            }
-        };
         return {
             options: MEMORY_SIZE,
             rules: {
@@ -204,9 +178,7 @@ export default {
                 auditor: [{ required: true, message: '请输入审核人', trigger: 'blur' }],
                 uploadType: [
                     { required: true, message: '请输入上传类型', trigger: 'blur' }
-                ],
-                IP: [{ validator: IPValidate, trigger: 'blur' }],
-                countName: [{ validator: nameValidate, trigger: 'blur' }]
+                ]
             }
         };
     },
@@ -222,8 +194,56 @@ export default {
     },
     methods: {
         ...mapActions(['saveEnv', 'saveUplaod']),
+        // 变量名校验
+        hasEnvValidErr(envVariables) {
+            let has = false
+            has = envVariables.some(item => {
+                if (!item.key || (item.key !== '' && /^[A-Za-z_][A-Za-z0-9_]$/.test(item.key ))) {
+                    this.$message({
+                        type: 'error',
+                        message: '变量格式不正确！'
+                    })
+                    return true
+                }  else if (!item.value) {
+                    this.$message({
+                        type: 'error',
+                        message: '值不能为空！'
+                    })
+                    return true
+                } else {
+                    return false
+                }
+            })
+            return has
+        },
+        // ip校验
+        hasIpValidErr(ipAlias) {
+            let has = false
+            has = ipAlias.some(item => {
+                if (!item.value ||  (item.value != '' && /^((25[0-5]|2[0-4]\\d|[1]{1}\\d{1}\\d{1}|[1-9]{1}\\d{1}|\\d{1})($|(?!\\.$)\\.)){4}$/.test(item.value))) {
+                    this.$message({
+                        type: 'error',
+                        message: 'ip格式不正确！'
+                    })
+                    return true
+                } else if (!item.key) {
+                    this.$message({
+                        type: 'error',
+                        message: 'ip别名不能为空！'
+                    })
+                    return true
+                } else {
+                    return false
+                }
+            })
+            return has
+        },
         addNewItem(prop) {
-            this.$emit('add:item', prop);
+            const checkErrFn = prop === 'envVariables' ? this.hasEnvValidErr : this.hasIpValidErr
+            const arr = prop === 'envVariables' ? this.envConfigForm.envVariables : this.envConfigForm.ipAlias
+            if (!checkErrFn(arr)) {
+                this.$emit('add:item', prop);
+            }
         },
 
         deleteItem(row, prop) {
@@ -252,6 +272,12 @@ export default {
                         desc,
                         uploadType
                     } = this.envConfigForm;
+                    if (envVariables.length > 0 && this.hasEnvValidErr(envVariables)) {
+                        return;
+                    }
+                    if (ipAlias.length > 0 &&  this.hasIpValidErr(ipAlias)) {
+                        return;
+                    }
                     if (this.dialogType == 'upload') {
                         const params = {
                             importId: this.importId,
@@ -300,6 +326,9 @@ export default {
     .addRowBtn {
         padding: 7px 15px !important;
         margin-top: 18px;
+        &:hover {
+            color: #016ad5;
+        }
     }
     .noWrap {
         white-space: nowrap !important;
@@ -317,13 +346,14 @@ export default {
 
     // 验证样式
     .validate-style {
-        margin-bottom: 18px;
+        margin-bottom: 0;
     }
     .validate-text {
         margin-left: -100px;
         width: 120px;
     }
-    .VF-style {
+    .el-table__body-wrapper .VF-style {
+         margin-bottom: 0;
         /deep/ .el-form-item__error {
             left: -100px!important;
         }
@@ -359,5 +389,9 @@ export default {
         width: 100% !important;
         display: flex;
         justify-content: space-between;
+    }
+
+    .del {
+        color:#016ad5;
     }
 </style>

@@ -255,3 +255,11 @@
 .terminal-dialog .el-dialog__body {
     padding: 0!important;
 }
+
+::-webkit-scrollbar-track-piece{width:10px;  }
+
+::-webkit-scrollbar{width:10px;height:10px ; }
+
+::-webkit-scrollbar-thumb{height:50px; cursor:pointer;}
+
+::-webkit-scrollbar-thumb:hover{ cursor:pointer}
