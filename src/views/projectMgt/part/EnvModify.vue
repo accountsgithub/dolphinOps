@@ -115,7 +115,7 @@
                                           placeholder="请输入别名备注" class="validate-style"></el-input>
                                 <el-tooltip placement="left-start" effect="light">
                                     <div slot="content" style="width: 300px; word-wrap:break-word; word-break: break-all;">{{scope.row.desc}}</div>
-                                    <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.desc}}</span>
+                                    <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.desc ? scope.row.desc : '--'}}</span>
                                 </el-tooltip>
                             </template>
                         </el-table-column>
