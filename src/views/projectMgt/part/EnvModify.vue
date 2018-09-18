@@ -12,7 +12,7 @@
             ref="envForm"
             :model="envConfigForm">
             <el-tabs>
-                <el-tab-pane label="基础信息">
+                <el-tab-pane label="基础信息" style="padding-top: 15px;">
                     <el-form-item label="上传类型" v-if="dialogType == 'upload'">
                         <div class="uploadType">
                             <div class="uploadField" :class="{active: envConfigForm.uploadType === 0}" @click="handelUploadType(0)">
@@ -25,10 +25,16 @@
                     </el-form-item>
 
                     <el-form-item label="实例数" prop="instanceNumber">
-                        <el-input
-                            placeholder="请输入实例数"
-                            v-model="envConfigForm.instanceNumber">
-                        </el-input>
+                        <el-select
+                            style="width:100%"
+                            v-model="envConfigForm.instanceNumber"
+                            placeholder="请选择实例数">
+                            <el-option :label="1" :value="1"/>
+                            <el-option :label="2" :value="2"/>
+                            <el-option :label="3" :value="3"/>
+                            <el-option :label="4" :value="4"/>
+                            <el-option :label="5" :value="5"/>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="内存(单位MB)" prop="memorySize">
                         <el-select
@@ -399,5 +405,9 @@ export default {
 
     .del {
         color:#016ad5;
+    }
+
+    .el-tabs__header {
+        margin-bottom: 25px;
     }
 </style>
