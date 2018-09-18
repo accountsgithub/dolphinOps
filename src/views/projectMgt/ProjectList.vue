@@ -13,13 +13,13 @@
                         <el-input
                             v-model="searchCriteria.name"
                             @keyup.enter.native="searchProject"
-                            placeholder="项目名称"></el-input>
+                            placeholder="请输入项目名称"></el-input>
                     </el-form-item>
                     <el-form-item label="项目标识">
                         <el-input
                             v-model="searchCriteria.mark"
                             @keyup.enter.native="searchProject"
-                            placeholder="项目标识"></el-input>
+                            placeholder="请输入项目标识"></el-input>
                     </el-form-item>
                 </div>
                 <el-form-item>
