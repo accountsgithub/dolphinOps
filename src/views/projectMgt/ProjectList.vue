@@ -408,6 +408,7 @@ export default {
     destroyed() {
         clearInterval(this.interval)
     },
+    /*eslint-disable*/
     beforeRouteEnter(to, from, next) {
         try {
             if (JSON.parse(localStorage.getItem('token')) === 'project') {
