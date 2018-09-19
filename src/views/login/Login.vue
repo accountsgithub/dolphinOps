@@ -2,21 +2,18 @@
     <div class="login-background">
         <div class="login-form-background">
             <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
-                <h3 class="title">OPS平台</h3>
-                <h3 class="title2">PUBLIC APPLICATION MANAGEMENT PLATFORM</h3>
+                <h3 class="title">海豚运维平台</h3>
+                <h3 class="title2">DOLPHIN OPS PLATFORM</h3>
                 <el-form-item prop="username">
-                    <el-input class="textStyle" placeholder="请输入用户名" v-model="loginForm.username" autoComplete="off">
-                        <i slot="prefix" class="icon iconfont icon-ic-name" style="margin: 0 15px 15px 13px;font-size: 20px;"></i>
+                    <el-input class="textStyle" placeholder="请输入项目标识" v-model="loginForm.username" autoComplete="off">
+                        <i slot="prefix" class="el-icon-document" style="margin: 0 15px 15px 13px;font-size: 20px;"></i>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input class="textStyle" name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" placeholder="请输入用密码">
+                    <el-input class="textStyle" name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" placeholder="请输入项目秘钥">
                         <i slot="prefix" class="icon iconfont icon-ic-lock" style="margin: 0 15px 15px 13px;font-size: 20px;"></i>
                         <i slot="suffix" class="show-pwd el-icon-view" @click="showPwd" style="margin: 10px 15px 15px 15px;font-size: 20px"></i>
                     </el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-checkbox v-model="isSavePW"><span style="font-size: 12px;">记住密码</span></el-checkbox>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary"
@@ -45,10 +42,10 @@ export default {
             },
             loginRules: {
                 username: [
-                    { required: true, message: '用户名不能为空', trigger: 'blur' }
+                    { required: true, message: '项目标识不能为空', trigger: 'blur' }
                 ],
                 password: [
-                    { required: true, message: '密码不能为空', trigger: 'blur' }
+                    { required: true, message: '项目秘钥不能为空', trigger: 'blur' }
                 ]
             },
             logButtonLabel: '登录',
