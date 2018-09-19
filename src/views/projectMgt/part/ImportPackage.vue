@@ -1,6 +1,7 @@
 <template>
     <el-dialog title="导入部署包"
                :visible.sync="dialogVisible"
+               :close-on-click-modal="false"
                :before-close="beforeClose"
                @close="clearItem"
                width="600px">
