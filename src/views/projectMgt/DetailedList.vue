@@ -98,26 +98,6 @@
                     </list-panel>
                 </el-tab-pane>
                 <el-tab-pane label="部署历史">
-                    <search-panel>
-                        <el-form
-                            :inline="true"
-                            size="small"
-                            :model="searchCriteria"
-                            class="formPanel"
-                            label-width="80px">
-                            <el-form-item label="人员">
-                                <el-input
-                                    v-model="searchCriteria.creatorName"/>
-                            </el-form-item>
-
-                            <el-form-item>
-                                <el-button
-                                    type="primary"
-                                    icon="el-icon-search"
-                                    @click="searchListMethod()" class="tableLastButtonStyleB" style="margin-right: -20px;">搜索</el-button>
-                            </el-form-item>
-                        </el-form>
-                    </search-panel>
                     <list-panel>
                         <!-- main start -->
                         <template slot="main">
@@ -149,10 +129,6 @@
                                 <el-table-column
                                     prop="statusLabel"
                                     label="状态"/>
-                                <el-table-column
-                                    prop="creatorName"
-                                    label="创建人">
-                                </el-table-column>
                                 <el-table-column
                                     :formatter="formatterUpdatedTime"
                                     prop="createTime"
