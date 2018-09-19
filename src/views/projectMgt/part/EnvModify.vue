@@ -12,7 +12,7 @@
             ref="envForm"
             :model="envConfigForm">
             <el-tabs>
-                <el-tab-pane label="基础信息">
+                <el-tab-pane label="基础信息" style="padding-top: 15px;">
                     <el-form-item label="上传类型" v-if="dialogType == 'upload'">
                         <div class="uploadType">
                             <div class="uploadField" :class="{active: envConfigForm.uploadType === 0}" @click="handelUploadType(0)">
@@ -25,10 +25,16 @@
                     </el-form-item>
 
                     <el-form-item label="实例数" prop="instanceNumber">
-                        <el-input
-                            placeholder="请输入实例数"
-                            v-model="envConfigForm.instanceNumber">
-                        </el-input>
+                        <el-select
+                            style="width:100%"
+                            v-model="envConfigForm.instanceNumber"
+                            placeholder="请选择实例数">
+                            <el-option :label="1" :value="1"/>
+                            <el-option :label="2" :value="2"/>
+                            <el-option :label="3" :value="3"/>
+                            <el-option :label="4" :value="4"/>
+                            <el-option :label="5" :value="5"/>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="内存(单位MB)" prop="memorySize">
                         <el-select
@@ -59,7 +65,10 @@
                                 <!-- <el-form-item prop="countName"> -->
                                 <el-input size="small" v-if="scope.row.isNew" v-model="scope.row.key" placeholder="请输入变量" class="validate-style"></el-input>
                                 <!-- </el-form-item> -->
-                                <span v-if="!scope.row.isNew" >{{scope.row.key}}</span>
+                                <el-tooltip placement="left-start" effect="light">
+                                    <div slot="content" style="width: 300px; word-wrap:break-word; word-break: break-all;">{{scope.row.key}}</div>
+                                    <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.key}}</span>
+                                </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column property="value" label="值">
@@ -68,8 +77,8 @@
                                           v-if="scope.row.isNew"
                                           v-model="scope.row.value"
                                           placeholder="请输入值" class="validate-style"></el-input>
-                                <el-tooltip placement="top-start" effect="light">
-                                    <div slot="content" style="width: 300px; white-space: nowrap; word-break: break-word">{{scope.row.value}}</div>
+                                <el-tooltip placement="left-start" effect="light">
+                                    <div slot="content" style="width: 300px; word-wrap:break-word; word-break: break-all;">{{scope.row.value}}</div>
                                     <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.value}}</span>
                                 </el-tooltip>
                             </template>
@@ -110,7 +119,10 @@
                                           v-if="scope.row.isNew"
                                           v-model="scope.row.desc"
                                           placeholder="请输入别名备注" class="validate-style"></el-input>
-                                <span v-if="!scope.row.isNew">{{scope.row.desc}}</span>
+                                <el-tooltip placement="left-start" effect="light">
+                                    <div slot="content" style="width: 300px; word-wrap:break-word; word-break: break-all;">{{scope.row.desc}}</div>
+                                    <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.desc ? scope.row.desc : '--'}}</span>
+                                </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column property="value" label="操作">
@@ -393,5 +405,9 @@ export default {
 
     .del {
         color:#016ad5;
+    }
+
+    .el-tabs__header {
+        margin-bottom: 25px;
     }
 </style>
