@@ -12,10 +12,12 @@ export default {
         const token = await axios.post(API.LOGIN, bodyFormData, {
             headers: {'Content-Type': 'multipart/form-data'}
         })
-            .then(response => response.data.result)
+            .then(response => {
+                localStorage.setItem('token', JSON.stringify(response.data.result))
+                return response.data.result
+            })
             .catch(error => Promise.reject(error))
         if (token) {
-            localStorage.setItem('token', JSON.stringify(token))
             commit(TYPES.POST_LOGIN, true)
         }
     },
