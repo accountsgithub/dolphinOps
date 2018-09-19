@@ -21,22 +21,22 @@
             </div>
             <el-row :gutter="20">
                 <el-form>
-                    <el-col :span="6">
+                    <el-col :span="3">
                         <el-form-item label="实例数:">
                             {{project.instanceNumber}}
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
+                    <el-col :span="5">
                         <el-form-item label="内存（MB）:">
                             {{project.memorySize}}
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
+                    <el-col :span="5">
                         <el-form-item label="当前版本：">
                             {{project.version}}
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
+                    <el-col :span="11">
                         <el-form-item label="外部路径：">
                             <a class="pathHerf" :href="getPath(project.path)" target="_blank">{{getPath(project.path)}}</a>
                         </el-form-item>
@@ -296,6 +296,7 @@ export default {
                 }, 15000)
             })
         } else {
+            this.getProject()
             this.interval = setInterval(() => {
                 const params = this.searchExample
                 this.getProject()
