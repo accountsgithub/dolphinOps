@@ -263,7 +263,8 @@ export default {
             },
             whiteIpDialog: false,
             ifprod: false,
-            currentPodName: ''
+            currentPodName: '',
+            interval: null
         }
     },
     created: function() {
@@ -287,8 +288,19 @@ export default {
             this.searchCriteria['projectId'] = project.id
             this.proName =  project.name
             this.project = project
+            this.$nextTick(() => {
+                this.interval = setInterval(() => {
+                    const params = this.searchExample
+                    this.getProject()
+                    this.getExampleList(params)
+                }, 15000)
+            })
         } else {
-            this.getProject()
+            this.interval = setInterval(() => {
+                const params = this.searchExample
+                this.getProject()
+                this.getExampleList(params)
+            }, 15000)
         }
         this.searchListMethod()
         window.addEventListener('resize', this.resizeScreen, false)
@@ -698,6 +710,9 @@ export default {
             searchList: state => state.project.searchList,
             listPaging: state => state.project.listPaging
         })
+    },
+    destroyed() {
+        clearInterval(this.interval)
     }
 }
 </script>
