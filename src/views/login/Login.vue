@@ -10,7 +10,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input class="textStyle" name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" placeholder="请输入项目秘钥">
+                    <el-input class="textStyle" name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" placeholder="请输入项目密钥">
                         <i slot="prefix" class="icon iconfont icon-ic-lock" style="margin: 0 15px 15px 13px;font-size: 20px;"></i>
                         <i slot="suffix" class="show-pwd el-icon-view" @click="showPwd" style="margin: 10px 15px 15px 15px;font-size: 20px"></i>
                     </el-input>
@@ -45,7 +45,7 @@ export default {
                     { required: true, message: '项目标识不能为空', trigger: 'blur' }
                 ],
                 password: [
-                    { required: true, message: '项目秘钥不能为空', trigger: 'blur' }
+                    { required: true, message: '项目密钥不能为空', trigger: 'blur' }
                 ]
             },
             logButtonLabel: '登录',
