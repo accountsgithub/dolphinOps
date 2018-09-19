@@ -467,9 +467,19 @@ export default {
             if (this.tabType == '0') {
                 const params = this.searchExample
                 this.getExampleList(params)
+                clearInterval(this.interval)
+                this.interval = setInterval(() => {
+                    const params = this.searchExample
+                    this.getProject()
+                    this.getExampleList(params)
+                }, 15000)
             } else if (this.tabType == '1') {
                 const params = this.searchCriteria
                 this.getHistoryList(params)
+                clearInterval(this.interval)
+                this.interval = setInterval(() => {
+                    this.getProject()
+                }, 15000)
             }
         },
         // 历史重置
