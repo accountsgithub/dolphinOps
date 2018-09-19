@@ -102,7 +102,7 @@
                         <!-- main start -->
                         <template slot="main">
                             <el-table
-                                :data="searchList"
+                                :data="historyList"
                                 class="list"
                                 highlight-current-row
                                 style="width: 100%"
@@ -148,10 +148,10 @@
                         <!-- pagination start -->
                         <template slot="pagination">
                             <el-pagination
-                                v-if="listPaging.total != 0"
-                                :page-size="listPaging.pageSize"
-                                :total="listPaging.total"
-                                :current-page="listPaging.pageNo + 1"
+                                v-if="historyListPaging.total != 0"
+                                :page-size="historyListPaging.pageSize"
+                                :total="historyListPaging.total"
+                                :current-page="historyListPaging.pageNo + 1"
                                 class="pagination"
                                 layout="total, sizes, prev, pager, next, jumper"
                                 @size-change="handleSizeChange"
@@ -467,19 +467,9 @@ export default {
             if (this.tabType == '0') {
                 const params = this.searchExample
                 this.getExampleList(params)
-                clearInterval(this.interval)
-                this.interval = setInterval(() => {
-                    const params = this.searchExample
-                    this.getProject()
-                    this.getExampleList(params)
-                }, 15000)
             } else if (this.tabType == '1') {
                 const params = this.searchCriteria
                 this.getHistoryList(params)
-                clearInterval(this.interval)
-                this.interval = setInterval(() => {
-                    this.getProject()
-                }, 15000)
             }
         },
         // 历史重置
@@ -495,7 +485,9 @@ export default {
         tabChange(val) {
             this.tabType = val.index
             this.reset()
-            this.searchListMethod()
+            this.$nextTick(() => {
+                this.searchListMethod()
+            })
         },
 
         // 切换每页数据个数
@@ -718,6 +710,8 @@ export default {
     },
     computed: {
         ...mapState ({
+            historyListPaging: state => state.project.historyListPaging,
+            historyList: state => state.project.historyList,
             searchList: state => state.project.searchList,
             listPaging: state => state.project.listPaging
         })

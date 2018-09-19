@@ -23,8 +23,8 @@ export default {
     [TYPES.GET_PROJECT_HISTORYLIST](state, payload) {
         const {pageNo, pageSize, total} = payload
         Object.assign(state, {
-            searchList: payload.data,
-            listPaging: {pageNo, pageSize, total}
+            historyList: payload.data,
+            historyListPaging: {pageNo, pageSize, total}
         })
     },
     // 实例数查询
