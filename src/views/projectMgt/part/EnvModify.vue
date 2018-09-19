@@ -3,6 +3,7 @@
         title="环境配置-编辑"
         top="30vh"
         width="600px"
+        :close-on-click-modal="false"
         :visible.sync="dialogVisible">
         <el-form
             size="small"
