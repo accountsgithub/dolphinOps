@@ -407,6 +407,20 @@ export default {
 
     destroyed() {
         clearInterval(this.interval)
+    },
+    beforeRouteEnter(to, from, next) {
+        try {
+            if (JSON.parse(localStorage.getItem('token')) === 'project') {
+                next(vm => {
+                    vm.$router.replace({name: 'projectItem'})
+                })
+            } else {
+                next()
+            }
+        }
+        catch (err) {
+            console.log(err)
+        }
     }
 }
 </script>

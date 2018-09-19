@@ -28,6 +28,20 @@ export const constantRouterMap = [
             }
         ]
     },
+    // 项目详情
+    {
+        path: '/project',
+        component: resolve => require(['@/views/layout/Layout'], resolve),
+        hidden: true,
+        children: [
+            {
+                path: '/projectItem',
+                name: 'projectItem',
+                component: resolve => require(['@/views/projectMgt/DetailedList'], resolve),
+                meta: {...meta, title: '详细信息'}
+            }
+        ]
+    },
     // 404
     { path: '/404',
         component: resolve => require(['@/views/404'], resolve),
@@ -42,18 +56,7 @@ export const constantRouterMap = [
             {
                 path: 'index',
                 name: 'projectManagement',
-                component: resolve => {
-                    try {
-                        if (JSON.parse(localStorage.getItem('token')) === 'project') {
-                            return require(['@/views/projectMgt/DetailedList'], resolve)
-                        } else {
-                            return require(['@/views/projectMgt/ProjectList'], resolve)
-                        }
-                    }
-                    catch (err) {
-                        return require(['@/views/projectMgt/ProjectList'], resolve)
-                    }
-                },
+                component: resolve => require(['@/views/projectMgt/ProjectList'], resolve),
                 meta: {...meta, title: '项目管理', icon: 'project'}
             }
         ]
