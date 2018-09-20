@@ -83,8 +83,8 @@ export default {
         },
         beforeClose(done) {
             this.upLoadStatus = '0';
-            this.$emit('update:close');
             this.clearFile();
+            this.$emit('update:close');
             done();
         },
         handleOk() {

@@ -8,55 +8,57 @@
         <el-form
             size="small"
             label-width="100px"
-            style="margin-top: -25px"
+            style="margin-top: -25px;"
             :rules="rules"
             ref="envForm"
             :model="envConfigForm">
             <el-tabs>
                 <el-tab-pane label="基础信息" style="padding-top: 15px;">
-                    <el-form-item label="上传类型" v-if="dialogType == 'upload'">
-                        <div class="uploadType">
-                            <div class="uploadField" :class="{active: envConfigForm.uploadType === 0}" @click="handelUploadType(0)">
-                                BUG修复
+                    <div style="width:450px; margin: 0 auto;"> 
+                        <el-form-item label="上传类型" v-if="dialogType == 'upload'">
+                            <div class="uploadType">
+                                <div class="uploadField" :class="{active: envConfigForm.uploadType === 0}" @click="handelUploadType(0)">
+                                    BUG修复
+                                </div>
+                                <div class="uploadField" :class="{active: envConfigForm.uploadType === 1}" @click="handelUploadType(1)">
+                                    版本发布
+                                </div>
                             </div>
-                            <div class="uploadField" :class="{active: envConfigForm.uploadType === 1}" @click="handelUploadType(1)">
-                                版本发布
-                            </div>
-                        </div>
-                    </el-form-item>
+                        </el-form-item>
 
-                    <el-form-item label="实例数" prop="instanceNumber">
-                        <el-select
-                            style="width:100%"
-                            v-model="envConfigForm.instanceNumber"
-                            placeholder="请选择实例数">
-                            <el-option :label="1" :value="1"/>
-                            <el-option :label="2" :value="2"/>
-                            <el-option :label="3" :value="3"/>
-                            <el-option :label="4" :value="4"/>
-                            <el-option :label="5" :value="5"/>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="内存(单位MB)" prop="memorySize">
-                        <el-select
-                            style="width:100%"
-                            v-model="envConfigForm.memorySize"
-                            placeholder="请选择">
-                            <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.label"/>
-                        </el-select>
-                    </el-form-item>
+                        <el-form-item label="实例数" prop="instanceNumber">
+                            <el-select
+                                style="width:100%"
+                                v-model="envConfigForm.instanceNumber"
+                                placeholder="请选择实例数">
+                                <el-option :label="1" :value="1"/>
+                                <el-option :label="2" :value="2"/>
+                                <el-option :label="3" :value="3"/>
+                                <el-option :label="4" :value="4"/>
+                                <el-option :label="5" :value="5"/>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="内存(单位MB)" prop="memorySize">
+                            <el-select
+                                style="width:100%"
+                                v-model="envConfigForm.memorySize"
+                                placeholder="请选择">
+                                <el-option
+                                    v-for="item in options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.label"/>
+                            </el-select>
+                        </el-form-item>
 
-                    <el-form-item label="审核人" v-if="dialogType == 'upload'">
-                        <el-input disabled v-model="envConfigForm.auditor">
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item label="版本说明" prop="desc" v-if="dialogType == 'upload'">
-                        <el-input type="textarea" v-model="envConfigForm.desc"></el-input>
-                    </el-form-item>
+                        <el-form-item label="审核人" v-if="dialogType == 'upload'">
+                            <el-input disabled v-model="envConfigForm.auditor">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="版本说明" prop="desc" v-if="dialogType == 'upload'">
+                            <el-input type="textarea" v-model="envConfigForm.desc"></el-input>
+                        </el-form-item>
+                    </div>
                 </el-tab-pane>
                 <!-- 环境变量 -->
                 <el-tab-pane label="环境变量" style="text-align: center">
@@ -392,8 +394,8 @@ export default {
             cursor: pointer;
             margin-right: 20px;
             &:hover, &.active {
-                border-color: #409EFF;
-                color: #409EFF;
+                border-color: #016ad5;
+                color: #016ad5;
             }
         }
     }
