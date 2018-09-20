@@ -16,7 +16,7 @@
             :before-remove="onremove"
             :limit="1"
             with-credentials
-            :file-list="fileList"
+            :file-list="displayFileList"
             name="pack"
             :action="url">
             <i class="el-icon-upload"></i>
@@ -43,6 +43,7 @@ export default {
         return {
             url: `${this.g_Config.BASE_URL}/project/import.do`,
             fileList: [],
+            displayFileList: [],
             upLoadStatus: '0'
         }
     },
@@ -57,6 +58,10 @@ export default {
         }
     },
     methods: {
+        clearFile() {
+            this.fileList = [];
+            this.displayFileList = [];
+        },
         beforeAvatarUpload(file) {
             let isZip = file.type.indexOf('zip') !== -1 || file.type.indexOf('rar') !== -1
             const isLtM = file.size / 1024 / 1024 < 200
@@ -79,7 +84,7 @@ export default {
         beforeClose(done) {
             this.upLoadStatus = '0';
             this.$emit('update:close');
-            this.fileList = [];
+            this.clearFile();
             done();
         },
         handleOk() {
@@ -89,10 +94,10 @@ export default {
             }
             this.$emit('update:close');
             this.$emit('env:dialog:open', this.fileList[0]);
-            this.fileList = []
+            this.clearFile();
         },
         clearItem() {
-            this.fileList = [];
+            this.clearFile();
             this.upLoadStatus = '0';
         },
         handleSuccess(file) {
@@ -103,6 +108,10 @@ export default {
                 })
                 this.upLoadStatus = '0'
                 this.fileList.push(file)
+                this.displayFileList.push({
+                    name: `${file.result.projectMask}-${file.result.projectVersion}`,
+                    url: ''
+                })
             } else {
                 this.upLoadStatus = '2'
                 this.$nextTick(() => {
@@ -121,7 +130,7 @@ export default {
             this.upLoadStatus = '1'
         },
         onremove() {
-            this.fileList = []
+            this.clearFile();
         }
     }
     
