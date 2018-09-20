@@ -228,6 +228,7 @@ export default {
         },
         searchProject() {
             const params = this.searchCriteria
+            params['pageNo'] = 0
             this.getProjectList(params)
         },
         reset() {

@@ -85,7 +85,7 @@
                         <!-- pagination start -->
                         <template slot="pagination">
                             <el-pagination
-                                v-if="listPaging.total != 0"
+                                v-if="listPaging.total != 0 && listPaging.total > listPaging.pageSize"
                                 :page-size="listPaging.pageSize"
                                 :total="listPaging.total"
                                 :current-page="listPaging.pageNo + 1"
@@ -98,6 +98,28 @@
                     </list-panel>
                 </el-tab-pane>
                 <el-tab-pane label="部署历史">
+                    <!-- <search-panel>
+                        <el-form
+                            :inline="true"
+                            size="small"
+                            :model="searchCriteria"
+                            class="formPanel"
+                            label-width="80px">
+                            <div class="searchCriteriaContent">
+                                <el-form-item label="人员">
+                                    <el-input
+                                        @keyup.enter.native="searchListMethod"
+                                        v-model="searchCriteria.creatorName"/>
+                                </el-form-item>
+                            </div>
+                            <el-form-item>
+                                <el-button
+                                    type="primary"
+                                    icon="el-icon-search"
+                                    @click="searchListMethod()">搜索</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </search-panel> -->
                     <list-panel>
                         <!-- main start -->
                         <template slot="main">
@@ -128,7 +150,12 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="statusLabel"
-                                    label="状态"/>
+                                    label="状态">
+                                    <template slot-scope="scope">
+                                        <span v-if="depolyErrorStatusLabel.indexOf(scope.row.statusLabel) !== -1" class="el_state_dot status-error">{{scope.row.statusLabel}}</span>
+                                        <span v-else class="el_state_dot status-agree">{{scope.row.statusLabel}}</span>
+                                    </template>
+                                </el-table-column>
                                 <el-table-column
                                     :formatter="formatterUpdatedTime"
                                     prop="createTime"
@@ -148,7 +175,7 @@
                         <!-- pagination start -->
                         <template slot="pagination">
                             <el-pagination
-                                v-if="historyListPaging.total != 0"
+                                v-if="historyListPaging.total != 0 && historyListPaging.total > historyListPaging.pageSize"
                                 :page-size="historyListPaging.pageSize"
                                 :total="historyListPaging.total"
                                 :current-page="historyListPaging.pageNo + 1"
@@ -264,7 +291,8 @@ export default {
             whiteIpDialog: false,
             ifprod: false,
             currentPodName: '',
-            interval: null
+            interval: null,
+            depolyErrorStatusLabel: ['jenkins失败','docker构建失败','部署失败','已取消']
         }
     },
     created: function() {
@@ -466,9 +494,11 @@ export default {
         searchListMethod() {
             if (this.tabType == '0') {
                 const params = this.searchExample
+                params['pageNo'] = 0
                 this.getExampleList(params)
             } else if (this.tabType == '1') {
                 const params = this.searchCriteria
+                params['pageNo'] = 0
                 this.getHistoryList(params)
             }
         },
@@ -480,14 +510,14 @@ export default {
                 pageNo: 0,
                 pageSize: 10
             }
+            this.$nextTick(() => {
+                this.searchListMethod()
+            })
         },
         // 切换tab
         tabChange(val) {
             this.tabType = val.index
             this.reset()
-            this.$nextTick(() => {
-                this.searchListMethod()
-            })
         },
 
         // 切换每页数据个数
@@ -722,7 +752,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     .title-style{
         font-family:PingFangSC-Medium;
         font-size:14px;
@@ -738,8 +768,8 @@ export default {
         text-align:left;
         margin-right: 10px;
     }
-    /deep/.mainContainer__header {
-        padding: 0!important;
+    /deep/ .mainContainer__header {
+        padding: 10px!important;
     }
     .pathHerf {
         color: #016ad5 !important;
@@ -774,5 +804,10 @@ export default {
     }
     .import-btn {
         margin-left: 10px;
+    }
+    .searchPanel  {
+        margin: 0;
+        padding: 0;
+        padding-top: 10px; 
     }
 </style>
