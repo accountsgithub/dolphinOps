@@ -26,7 +26,7 @@
                     <el-button
                         type="primary"
                         @click="searchProject" class="tableLastButtonStyleB icon iconfont icon-ic-search">搜索</el-button>
-                    <el-button @click="reset" class="tableLastButtonStyleW icon iconfont icon-ic-refresh" style="margin-right: -10px;">重置</el-button>
+                    <el-button @click="reset" class="tableLastButtonStyleW icon iconfont icon-ic-refresh" style="margin-right: -10px;line-height:30px;">重置</el-button>
                 </el-form-item>
             </el-form>
         </SearchPanel>
@@ -57,7 +57,7 @@
                         width="180"/>
                     <el-table-column
                         prop="state"
-                        width="180"
+                        width="80"
                         label="运行状态">
                         <template slot-scope="scope">
                             <tableStatus :statusType="statusArray[+scope.row.state]"></tableStatus>
@@ -76,17 +76,23 @@
                     <el-table-column
                         prop="version"
                         width="100"
-                        label="当前版本"/>
+                        label="当前版本">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.version">{{scope.row.version}}</span>
+                            <span v-else>—</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column
                         prop="path"
                         label="外部路径">
                         <template slot-scope="scope">
-                            <a class="pathHerf" :href="getPath(scope.row.path)" target="_blank">{{getPath(scope.row.path)}}</a>
+                            <a class="pathHerf" v-if="getPath(scope.row.path)" :href="getPath(scope.row.path)" target="_blank">{{getPath(scope.row.path)}}</a>
+                            <span v-else>—</span>
                         </template>
                     </el-table-column>
                     <el-table-column
                         label="操作"
-                        width="250">
+                        width="200">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" @click="dialogInfo(scope.row)" v-if="scope.row.state !== 4 && scope.row.state !== 5">查看详情</a>
                             <a class="tableActionStyle" @click="dialogChange(scope.row)" v-if="scope.row.state !== 4 && scope.row.state !== 5">变更</a>

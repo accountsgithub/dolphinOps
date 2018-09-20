@@ -18,7 +18,7 @@ export default {
         align-items: center;
         background-color: $white-bg;
         font-size: $search-font-size;
-        margin-bottom: 15px;
+        margin-bottom: 12px;
         padding: 20px;
         .formPanel {
             width: 100% !important;
