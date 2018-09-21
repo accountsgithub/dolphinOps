@@ -311,9 +311,9 @@ export default {
         }
         this.searchListMethod()
         window.addEventListener('resize', this.resizeScreen, false)
-        // window.onbeforeunload = () => {
-        //     this.closeTerminal()
-        // }
+        window.onbeforeunload = () => {
+            this.closeTerminal()
+        }
     },
     resizeScreen() {
         term.fit()
