@@ -311,9 +311,9 @@ export default {
         }
         this.searchListMethod()
         window.addEventListener('resize', this.resizeScreen, false)
-        window.onbeforeunload = () => {
-            this.closeTerminal()
-        }
+        // window.onbeforeunload = () => {
+        //     this.closeTerminal()
+        // }
     },
     resizeScreen() {
         term.fit()
@@ -376,7 +376,8 @@ export default {
                         wirteData = unescape(escapeData)
                     }
                     term.write(wirteData)
-                    if (this.commondStr.indexOf('sz') !== -1) {
+                    // 只累加 tab 键 返回的不带路径（包含 @、：）的数据
+                    if (this.commondStr.indexOf('sz') !== -1 && wirteData.indexOf('@') === -1  && wirteData.indexOf(':') === -1) {
                         this.commondStr = trim(this.commondStr) + trim(unescape(escapeData))
                     }
                 }
@@ -398,7 +399,9 @@ export default {
                 }
                 // 获取路径为后面 sz 下载使用
                 if (wirteData.indexOf(_this.currentPodName) !== -1 && wirteData.indexOf('@') !== -1  && wirteData.indexOf(':') !== -1 ) {
-                    _this.absPath = wirteData
+                    if (trim(wirteData).split('')[wirteData.length - 1]  === '#') {
+                         _this.absPath = wirteData
+                    }
                 }
             }
             this.websocket.onclose=function(e) {
