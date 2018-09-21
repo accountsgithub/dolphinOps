@@ -26,7 +26,7 @@
                     <el-button
                         type="primary"
                         @click="searchProject" class="tableLastButtonStyleB icon iconfont icon-ic-search">搜索</el-button>
-                    <el-button @click="reset" class="tableLastButtonStyleW icon iconfont icon-ic-refresh" style="margin-right: -10px;line-height:30px;">重置</el-button>
+                    <el-button @click="reset" class="tableLastButtonStyleW icon iconfont icon-ic-refresh" style="margin-right: -10px;">重置</el-button>
                 </el-form-item>
             </el-form>
         </SearchPanel>
@@ -54,7 +54,7 @@
                     <el-table-column
                         prop="mark"
                         label="项目标识"
-                        width="180"/>
+                        width="200"/>
                     <el-table-column
                         prop="state"
                         width="80"
@@ -65,7 +65,7 @@
                     </el-table-column>
                     <el-table-column
                         prop="instanceNumber"
-                        width="80"
+                        width="60"
                         label="实例数"/>
 
                     <el-table-column
@@ -75,7 +75,7 @@
                     </el-table-column>
                     <el-table-column
                         prop="version"
-                        width="100"
+                        width="80"
                         label="当前版本">
                         <template slot-scope="scope">
                             <span v-if="scope.row.version">{{scope.row.version}}</span>
@@ -84,6 +84,7 @@
                     </el-table-column>
                     <el-table-column
                         prop="path"
+                        width="200"
                         label="外部路径">
                         <template slot-scope="scope">
                             <a class="pathHerf" v-if="getPath(scope.row.path)" :href="getPath(scope.row.path)" target="_blank">{{getPath(scope.row.path)}}</a>
