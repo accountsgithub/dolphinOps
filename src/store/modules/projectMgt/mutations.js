@@ -3,10 +3,27 @@ import * as TYPES from './mutationTypes'
 export default {
     //项目列表
     [TYPES.GET_PROJECT_LIST](state, payload) {
-        const {pageNo, pageSize, total} = payload
+        const {pageNo, pageSize, total} = payload.result
         Object.assign(state, {
-            elements: payload.data,
-            paging: {pageNo, pageSize, total}
+            elements: payload.result.data,
+            paging: {pageNo, pageSize, total},
+            searchCriteria: {
+                mark: payload.params.mark,
+                name: payload.params.name,
+                pageNo: payload.params.pageNo,
+                pageSize: payload.params.pageSize,
+            }
+        })
+    },
+    // 重置搜索项
+    [TYPES.RESET_SEARCH_CRITERIA](state) {
+        Object.assign(state, {
+            searchCriteria: {
+                mark: '',
+                name: '',
+                pageNo: 0,
+                pageSize: 10
+            }
         })
     },
 

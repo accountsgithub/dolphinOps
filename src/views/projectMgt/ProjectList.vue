@@ -174,12 +174,12 @@ export default {
             tempPN: 0,
             defaultUploadList: [],
             // import end
-            searchCriteria: {
-                mark: '',
-                name: '',
-                pageNo: 0,
-                pageSize: 10
-            },
+            // searchCriteria: {
+            //     mark: '',
+            //     name: '',
+            //     pageNo: 0,
+            //     pageSize: 10
+            // },
             // 启动
             startForm: {
                 projectId: '',
@@ -218,7 +218,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy', 'setWhiteIp']),
+        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy', 'setWhiteIp', 'resetSearchCriteria']),
 
         getPath(path) {
             if (path && /\[(.*)\]?/g.test(path)) {
@@ -238,23 +238,24 @@ export default {
             this.getProjectList(params)
         },
         reset() {
-            this.searchCriteria = {
-                mark: '',
-                name: '',
-                pageNo: 0,
-                pageSize: 10
-            }
+            // this.searchCriteria = {
+            //     mark: '',
+            //     name: '',
+            //     pageNo: 0,
+            //     pageSize: 10
+            // }
+            this.resetSearchCriteria();
             this.getProjectList(this.searchCriteria)
         },
         handleSizeChange(pageSize) {
             this.tempPS = pageSize
             const params = Object.assign({}, this.searchCriteria, {pageSize})
-            this.$set(this.searchCriteria, 'pageSize', pageSize)
+            // this.$set(this.searchCriteria, 'pageSize', pageSize)
             this.getProjectList(params)
         },
         handlePageChange(pageNo) {
             const params = Object.assign({}, this.searchCriteria, {pageNo: pageNo - 1})
-            this.$set(this.searchCriteria, 'pageNo', pageNo-1)
+            // this.$set(this.searchCriteria, 'pageNo', pageNo-1)
             this.getProjectList(params)
         },
         // 变更
@@ -397,7 +398,8 @@ export default {
                 return state.project.elements
             },
             paging: state => state.project.paging,
-            auditor: 'admin'
+            auditor: 'admin',
+            searchCriteria: state => state.project.searchCriteria
         })
     },
 

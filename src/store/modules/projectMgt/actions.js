@@ -7,8 +7,12 @@ export default {
     getProjectList({commit}, params) {
         return axios.get(API.PROJECT_LIST, {params})
             .then(response => response.data)
-            .then(({result}) => {commit(TYPES.GET_PROJECT_LIST, result)})
+            .then(({result}) => {commit(TYPES.GET_PROJECT_LIST, {result,params})})
             .catch(error => Promise.reject(error))
+    },
+
+    resetSearchCriteria({commit}) {
+        commit(TYPES.RESET_SEARCH_CRITERIA)
     },
 
     async getCurrentProject(data, params) {

@@ -1,5 +1,8 @@
 export const GET_PROJECT_LIST = 'GET_PROJECT_LIST';
 export const GET_PROJECT_ENV_CONFIG= 'GET_PROJECT_ENV_CONFIG';
+// 重置项目搜索
+export const RESET_SEARCH_CRITERIA = 'RESET_SEARCH_CRITERIA'
+
 
 //开始部署
 export const GET_PROJECT_DEPLOY = 'getProjectDeploy'

@@ -2,6 +2,12 @@ import actions from './actions'
 import mutations from './mutations'
 
 const state = {
+    searchCriteria: {
+        mark: '',
+        name: '',
+        pageNo: 0,
+        pageSize: 10
+    },
     elements: [],
     paging: {
         pageNo: 1,
