@@ -270,23 +270,7 @@ export default {
             ifprod: false,
             currentPodName: '',
             interval: null,
-            depolyErrorStatusLabel: ['jenkins失败','docker构建失败','部署失败','已取消'],
-            depolyStatusObj: {
-                '0': '初始',
-                '1': 'jenkins构建中',
-                '2': 'jenkins失败',
-                '3': '准备docker构建',
-                '4': 'docker构建中',
-                '5': 'docker构建失败',
-                '6': '推送中',
-                '7': '等待调度',
-                '8': '启动成功',
-                '9': '部署失败',
-                '10': '启动中',
-                '11': '已取消',
-                '12': '待打部署包',
-                '13': '打包完成',
-            }
+            depolyErrorStatusLabel: ['jenkins失败','docker构建失败','部署失败','已取消']
         }
     },
     created: function() {
