@@ -98,28 +98,6 @@
                     </list-panel>
                 </el-tab-pane>
                 <el-tab-pane label="部署历史">
-                    <!-- <search-panel>
-                        <el-form
-                            :inline="true"
-                            size="small"
-                            :model="searchCriteria"
-                            class="formPanel"
-                            label-width="80px">
-                            <div class="searchCriteriaContent">
-                                <el-form-item label="人员">
-                                    <el-input
-                                        @keyup.enter.native="searchListMethod"
-                                        v-model="searchCriteria.creatorName"/>
-                                </el-form-item>
-                            </div>
-                            <el-form-item>
-                                <el-button
-                                    type="primary"
-                                    icon="el-icon-search"
-                                    @click="searchListMethod()">搜索</el-button>
-                            </el-form-item>
-                        </el-form>
-                    </search-panel> -->
                     <list-panel>
                         <!-- main start -->
                         <template slot="main">
@@ -292,7 +270,23 @@ export default {
             ifprod: false,
             currentPodName: '',
             interval: null,
-            depolyErrorStatusLabel: ['jenkins失败','docker构建失败','部署失败','已取消']
+            depolyErrorStatusLabel: ['jenkins失败','docker构建失败','部署失败','已取消'],
+            depolyStatusObj: {
+                '0': '初始',
+                '1': 'jenkins构建中',
+                '2': 'jenkins失败',
+                '3': '准备docker构建',
+                '4': 'docker构建中',
+                '5': 'docker构建失败',
+                '6': '推送中',
+                '7': '等待调度',
+                '8': '启动成功',
+                '9': '部署失败',
+                '10': '启动中',
+                '11': '已取消',
+                '12': '待打部署包',
+                '13': '打包完成',
+            }
         }
     },
     created: function() {

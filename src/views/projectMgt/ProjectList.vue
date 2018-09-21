@@ -173,13 +173,6 @@ export default {
             tempPS: 10,
             tempPN: 0,
             defaultUploadList: [],
-            // import end
-            // searchCriteria: {
-            //     mark: '',
-            //     name: '',
-            //     pageNo: 0,
-            //     pageSize: 10
-            // },
             // 启动
             startForm: {
                 projectId: '',
@@ -193,7 +186,6 @@ export default {
                 memorySize: '',
                 envVariables: [],
                 ipAlias: [],
-
                 // 上传
                 auditor: 'admin',
                 desc: '',
@@ -238,24 +230,16 @@ export default {
             this.getProjectList(params)
         },
         reset() {
-            // this.searchCriteria = {
-            //     mark: '',
-            //     name: '',
-            //     pageNo: 0,
-            //     pageSize: 10
-            // }
             this.resetSearchCriteria();
             this.getProjectList(this.searchCriteria)
         },
         handleSizeChange(pageSize) {
             this.tempPS = pageSize
             const params = Object.assign({}, this.searchCriteria, {pageSize})
-            // this.$set(this.searchCriteria, 'pageSize', pageSize)
             this.getProjectList(params)
         },
         handlePageChange(pageNo) {
             const params = Object.assign({}, this.searchCriteria, {pageNo: pageNo - 1})
-            // this.$set(this.searchCriteria, 'pageNo', pageNo-1)
             this.getProjectList(params)
         },
         // 变更
