@@ -802,11 +802,6 @@ export default {
         padding: 0;
         padding-top: 10px; 
     }
-    .status-wrap {
-        padding: 2px 8px;
-        border:1px solid #e7e9f0;
-        border-radius:4px;
-    }
 
     /deep/ .el-form-item {
         margin-bottom: 0;
@@ -815,4 +810,5 @@ export default {
     /deep/ .el-card__header {
         padding: 13px 20px;
     }
+
 </style>
