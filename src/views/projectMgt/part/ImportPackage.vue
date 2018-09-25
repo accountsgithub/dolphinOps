@@ -135,6 +135,7 @@ export default {
         onremove() {
             this.upLoadStatus = '0';
             this.clearFile();
+            return false;
         }
     }
     
