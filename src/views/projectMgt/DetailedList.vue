@@ -130,8 +130,10 @@
                                     prop="statusLabel"
                                     label="状态">
                                     <template slot-scope="scope">
-                                        <span v-if="depolyErrorStatusLabel.indexOf(scope.row.statusLabel) !== -1" class="el_state_dot status-error">{{scope.row.statusLabel}}</span>
-                                        <span v-else class="el_state_dot status-agree">{{scope.row.statusLabel}}</span>
+                                        <span class="status-wrap">
+                                            <span v-if="depolyErrorStatusLabel.indexOf(scope.row.statusLabel) !== -1" class="el_state_dot status-error">{{scope.row.statusLabel}}</span>
+                                            <span v-else class="el_state_dot status-agree">{{scope.row.statusLabel}}</span>
+                                        </span>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
@@ -141,6 +143,7 @@
                                 </el-table-column>
                                 <el-table-column
                                     align="center"
+                                    width="180"
                                     label="操作">
                                     <template slot-scope="scope">
                                         <el-button class="icon iconfont icon-ic-change" :class="[{tableLastButtonStyleW: true}]" @click="changeType(scope.row.id)">版本切换</el-button>
@@ -751,6 +754,7 @@ export default {
     }
     /deep/ .mainContainer__header {
         padding: 10px!important;
+        border-bottom: 0;
     }
     .pathHerf {
         color: #016ad5 !important;
@@ -790,5 +794,10 @@ export default {
         margin: 0;
         padding: 0;
         padding-top: 10px; 
+    }
+    .status-wrap {
+        padding: 2px 8px;
+        border:1px solid #e7e9f0;
+        border-radius:4px;
     }
 </style>
