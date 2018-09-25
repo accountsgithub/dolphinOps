@@ -92,8 +92,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                        label="操作"
-                        width="200">
+                        label="操作">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" @click="dialogInfo(scope.row)" v-if="scope.row.state !== 4 && scope.row.state !== 5">查看详情</a>
                             <a class="tableActionStyle" @click="dialogChange(scope.row)" v-if="scope.row.state !== 4 && scope.row.state !== 5">变更</a>

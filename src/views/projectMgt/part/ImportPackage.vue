@@ -81,11 +81,9 @@ export default {
             }
             return isZip && isLtM && this.upLoadStatus !== '1';
         },
-        beforeClose(done) {
-            this.upLoadStatus = '0';
-            this.clearFile();
+        beforeClose() {
+            this.clearItem()
             this.$emit('update:close');
-            done();
         },
         handleOk() {
             if (this.fileList.length === 0) {
@@ -123,13 +121,19 @@ export default {
             this.$message({
                 message: '只允许上传一个文件！',
                 type: 'warning'
-            })
-            this.upLoadStatus = '0'
+            });
+            this.upLoadStatus = '0';
         },
-        onprogress() {
-            this.upLoadStatus = '1'
+        onprogress(event, file) {
+            if (file) {
+                this.upLoadStatus = '1';
+            } else {
+                this.upLoadStatus = '0';
+            }
+            
         },
         onremove() {
+            this.upLoadStatus = '0';
             this.clearFile();
         }
     }
