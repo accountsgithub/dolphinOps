@@ -1,5 +1,5 @@
 <template>
-    <div style="background: #ffffff">
+    <div>
         <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <div class="title-style">
@@ -11,7 +11,7 @@
                     <span v-else-if="project.stateTxt == '启动中'" class="prj-status prj-status-begin">{{project.stateTxt}}</span>
                     <span v-else-if="project.stateTxt == '系统崩溃'" class="prj-status prj-status-error">{{project.stateTxt}}</span>
                     
-                    <el-button class="prj-btn import-btn" type="primary" @click="importDialog" icon="el-icon-upload">导入部署包</el-button>
+                    <el-button class="prj-btn import-btn " type="primary" @click="importDialog" icon="el-icon-upload">导入部署包</el-button>
                     <el-button class="prj-btn" type="default" @click="startUp" v-if="project.state !== 1 && project.state !== 3">启动</el-button>
                     <el-button class="prj-btn" type="default" @click="stopDeploy(project)" v-if="project.state === 1">停止</el-button>
                     <el-button class="prj-btn" type="default" @click="beginDeploy(project)" v-if="project.deployStatus && project.deployStatus === 5">开始部署</el-button>
@@ -143,7 +143,7 @@
                                 </el-table-column>
                                 <el-table-column
                                     align="center"
-                                    width="180"
+                                    width="120"
                                     label="操作">
                                     <template slot-scope="scope">
                                         <el-button class="icon iconfont icon-ic-change" :class="[{tableLastButtonStyleW: true}]" @click="changeType(scope.row.id)">版本切换</el-button>
@@ -768,6 +768,9 @@ export default {
         color:#ffffff;
         letter-spacing:0;
         text-align:left;
+        height: 32px;
+        line-height: 32px;
+        width: 50px;
     }
     .prj-status-agree {
         background: #0dcf5f;
@@ -786,6 +789,10 @@ export default {
     }
     .prj-btn {
         float: right;
+        padding-top: 0;
+        padding-bottom: 0;
+        height: 32px;
+        line-height:30px;
     }
     .import-btn {
         margin-left: 10px;
@@ -799,5 +806,13 @@ export default {
         padding: 2px 8px;
         border:1px solid #e7e9f0;
         border-radius:4px;
+    }
+
+    /deep/ .el-form-item {
+        margin-bottom: 0;
+    }
+
+    /deep/ .el-card__header {
+        padding: 13px 20px;
     }
 </style>
