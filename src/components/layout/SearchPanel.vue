@@ -20,6 +20,7 @@ export default {
         font-size: $search-font-size;
         margin-bottom: 12px;
         padding: 20px;
+        background-color: #ffffff;
         .formPanel {
             width: 100% !important;
             display: flex;

@@ -82,7 +82,7 @@ export default {
         border-radius: 0 !important;
         display: flex;
         justify-content: space-between;
-
+        background-color: #ffffff;
         .avatar-container {
             .avatar-wrapper {
                 margin-top: 10px;
