@@ -23,3 +23,5 @@ export const GET_PROJECT_EXAMPLELIST = 'getExampleList'
 export const GET_PROJECT_CHANGEVERSION = 'changeVersion'
 // 白名单设置
 export const GET_WHITE_IP_SETTING= 'whiteIp'
+// 邮箱设置
+export const GET_EAMIL_SETTING='emailist'

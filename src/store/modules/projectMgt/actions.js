@@ -51,6 +51,13 @@ export default {
             .catch(error => Promise.reject(error))
     },
 
+    setEamil({commit},params) {
+        return  axios.get(API.EMAIL_SETTING ,{params})
+            .then(response => response.data)
+            .then(({result}) => {commit(TYPES.GET_EAMIL_SETTING,result)})
+            .catch(error => Promise.reject(error))
+    },
+
     // 开始部署
     getProjectDeploy(data, params) {
         return axios.get(API.PROJECT_DEPLOY, {params})

@@ -56,5 +56,8 @@ export default {
     [TYPES.GET_PROJECT_UPLOAD_CONFIG]() {},
 
     //保存白名单
-    [TYPES.GET_WHITE_IP_SETTING]() {}
+    [TYPES.GET_WHITE_IP_SETTING]() {},
+
+    //保存邮箱
+    [TYPES.GET_EAMIL_SETTING]() {}
 }

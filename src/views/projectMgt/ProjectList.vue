@@ -99,7 +99,9 @@
                             <a class="tableActionStyle" @click="stopDeploy(scope.row)" v-if="scope.row.state === 1">停止</a>
                             <a class="tableActionStyle" @click="startUp(scope.row)" v-else-if="scope.row.state !== 1 && scope.row.state !== 3">启动</a>
                             <a class="tableActionStyle" @click="beginDeploy(scope.row)" v-if="scope.row.deployStatus && scope.row.deployStatus === 5">开始部署</a>
-                            <a class="tableActionStyle" v-if="ifprod" @click="whiteIpConfig(scope.row)">白名单设置</a>
+                            <!--<a class="tableActionStyle" v-if="ifprod" @click="whiteIpConfig(scope.row)">白名单设置</a>-->
+                            <a class="tableActionStyle" @click="whiteIpConfig(scope.row)">白名单设置</a>
+                            <a class="tableActionStyle" @click="addEmail(scope.row)">添加邮箱</a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -142,6 +144,11 @@
             :whiteIpDialog.sync="whiteIpDialog"
             :whiteIpFrom.sync="whiteIpFrom"
         ></white-list>
+        <email-list
+            v-on:update:close="handleEmailListDialogClose"
+            :EmailDialog.sync="EmailDialog"
+            :EmailForm.sync="EmailForm"
+        ></email-list>
     </div>
 
 </template>
@@ -153,13 +160,15 @@ import {SearchPanel} from '@/components/layout'
 import EnvModify from './part/EnvModify'
 import ImportPackage from './part/ImportPackage'
 import WhiteList from './part/WhiteList'
+import EmailList from './part/EmailList'
 export default {
     components: {
         SearchPanel,
         tableStatus,
         'env-modify': EnvModify,
         'import-package': ImportPackage,
-        'white-list': WhiteList
+        'white-list': WhiteList,
+        'email-list': EmailList
     },
 
     data() {
@@ -169,6 +178,7 @@ export default {
             dialogExpoVisible: false,
             envConfigDialog: false,
             whiteIpDialog: false,
+            EmailDialog: false,
             exportData: {},
             tempPS: 10,
             tempPN: 0,
@@ -196,6 +206,10 @@ export default {
                 projectId: '',
                 whiteList: ''
             },
+            EmailForm: {
+                projectId: '',
+                emails: ''
+            },
             statusArray: ['已停止','运行中','待部署','启动中','故障','初始','系统崩溃'],
             basePath: '',
             ifprod: false
@@ -210,7 +224,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy', 'setWhiteIp', 'resetSearchCriteria']),
+        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy', 'setWhiteIp','setEmail', 'resetSearchCriteria']),
 
         getPath(path) {
             if (path && /\[(.*)\]?/g.test(path)) {
@@ -371,8 +385,18 @@ export default {
             this.whiteIpFrom.projectId=row.id
             this.whiteIpFrom.whiteList=row.whiteList
         },
+
+        addEmail(row) {
+            this.EmailDialog=true
+            this.EmailForm.projectId=row.id
+            this.EmailForm.EmailList=row.emails
+
+        },
         handleWhiteIpDialogClose() {
             this.whiteIpDialog=false
+        },
+        handleEmailListDialogClose() {
+            this.EmailDialog=false
         }
     },
 

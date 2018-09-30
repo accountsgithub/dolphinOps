@@ -62,6 +62,8 @@ let API = {
     PROJECT_CHANGEVERSION: '/project/deploy',
     //白名单设置
     WHITE_IP_SETTING: '/project/white_set',
+    //添加告警邮箱
+    EMAIL_SETTING: '/project/email_set',
     //sz 命令下载
     WEBTERMLOG: '/project/WebtermLog/log'
 }
