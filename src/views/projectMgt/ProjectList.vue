@@ -49,15 +49,13 @@
                     stripe>
                     <el-table-column
                         prop="name"
-                        label="项目名称"
-                        width="180"/>
+                        label="项目名称" />
                     <el-table-column
                         prop="mark"
                         label="项目标识"
-                        width="200"/>
+                        width="180"/>
                     <el-table-column
                         prop="state"
-                        width="80"
                         label="运行状态">
                         <template slot-scope="scope">
                             <tableStatus :statusType="statusArray[+scope.row.state]"></tableStatus>
@@ -65,17 +63,13 @@
                     </el-table-column>
                     <el-table-column
                         prop="instanceNumber"
-                        width="60"
                         label="实例数"/>
-
                     <el-table-column
                         prop="memorySize"
-                        width="100"
                         label="内存（MB）">
                     </el-table-column>
                     <el-table-column
                         prop="version"
-                        width="80"
                         label="当前版本">
                         <template slot-scope="scope">
                             <span v-if="scope.row.version">{{scope.row.version}}</span>
@@ -84,7 +78,6 @@
                     </el-table-column>
                     <el-table-column
                         prop="path"
-                        width="200"
                         label="外部路径">
                         <template slot-scope="scope">
                             <a class="pathHerf" v-if="getPath(scope.row.path)" :href="getPath(scope.row.path)" target="_blank">{{getPath(scope.row.path)}}</a>
@@ -92,7 +85,8 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                        label="操作">
+                        label="操作"
+                        width="300">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" @click="dialogInfo(scope.row)" v-if="scope.row.state !== 4 && scope.row.state !== 5">查看详情</a>
                             <a class="tableActionStyle" @click="dialogChange(scope.row)" v-if="scope.row.state !== 4 && scope.row.state !== 5">变更</a>
@@ -389,7 +383,7 @@ export default {
         addEmail(row) {
             this.EmailDialog=true
             this.EmailForm.projectId=row.id
-            this.EmailForm.EmailList=row.emails
+            this.EmailForm.emails=row.emails
 
         },
         handleWhiteIpDialogClose() {

@@ -1,8 +1,8 @@
 <template>
     <el-dialog title="添加邮箱" :visible.sync="dialogVisible" width="600px">
-        <el-form :model="whiteIpFrom" label-width="100px">
+        <el-form :model="EmailForm" label-width="100px">
             <el-form-item label="邮箱地址:">
-                <el-input v-model="whiteIpFrom.whiteList" auto-complete="off" placeholder="请添加告警邮箱,多个地址请用逗号 (',') 分隔"></el-input>
+                <el-input v-model="EmailForm.emails" auto-complete="off" placeholder="请添加告警邮箱,多个地址请用逗号 (',') 分隔"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -41,9 +41,9 @@ export default {
         saveWhiteIp() {
             const params = {
                 projectId: this.EmailForm.projectId,
-                whiteList: this.EmailForm.emails
+                emails: this.EmailForm.emails
             }
-            this.setWhiteIp(params)
+            this.setEamil(params)
                 .then(() => {
                     this.$message({
                         type: 'success',
