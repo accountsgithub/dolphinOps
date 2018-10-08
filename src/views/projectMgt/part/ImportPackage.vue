@@ -100,10 +100,10 @@ export default {
         },
         handleSuccess(file) {
             if (file.status == '200') {
-                this.$message({
-                    message: '导入成功！',
-                    type: 'success'
-                })
+                // this.$message({
+                //     message: '导入成功！',
+                //     type: 'success'
+                // })
                 this.upLoadStatus = '0'
                 this.fileList.push(file)
                 this.displayFileList.push({
