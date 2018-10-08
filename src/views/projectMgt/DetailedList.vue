@@ -109,12 +109,10 @@
                                 stripe>
                                 <el-table-column
                                     prop="version"
-                                    label="版本号"
-                                    width="180"/>
+                                    label="版本号"/>
                                 <el-table-column
                                     prop="uploadMode"
-                                    label="发布方式"
-                                    width="180">
+                                    label="发布方式">
                                     <template slot-scope="scope">
                                         {{ mappingUploadMode(+scope.row.uploadMode) }}
                                     </template>
