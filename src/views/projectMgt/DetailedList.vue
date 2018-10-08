@@ -154,7 +154,6 @@
                         <!-- pagination start -->
                         <template slot="pagination">
                             <el-pagination
-                                v-if="historyListPaging.total != 0 && historyListPaging.total > historyListPaging.pageSize"
                                 :page-size="historyListPaging.pageSize"
                                 :total="historyListPaging.total"
                                 :current-page="historyListPaging.pageNo + 1"
