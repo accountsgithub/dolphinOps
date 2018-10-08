@@ -52,6 +52,7 @@ export const delCookie = (name) => {
     }
 }
 
+
 export const trim = (str) => {
     if (Object.prototype.toString.call(str) === '[object String]') {
         return str.trim()
