@@ -128,7 +128,7 @@
                                 </el-tooltip>
                             </template>
                         </el-table-column>
-                        <el-table-column property="value" label="操作">
+                        <el-table-column property="value" width="50" label="操作">
                             <template slot-scope="scope">
                                 <a href="javascript:;" class="del" @click="deleteItem(scope.row, 'ipAlias')" >删除</a>
                             </template>
