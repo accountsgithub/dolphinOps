@@ -764,10 +764,10 @@ export default {
         font-size:12px;
         color:#ffffff;
         letter-spacing:0;
-        text-align:left;
+        text-align:center;
         height: 32px;
         line-height: 32px;
-        width: 50px;
+        min-width: 50px;
     }
     .prj-status-agree {
         background: #0dcf5f;
