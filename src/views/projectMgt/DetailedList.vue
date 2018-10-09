@@ -85,7 +85,6 @@
                         <!-- pagination start -->
                         <template slot="pagination">
                             <el-pagination
-                                v-if="listPaging.total != 0 && listPaging.total > listPaging.pageSize"
                                 :page-size="listPaging.pageSize"
                                 :total="listPaging.total"
                                 :current-page="listPaging.pageNo + 1"
@@ -807,5 +806,24 @@ export default {
     /deep/ .el-card__header {
         padding: 13px 20px;
     }
+
+    /deep/ .el-tabs--border-card,
+    .el-card.is-always-shadow {
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.05);
+    }
+
+    /deep/ .el-card.is-always-shadow {
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.05);
+    }
+
+    /deep/ .el-tabs__header {
+        height: 46px;
+        line-height: 46px;
+        .el-tabs__item {
+            height: 47px;
+            line-height: 47px;
+        }
+    }
+
 
 </style>
