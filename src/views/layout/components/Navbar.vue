@@ -9,43 +9,66 @@
                 class="hamburger-container"/>
             <breadcrumb/>
         </div>
-
-        <el-dropdown
-            @command="handleCommand"
-            class="avatar-container"
-            trigger="click">
-            <div class="avatar-wrapper">
-                <img :src="avatar" class="avatar"/>
-                <div class="userName"><span>{{userName}}</span></div>
-                <i class="el-icon-caret-bottom"/>
+        <div style="display: flex;">
+            <div class="langSelectStyle">
+                <lang-select :lang="lang" class="international right-menu-item"></lang-select>
             </div>
-            <el-dropdown-menu
-                slot="dropdown"
-                class="user-dropdown">
-                <el-dropdown-item command="logout">
-                    <span>登出</span>
-                </el-dropdown-item>
-            </el-dropdown-menu>
-        </el-dropdown>
+            <el-dropdown
+                @command="handleCommand"
+                class="avatar-container"
+                trigger="click">
+                <div class="avatar-wrapper">
+                    <img :src="avatar" class="avatar"/>
+                    <div class="userName"><span>{{userName}}</span></div>
+                    <i class="el-icon-caret-bottom"/>
+                </div>
+                <el-dropdown-menu
+                    slot="dropdown"
+                    class="user-dropdown">
+                    <el-dropdown-item command="logout">
+                        <span>登出</span>
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </div>
     </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import LangSelect from '@/components/langSelect'
+import local from '@/lang'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import avatar from '@/assets/images/pic-head.png'
+const viewName = 'i18nView'
 
 export default {
     components: {
+        LangSelect,
         Breadcrumb,
         Hamburger
+    },
+    created() {
+        if (!this.$i18n.getLocaleMessage('en')[viewName]) {
+            this.$i18n.mergeLocaleMessage('zh', local.zh)
+            this.$i18n.mergeLocaleMessage('en', local.en)
+        }
     },
     computed: {
         ...mapGetters(['sidebar']),
 
         userName: function() {
             return ''
+        },
+        lang: {
+            get() {
+                return this.$store.state.app.language
+            },
+            set(lang) {
+                this.$i18n.locale = lang
+                this.$store.dispatch('setLanguage', lang)
+            }
         }
     },
 
@@ -77,6 +100,41 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+    .langSelectStyle{
+        top: 8px;
+        position: relative;
+        display: inline-table;
+        width: 83px;
+        /*right: 35px;*/
+        /deep/.el-input {
+            background:#ffffff;
+            border:1px solid #dcdfe6;
+            border-radius:4px;
+            height:30px !important;
+            width: 83px;
+            font-size: 12px;
+        }
+        /deep/.el-input__inner{
+            background:#ffffff;
+            border:1px solid #dcdfe6;
+            border-radius:4px;
+            height:30px !important;
+            width: 83px;
+            font-size: 12px;
+        }
+        /deep/.el-input--suffix .el-input__inner{
+            height:30px !important;
+        }
+    }
+
+    .international{
+        vertical-align: top;
+    }
+    .right-menu-item {
+        display: inline-block;
+        margin: 0;
+    }
+
     .navbar {
         padding: 12px 30px 10px 0px;
         border-radius: 0 !important;

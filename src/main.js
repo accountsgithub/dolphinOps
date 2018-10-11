@@ -3,6 +3,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import axios from 'axios'
+import i18n from './lang'
 import '@/components'
 
 import ElementUI from 'element-ui'
@@ -29,6 +30,7 @@ axios.get(glbalFilePath).then((res) => {
     new Vue({
         router,
         store,
+        i18n,
         render: h => h(App)
     }).$mount('#app')
 })

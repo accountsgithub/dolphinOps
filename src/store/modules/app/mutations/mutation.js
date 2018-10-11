@@ -2,6 +2,10 @@ import * as TYPES from '../mutationTypes'
 import Cookies from 'js-cookie'
 
 export default {
+    [TYPES.SETLANGUAGE](state, language) {
+        state.language = language
+        Cookies.set('language', language)
+    },
     [TYPES.TOGGLE_SIDE_BAR](state) {
         if (state.sidebar.opened) {
             Cookies.set('sidebarStatus', 1)

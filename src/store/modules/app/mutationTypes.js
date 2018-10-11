@@ -1,3 +1,5 @@
+export const SETLANGUAGE = 'setLanguage'
+
 export const TOGGLE_SIDE_BAR = 'TOGGLE_SIDEBAR'
 // 关闭sidebar
 export const CLOSE_SIDE_BAR = 'CLOSE_SIDE_BAR'

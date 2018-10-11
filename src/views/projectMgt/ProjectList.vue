@@ -25,7 +25,7 @@
                 <el-form-item>
                     <el-button
                         type="primary"
-                        @click="searchProject" class="tableLastButtonStyleB icon iconfont icon-ic-search">搜索</el-button>
+                        @click="searchProject" class="tableLastButtonStyleB icon iconfont icon-ic-search">{{$t('common.searchButton')}}</el-button>
                     <el-button @click="reset" class="tableLastButtonStyleW icon iconfont icon-ic-refresh" style="margin-right: -10px;">重置</el-button>
                 </el-form-item>
             </el-form>
@@ -122,13 +122,13 @@
             v-on:delete:item="deleteItem"
             v-on:update:uploadType="handelUploadType"
             :onClose="envDialogOnClose"
-            :envConfigDialog.sync="envConfigDialog" 
-            :envConfigForm.sync="envConfigForm" 
-            :dialogType.sync="dialogType" 
-            :importId.sync="importId" 
+            :envConfigDialog.sync="envConfigDialog"
+            :envConfigForm.sync="envConfigForm"
+            :dialogType.sync="dialogType"
+            :importId.sync="importId"
             isAdmin="0">
         </env-modify>
-        <import-package 
+        <import-package
             v-on:update:close="handleImportDialogClose"
             v-on:env:dialog:open="handleEnvDialogOpen"
             :dialogExpoVisible.sync="dialogExpoVisible">

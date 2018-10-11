@@ -2,6 +2,9 @@ import * as TYPES from '../mutationTypes'
 // import Cookies from 'js-cookie' // cookie
 
 export default {
+    setLanguage({ commit }, language) {
+        commit(TYPES.SETLANGUAGE, language)
+    },
     ToggleSideBar: ({ commit }) => {
         commit(TYPES.TOGGLE_SIDE_BAR)
     },
