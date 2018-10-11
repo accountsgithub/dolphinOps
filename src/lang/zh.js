@@ -7,6 +7,8 @@ export default {
         searchButton: '搜索'
     },
     projectMgt: {
-
+        part: {
+            
+        }
     }
 }
