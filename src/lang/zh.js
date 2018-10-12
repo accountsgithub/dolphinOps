@@ -116,6 +116,7 @@ export default {
         // EmailList
         addEmail: '添加邮箱',
         email: '邮箱地址:',
+        emailPlaceholder: '请添加告警邮箱,多个地址请用逗号 (",") 分隔',
         // EnvModify
         envEditTit: '环境配置-编辑',
         basicTab: '基础信息',
@@ -155,8 +156,8 @@ export default {
         uploadMes2: '点击上传',
         uploadMes3: '文件上传中，请勿重复上传',
         uploadMes4: '文件上传失败，请删除后重新上传',
-        uploadErrMes1: '上传文件类型只能是 rar/zip 格式!',
-        uploadErrMes2: '上传文件大小不能超过 300MB!',
+        uploadErrMes1: '文件类型只能是 rar/zip 格式!',
+        uploadErrMes2: '文件大小不能超过 300MB!',
         uploadErrMes3: '请上传文件!',
         uploadErrMes4: '只允许上传一个文件！',
         // WhiteList

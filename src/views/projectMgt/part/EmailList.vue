@@ -1,13 +1,13 @@
 <template>
-    <el-dialog title="添加邮箱" :visible.sync="dialogVisible" width="600px">
+    <el-dialog :title="$t('projectMgt.addEmail_button')" :visible.sync="dialogVisible" width="600px">
         <el-form :model="EmailForm" label-width="100px">
-            <el-form-item label="邮箱地址:">
-                <el-input v-model="EmailForm.emails" auto-complete="off" placeholder="请添加告警邮箱,多个地址请用逗号 (',') 分隔"></el-input>
+            <el-form-item :label="$t('part.email')">
+                <el-input v-model="EmailForm.emails" auto-complete="off" :placeholder="$t('part.emailPlaceholder')"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="cancelWhiteIp">取 消</el-button>
-            <el-button type="primary" @click="saveWhiteIp">确 定</el-button>
+            <el-button @click="cancelWhiteIp">{{$t('part.cancelLabel')}}</el-button>
+            <el-button type="primary" @click="saveWhiteIp">{{$t('part.okLabel')}}</el-button>
         </div>
     </el-dialog>
 </template>
@@ -47,7 +47,7 @@ export default {
                 .then(() => {
                     this.$message({
                         type: 'success',
-                        message: '添加成功！'
+                        message: this.$t('part.saveSuccessMes')
                     })
                     this.$emit('update:close')
                     location.reload()
