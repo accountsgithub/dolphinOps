@@ -1,6 +1,6 @@
 <template>
     <el-dialog
-        title="环境配置-编辑"
+        :title="$t('part.envEditTit')"
         top="30vh"
         width="600px"
         :close-on-click-modal="false"
@@ -13,24 +13,24 @@
             ref="envForm"
             :model="envConfigForm">
             <el-tabs>
-                <el-tab-pane label="基础信息" style="padding-top: 15px;">
+                <el-tab-pane :label="$t('part.basicTab')" style="padding-top: 15px;">
                     <div style="width:450px; margin: 0 auto;"> 
-                        <el-form-item label="上传类型" v-if="dialogType == 'upload'">
+                        <el-form-item :label="$t('part.uploadField')" v-if="dialogType == 'upload'">
                             <div class="uploadType">
                                 <div class="uploadField" :class="{active: envConfigForm.uploadType === 0}" @click="handelUploadType(0)">
-                                    BUG修复
+                                    {{$t('part.bugFix')}}
                                 </div>
                                 <div class="uploadField" :class="{active: envConfigForm.uploadType === 1}" @click="handelUploadType(1)">
-                                    版本发布
+                                    {{$t('part.versionPub')}}
                                 </div>
                             </div>
                         </el-form-item>
 
-                        <el-form-item label="实例数" prop="instanceNumber">
+                        <el-form-item :label="$t('projectMgt.instanceNumber_label')" prop="instanceNumber">
                             <el-select
                                 style="width:100%"
                                 v-model="envConfigForm.instanceNumber"
-                                placeholder="请选择实例数">
+                                :placeholder="$t('part.instancePlaceholder')">
                                 <el-option :label="1" :value="1"/>
                                 <el-option :label="2" :value="2"/>
                                 <el-option :label="3" :value="3"/>
@@ -38,11 +38,11 @@
                                 <el-option :label="5" :value="5"/>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="内存(单位MB)" prop="memorySize">
+                        <el-form-item :label="$t('projectMgt.memorySize')" prop="memorySize">
                             <el-select
                                 style="width:100%"
                                 v-model="envConfigForm.memorySize"
-                                placeholder="请选择内存(单位MB)">
+                                :placeholder="$t('part.selectLabel')">
                                 <el-option
                                     v-for="item in options"
                                     :key="item.value"
@@ -51,22 +51,22 @@
                             </el-select>
                         </el-form-item>
 
-                        <el-form-item label="审核人" v-if="dialogType == 'upload'">
+                        <el-form-item :label="$t('part.auditor')" v-if="dialogType == 'upload'">
                             <el-input disabled v-model="envConfigForm.auditor">
                             </el-input>
                         </el-form-item>
-                        <el-form-item label="版本说明" prop="desc" v-if="dialogType == 'upload'">
+                        <el-form-item :label="$t('part.versionDesc')" prop="desc" v-if="dialogType == 'upload'">
                             <el-input type="textarea" v-model="envConfigForm.desc"></el-input>
                         </el-form-item>
                     </div>
                 </el-tab-pane>
                 <!-- 环境变量 -->
-                <el-tab-pane label="环境变量" style="text-align: center">
+                <el-tab-pane :label="$t('part.varTab')" style="text-align: center">
                     <el-table id="envTab" :data="envConfigForm.envVariables" width="100%" max-height="300" highlight-current-row stripe>
-                        <el-table-column property="label" label="变量">
+                        <el-table-column property="label" :label="$t('part.variable')">
                             <template slot-scope="scope">
                                 <!-- <el-form-item prop="countName"> -->
-                                <el-input size="small" v-if="scope.row.isNew" v-model="scope.row.key" placeholder="请输入变量" class="validate-style"></el-input>
+                                <el-input size="small" v-if="scope.row.isNew" v-model="scope.row.key" :placeholder="$t('part.varPlaceholder')" class="validate-style"></el-input>
                                 <!-- </el-form-item> -->
                                 <el-tooltip placement="left-start" effect="light">
                                     <div slot="content" style="width: 300px; word-wrap:break-word; word-break: break-all;">{{scope.row.key}}</div>
@@ -74,34 +74,35 @@
                                 </el-tooltip>
                             </template>
                         </el-table-column>
-                        <el-table-column property="value" label="值">
+                        <el-table-column property="value" :label="$t('part.value')">
                             <template slot-scope="scope">
                                 <el-input size="small"
                                           v-if="scope.row.isNew"
                                           v-model="scope.row.value"
-                                          placeholder="请输入值" class="validate-style"></el-input>
+                                          :placeholder="$t('part.valuePlaceholder')" class="validate-style"></el-input>
                                 <el-tooltip placement="left-start" effect="light">
                                     <div slot="content" style="width: 300px; word-wrap:break-word; word-break: break-all;">{{scope.row.value}}</div>
                                     <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.value}}</span>
                                 </el-tooltip>
                             </template>
                         </el-table-column>
-                        <el-table-column property="value" width="50" label="操作">
+                        <el-table-column property="value" width="50" :label="$t('common.operate_label')">
                             <template slot-scope="scope">
-                                <a href="javascript:;" class="del" @click="deleteItem(scope.row, 'envVariables')" >删除</a>
+                                <a href="javascript:;" class="del" @click="deleteItem(scope.row, 'envVariables')" >{{$t('part.deleteLabel')}}</a>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-button class="addRowBtn" icon="el-icon-plus" size="mini" @click="addNewItem('envVariables')">添加环境变量</el-button>
+                    <el-button class="addRowBtn" icon="el-icon-plus" size="mini" @click="addNewItem('envVariables')">{{$t('part.addEnv')}}</el-button>
                 </el-tab-pane>
-                <el-tab-pane label="IP别名" style="text-align: center">
+                <el-tab-pane :label="$t('part.ipLabal')" style="text-align: center">
                     <el-table :data="envConfigForm.ipAlias" width="100%" max-height="300" highlight-current-row stripe>
-                        <el-table-column property="label" label="IP别名">
+                        <el-table-column property="label" :label="$t('part.ipLabal')">
                             <template slot-scope="scope">
                                 <el-input size="small"
                                           v-if="scope.row.isNew"
                                           v-model="scope.row.key"
-                                          placeholder="请输入IP别名" class="validate-style"></el-input>
+                                          :placeholder="$t('part.ipLabalPlaceholder')"
+                                          class="validate-style"></el-input>
                                 <span v-if="!scope.row.isNew">{{scope.row.key}}</span>
                             </template>
                         </el-table-column>
@@ -111,36 +112,38 @@
                                     <el-input size="small"
                                               v-if="scope.row.isNew"
                                               v-model="scope.row.value"
-                                              placeholder="请输入IP" class="validate-text"></el-input>
+                                              :placeholder="$t('part.ipPlaceholder')"
+                                              class="validate-text"></el-input>
                                 </el-form-item>
                                 <span v-if="!scope.row.isNew">{{scope.row.value}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column property="value" label="别名备注">
+                        <el-table-column property="value" :label="$t('part.ipDesc')">
                             <template slot-scope="scope">
                                 <el-input size="small"
                                           v-if="scope.row.isNew"
                                           v-model="scope.row.desc"
-                                          placeholder="请输入别名备注" class="validate-style"></el-input>
+                                          :placeholder="$t('part.ipDescPlaceholder')"
+                                          class="validate-style"></el-input>
                                 <el-tooltip placement="left-start" effect="light">
                                     <div slot="content" style="width: 300px; word-wrap:break-word; word-break: break-all;">{{scope.row.desc}}</div>
                                     <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.desc ? scope.row.desc : '--'}}</span>
                                 </el-tooltip>
                             </template>
                         </el-table-column>
-                        <el-table-column property="value" width="50" label="操作">
+                        <el-table-column property="value" width="50" :label="$t('common.operate_label')">
                             <template slot-scope="scope">
-                                <a href="javascript:;" class="del" @click="deleteItem(scope.row, 'ipAlias')" >删除</a>
+                                <a href="javascript:;" class="del" @click="deleteItem(scope.row, 'ipAlias')" >{{$t('part.deleteLabel')}}</a>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-button class="addRowBtn" icon="el-icon-plus" size="mini" @click="addNewItem('ipAlias')">添加环境变量</el-button>
+                    <el-button class="addRowBtn" icon="el-icon-plus" size="mini" @click="addNewItem('ipAlias')">{{$t('part.addEnv')}}</el-button>
                 </el-tab-pane>
             </el-tabs>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="closeEnvDialog">取消</el-button>
-            <el-button type="primary" @click="saveEnvConfig">保存</el-button>
+            <el-button @click="closeEnvDialog">{{$t('part.cancelLabel')}}</el-button>
+            <el-button type="primary" @click="saveEnvConfig">{{$t('part.saveLabel')}}</el-button>
         </span>
     </el-dialog>
 </template>
@@ -173,9 +176,9 @@ export default {
     data() {
         const NumberApply = (rule, value, callback) => {
             if (value === '' || !value) {
-                callback(new Error('请输入实例数'));
+                callback(new Error(this.$t('part.instanceMes1')));
             } else if (!/^\d+$/.test(value)) {
-                callback(new Error('实例数必须是正整数'));
+                callback(new Error(this.$t('part.instanceMes2')));
             } else {
                 callback();
             }
@@ -184,15 +187,15 @@ export default {
             options: MEMORY_SIZE,
             rules: {
                 instanceNumber: [
-                    { required: true, message: '请输入实例数', trigger: 'blur' },
+                    { required: true, message: this.$t('part.instanceMes1'), trigger: 'blur' },
                     { validator: NumberApply, trigger: 'blur' }
                 ],
                 memorySize: [
-                    { required: true, message: '请输入内存大小', trigger: 'blur' }
+                    { required: true, message: this.$t('part.memorySizeMes'), trigger: 'blur' }
                 ],
-                auditor: [{ required: true, message: '请输入审核人', trigger: 'blur' }],
+                auditor: [{ required: true, message: this.$t('part.auditorMes'), trigger: 'blur' }],
                 uploadType: [
-                    { required: true, message: '请输入上传类型', trigger: 'blur' }
+                    { required: true, message: this.$t('part.uploadFieldMes'), trigger: 'blur' }
                 ]
             }
         };
@@ -216,13 +219,13 @@ export default {
                 if (!item.key || (item.key !== '' && /^[A-Za-z_][A-Za-z0-9_]$/.test(item.key ))) {
                     this.$message({
                         type: 'error',
-                        message: '变量格式不正确！'
+                        message: this.$t('part.variableMes')
                     })
                     return true
                 }  else if (!item.value) {
                     this.$message({
                         type: 'error',
-                        message: '值不能为空！'
+                        message: this.$t('part.valueMes')
                     })
                     return true
                 } else {
@@ -238,13 +241,13 @@ export default {
                 if (!item.value ||  (item.value != '' && /^((25[0-5]|2[0-4]\\d|[1]{1}\\d{1}\\d{1}|[1-9]{1}\\d{1}|\\d{1})($|(?!\\.$)\\.)){4}$/.test(item.value))) {
                     this.$message({
                         type: 'error',
-                        message: 'ip格式不正确！'
+                        message: this.$t('part.ipMes')
                     })
                     return true
                 } else if (!item.key) {
                     this.$message({
                         type: 'error',
-                        message: 'ip别名不能为空！'
+                        message: this.$t('part.ipLabalMes')
                     })
                     return true
                 } else {
@@ -306,7 +309,7 @@ export default {
                         };
                         this.saveUplaod(params).then(() => {
                             this.$message({
-                                message: '保存成功！',
+                                message: this.$t('part.saveSuccessMes'),
                                 type: 'success'
                             });
                             this.closeEnvDialog();
@@ -323,7 +326,7 @@ export default {
                         };
                         this.saveEnv(params).then(() => {
                             this.$message({
-                                message: '保存成功！',
+                                message: this.$t('part.saveSuccessMes'),
                                 type: 'success'
                             });
                             this.closeEnvDialog();

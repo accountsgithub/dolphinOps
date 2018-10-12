@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="导入部署包"
+    <el-dialog :title="$t('projectMgt.importPackage')"
                :visible.sync="dialogVisible"
                :close-on-click-modal="false"
                :before-close="beforeClose"
@@ -20,14 +20,14 @@
             name="pack"
             :action="url">
             <i class="el-icon-upload"></i>
-            <div class="el-upload__text" v-if="upLoadStatus === '0'">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__text" v-else-if="upLoadStatus === '1'">文件上传中，请勿重复上传</div>
-            <div class="el-upload__text" v-else-if="upLoadStatus === '2'"> <span style="color:red;">文件上传失败，请删除后重新上传</span></div>
-            <div class="el-upload__tip" slot="tip">只能上传rar/zip文件，且不超过300M</div>
+            <div class="el-upload__text" v-if="upLoadStatus === '0'">{{$t('part.uploadMes1')}}<em>{{$t('part.uploadMes2')}}</em></div>
+            <div class="el-upload__text" v-else-if="upLoadStatus === '1'">{{$t('part.uploadMes3')}}</div>
+            <div class="el-upload__text" v-else-if="upLoadStatus === '2'"> <span style="color:red;">{{$t('part.uploadMes4')}}</span></div>
+            <div class="el-upload__tip" slot="tip">{{$t('part.uploadErrMes1')}}{{$t('part.uploadErrMes2')}}</div>
         </el-upload>
         <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="handleOk" v-if="fileList.length > 0" class="dialogButtonW">确认</el-button>
-            <el-button @click="beforeClose" class="dialogButtonW">取消</el-button>
+            <el-button type="primary" @click="handleOk" v-if="fileList.length > 0" class="dialogButtonW">{{$t('projectMgt.confirmButtonText')}}</el-button>
+            <el-button @click="beforeClose" class="dialogButtonW">{{$t('projectMgt.cancelButtonText')}}</el-button>
         </span>
     </el-dialog>
 </template>

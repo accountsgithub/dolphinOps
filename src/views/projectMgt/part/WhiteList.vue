@@ -1,13 +1,13 @@
 <template>
-    <el-dialog title="添加白名单" :visible.sync="dialogVisible" width="600px">
+    <el-dialog :title="$t('part.addWhiteList')" :visible.sync="dialogVisible" width="600px">
         <el-form :model="whiteIpFrom" label-width="100px">
-            <el-form-item label="地址:">
-                <el-input v-model="whiteIpFrom.whiteList" auto-complete="off" placeholder="请填写白名单地址,多个地址请用逗号 (',') 分隔"></el-input>
+            <el-form-item :label="$t('part.whiteIp')">
+                <el-input v-model="whiteIpFrom.whiteList" auto-complete="off" :placeholder="$t('part.whiteIpPlaceholder')"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="cancelWhiteIp">取 消</el-button>
-            <el-button type="primary" @click="saveWhiteIp">确 定</el-button>
+            <el-button @click="cancelWhiteIp">{{$t('part.cancelLabel')}}</el-button>
+            <el-button type="primary" @click="saveWhiteIp">{{$t('part.okLabel')}}</el-button>
         </div>
     </el-dialog>
 </template>
@@ -47,7 +47,7 @@ export default {
                 .then(() => {
                     this.$message({
                         type: 'success',
-                        message: '添加成功！'
+                        message: this.$t('part.whiteIpSuccessMes')
                     })
                     this.$emit('update:close')
                     location.reload()
