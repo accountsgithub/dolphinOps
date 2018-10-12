@@ -1,12 +1,75 @@
 export default {
     route: {
+        detailed: '详细信息',
         projectMgt: '项目管理'
     },
     common: {
         title: '海豚平台',
-        searchButton: '搜索'
+        index_title: '海豚运维平台',
+        reset_button: '重置',
+        search_button: '搜索',
+        operate_label: '操作',
+        sure_button: '确认',
+        cancel_button: '取消',
+        networkError_message: '服务器错误，请重试',
+        categories_label0: '后端',
+        categories_label1: '前端',
+        categories_label2: '组件',
+        modeType_label0: '基于源码',
+        modeType_label1: '基于镜像',
+        uploadMode_label0: '在线发布',
+        uploadMode_label1: '手动导入',
+        uploadType_label0: 'bug修复',
+        uploadType_label1: '版本发布'
+    },
+    login: {
+        title: '海豚运维平台',
+        usernameRules: '项目标识不能为空',
+        passwordRules: '项目密钥不能为空',
+        loginButton: '登陆'
     },
     projectMgt: {
-
+        name_label: '项目名称',
+        name_placeholder: '请输入项目名称',
+        mark_label: '项目标识',
+        mark_placeholder: '请输入项目标识',
+        project_list_title: '项目列表',
+        import_button: '导入部署包',
+        status_label: '运行状态',
+        instanceNumber_label: '实例数',
+        memorySize_label: '内存',
+        version_label: '当前版本',
+        path_label: '外部路径',
+        showDetail_button: '查看详情',
+        change_button: '变更',
+        stop_button: '停止',
+        start_button: '启动',
+        deploy_button: '开始部署',
+        whitelist_set_button: '白名单设置',
+        addEmail_button: '添加邮箱',
+        stop_data: '已停止',
+        running_data: '运行中',
+        deploy_data: '待部署',
+        start_data: '启动中',
+        error_data: '故障',
+        init_data: '初始',
+        systemError_data: '系统崩溃',
+        isDeploy_message: '是否确认部署项目？',
+        sureDeploy_message: '确认部署',
+        deploying_message: '正在部署请稍后！',
+        cancel_message: '操作已取消！',
+        isStop_message: '是否确认停止项目？',
+        sureStop_message: '确认停止',
+        stoping_message: '正在停止请稍后！',
+        stop_message: '操作已取消！',
+        isStart_message: '是否确认启动项目？',
+        sureStart_message: '确认启动',
+        starting_message: '正在启动请稍后！',
+        start_message: '操作已取消！'
+    },
+    error404: {
+        noPage_message: '该页面不存在。。。。',
+        error404_message: '请检查您输入的网址是否正确，请点击以下按钮返回主页或者发送错误报告',
+        error404_backButton: '返回首页'
     }
 }

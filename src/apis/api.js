@@ -9,7 +9,7 @@ axios.interceptors.request.use(config => {
     NProgress.start()
     return config
 }, err => {
-    Message.error('服务器错误，请重试')
+    Message.error(this.$t('common.networkError_message'))
     return Promise.reject(err)
 })
 axios.interceptors.response.use(response => {
@@ -28,7 +28,7 @@ axios.interceptors.response.use(response => {
     return response
 }, err => {
     NProgress.done()
-    Message.error('服务器错误，请重试')
+    Message.error(this.$t('common.networkError_message'))
     return Promise.reject(err)
 })
 
