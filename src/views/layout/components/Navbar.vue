@@ -26,7 +26,7 @@
                     slot="dropdown"
                     class="user-dropdown">
                     <el-dropdown-item command="logout">
-                        <span>登出</span>
+                        <span>{{$t('common.logout')}}</span>
                     </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>

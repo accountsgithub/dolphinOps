@@ -22,7 +22,8 @@ export default {
         uploadMode_label0: '在线发布',
         uploadMode_label1: '手动导入',
         uploadType_label0: 'bug修复',
-        uploadType_label1: '版本发布'
+        uploadType_label1: '版本发布',
+        logout: '登出' // 变更1
     },
     login: {
         title: '海豚运维平台',
@@ -36,11 +37,12 @@ export default {
         name_placeholder: '请输入项目名称',
         mark_label: '项目标识',
         mark_placeholder: '请输入项目标识',
+        password_placeholder: '请输入项目密钥', // 变更1
         project_list_title: '项目列表',
         import_button: '导入部署包',
         status_label: '运行状态',
         instanceNumber_label: '实例数',
-        memorySize_label: '内存',
+        memorySize_label: '内存（MB）', // 变更1
         version_label: '当前版本',
         path_label: '外部路径',
         showDetail_button: '查看详情',

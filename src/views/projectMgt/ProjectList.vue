@@ -9,24 +9,24 @@
                 class="formPanel"
                 label-width="80px">
                 <div>
-                    <el-form-item label="项目名称">
+                    <el-form-item :label="$t('projectMgt.name_label')">
                         <el-input
                             v-model="searchCriteria.name"
                             @keyup.enter.native="searchProject"
-                            placeholder="请输入项目名称"></el-input>
+                            :placeholder="$t('projectMgt.name_placeholder')"></el-input>
                     </el-form-item>
-                    <el-form-item label="项目标识">
+                    <el-form-item :label="$t('projectMgt.mark_label')">
                         <el-input
                             v-model="searchCriteria.mark"
                             @keyup.enter.native="searchProject"
-                            placeholder="请输入项目标识"></el-input>
+                            :placeholder="$t('projectMgt.mark_placeholder')"></el-input>
                     </el-form-item>
                 </div>
                 <el-form-item>
                     <el-button
                         type="primary"
                         @click="searchProject" class="tableLastButtonStyleB icon iconfont icon-ic-search">{{$t('common.search_button')}}</el-button>
-                    <el-button @click="reset" class="tableLastButtonStyleW icon iconfont icon-ic-refresh" style="margin-right: -10px;">重置</el-button>
+                    <el-button @click="reset" class="tableLastButtonStyleW icon iconfont icon-ic-refresh" style="margin-right: -10px;">{{$t('common.reset_button')}}</el-button>
                 </el-form-item>
             </el-form>
         </SearchPanel>
@@ -34,8 +34,8 @@
         <list-panel>
             <!-- header start -->
             <template slot="header">
-                <span class="header__title">项目列表</span>
-                <el-button @click="importDialog" class="tableLastButtonStyleW icon iconfont icon-ic-import">导入部署包</el-button>
+                <span class="header__title">{{$t('projectMgt.project_list_title')}}</span>
+                <el-button @click="importDialog" class="tableLastButtonStyleW icon iconfont icon-ic-import">{{$t('projectMgt.import_button')}}</el-button>
             </template>
             <!-- header end -->
 
@@ -49,28 +49,28 @@
                     stripe>
                     <el-table-column
                         prop="name"
-                        label="项目名称" />
+                        :label="$t('projectMgt.name_label')" />
                     <el-table-column
                         prop="mark"
-                        label="项目标识"
+                        :label="$t('projectMgt.mark_label')"
                         width="180"/>
                     <el-table-column
                         prop="state"
-                        label="运行状态">
+                        :label="$t('projectMgt.status_label')">
                         <template slot-scope="scope">
                             <tableStatus :statusType="statusArray[+scope.row.state]"></tableStatus>
                         </template>
                     </el-table-column>
                     <el-table-column
                         prop="instanceNumber"
-                        label="实例数"/>
+                        :label="$t('projectMgt.instanceNumber_label')"/>
                     <el-table-column
                         prop="memorySize"
-                        label="内存（MB）">
+                        :label="$t('projectMgt.memorySize_label')">
                     </el-table-column>
                     <el-table-column
                         prop="version"
-                        label="当前版本">
+                        :label="$t('projectMgt.version_label')">
                         <template slot-scope="scope">
                             <span v-if="scope.row.version">{{scope.row.version}}</span>
                             <span v-else>—</span>
@@ -78,24 +78,24 @@
                     </el-table-column>
                     <el-table-column
                         prop="path"
-                        label="外部路径">
+                        :label="$t('projectMgt.path_label')">
                         <template slot-scope="scope">
                             <a class="pathHerf" v-if="getPath(scope.row.path)" :href="getPath(scope.row.path)" target="_blank">{{getPath(scope.row.path)}}</a>
                             <span v-else>—</span>
                         </template>
                     </el-table-column>
                     <el-table-column
-                        label="操作"
+                        :label="$t('common.operate_label')"
                         width="300">
                         <template slot-scope="scope">
-                            <a class="tableActionStyle" @click="dialogInfo(scope.row)" v-if="scope.row.state !== 4 && scope.row.state !== 5">查看详情</a>
-                            <a class="tableActionStyle" @click="dialogChange(scope.row)" v-if="scope.row.state !== 4 && scope.row.state !== 5">变更</a>
-                            <a class="tableActionStyle" @click="stopDeploy(scope.row)" v-if="scope.row.state === 1">停止</a>
-                            <a class="tableActionStyle" @click="startUp(scope.row)" v-else-if="scope.row.state !== 1 && scope.row.state !== 3">启动</a>
-                            <a class="tableActionStyle" @click="beginDeploy(scope.row)" v-if="scope.row.deployStatus && scope.row.deployStatus === 5">开始部署</a>
-                            <a class="tableActionStyle" v-if="ifprod" @click="whiteIpConfig(scope.row)">白名单设置</a>
+                            <a class="tableActionStyle" @click="dialogInfo(scope.row)" v-if="scope.row.state !== 4 && scope.row.state !== 5">{{$t('projectMgt.showDetail_button')}}</a>
+                            <a class="tableActionStyle" @click="dialogChange(scope.row)" v-if="scope.row.state !== 4 && scope.row.state !== 5">{{$t('projectMgt.change_button')}}</a>
+                            <a class="tableActionStyle" @click="stopDeploy(scope.row)" v-if="scope.row.state === 1">{{$t('projectMgt.stop_button')}}</a>
+                            <a class="tableActionStyle" @click="startUp(scope.row)" v-else-if="scope.row.state !== 1 && scope.row.state !== 3">{{$t('projectMgt.start_button')}}</a>
+                            <a class="tableActionStyle" @click="beginDeploy(scope.row)" v-if="scope.row.deployStatus && scope.row.deployStatus === 5">{{$t('projectMgt.deploy_button')}}</a>
+                            <a class="tableActionStyle" v-if="ifprod" @click="whiteIpConfig(scope.row)">{{$t('projectMgt.whitelist_set_button')}}</a>
                             <!--<a class="tableActionStyle" @click="whiteIpConfig(scope.row)">白名单设置</a>-->
-                            <a class="tableActionStyle" @click="addEmail(scope.row)">添加邮箱</a>
+                            <a class="tableActionStyle" @click="addEmail(scope.row)">{{$t('projectMgt.addEmail_button')}}</a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -204,7 +204,14 @@ export default {
                 projectId: '',
                 emails: ''
             },
-            statusArray: ['已停止','运行中','待部署','启动中','故障','初始','系统崩溃'],
+            statusArray: [
+                this.$t('projectMgt.stop_data'),
+                this.$t('projectMgt.running_data'),
+                this.$t('projectMgt.deploy_data'),
+                this.$t('projectMgt.start_data'),
+                this.$t('projectMgt.error_data'),
+                this.$t('projectMgt.init_data'),
+                this.$t('projectMgt.systemError_data')],
             basePath: '',
             ifprod: false
         }
@@ -297,15 +304,15 @@ export default {
         },
         //开始部署
         beginDeploy(val) {
-            this.$confirm('是否确认部署项目？', '确认部署', {
-                confirmButtonText: '确认',
-                cancelButtonText: '取消',
+            this.$confirm(this.$t('projectMgt.isDeploy_message'), this.$t('projectMgt.sureDeploy_message'), {
+                confirmButtonText: this.$t('common.sure_button'),
+                cancelButtonText: this.$t('common.cancel_button'),
                 type: 'warning',
                 center: true
             }).then(() => {
                 this.$message({
                     type: 'success',
-                    message: '正在部署请稍后！'
+                    message: this.$t('projectMgt.deploying_message')
                 })
                 let params = Object.assign({id: val.desireDeployId})
                 this.getProjectDeploy(params).then(res => {
@@ -316,22 +323,22 @@ export default {
             }).catch((
             ) => {
                 this.$message({
-                    message: '操作已取消！'
+                    message: this.$t('projectMgt.cancel_message')
                 })
             })
         },
 
         // 启动
         startUp(val) {
-            this.$confirm('是否确认启动项目？', '确认启动', {
-                confirmButtonText: '确认',
-                cancelButtonText: '取消',
+            this.$confirm(this.$t('projectMgt.isStart_message'), this.$t('projectMgt.sureStart_message'), {
+                confirmButtonText: this.$t('common.sure_button'),
+                cancelButtonText: this.$t('common.cancel_button'),
                 type: 'warning',
                 center: true
             }).then(() => {
                 this.$message({
                     type: 'success',
-                    message: '正在启动请稍后！'
+                    message: this.$t('projectMgt.starting_message')
                 })
                 this.startForm.projectId = val.id
                 this.startForm.instance = val.instanceNumber
@@ -344,22 +351,22 @@ export default {
                 })
             }).catch(() => {
                 this.$message({
-                    message: '操作已取消！'
+                    message: this.$t('projectMgt.start_message')
                 })
             })
         },
 
         // 停止
         stopDeploy(val) {
-            this.$confirm('是否确认停止项目？', '确认停止', {
-                confirmButtonText: '确认',
-                cancelButtonText: '取消',
+            this.$confirm(this.$t('projectMgt.isStop_message'), this.$t('projectMgt.sureStop_message'), {
+                confirmButtonText: this.$t('common.sure_button'),
+                cancelButtonText: this.$t('common.cancel_button'),
                 type: 'warning',
                 center: true
             }).then(() => {
                 this.$message({
                     type: 'success',
-                    message: '正在停止请稍后！'
+                    message: this.$t('projectMgt.stoping_message')
                 })
                 let params = Object.assign({name: val.mark})
                 this.getProjectStop(params).then(res => {
@@ -369,7 +376,7 @@ export default {
                 })
             }).catch(() => {
                 this.$message({
-                    message: '操作已取消！'
+                    message: this.$t('projectMgt.stop_message')
                 })
             })
         },

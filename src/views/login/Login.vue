@@ -2,15 +2,15 @@
     <div class="login-background">
         <div class="login-form-background">
             <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
-                <h3 class="title">海豚运维平台</h3>
+                <h3 class="title">{{$t('common.index_title')}}</h3>
                 <h3 class="title2">DOLPHIN OPS PLATFORM</h3>
                 <el-form-item prop="username">
-                    <el-input class="textStyle" placeholder="请输入项目标识" v-model="loginForm.username" autoComplete="off">
+                    <el-input class="textStyle" :placeholder="$t('projectMgt.mark_placeholder')" v-model="loginForm.username" autoComplete="off">
                         <i slot="prefix" class="el-icon-document" style="margin: 0 15px 15px 13px;font-size: 20px;"></i>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input class="textStyle" name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" placeholder="请输入项目密钥">
+                    <el-input class="textStyle" name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off">
                         <i slot="prefix" class="icon iconfont icon-ic-lock" style="margin: 0 15px 15px 13px;font-size: 20px;"></i>
                         <i slot="suffix" class="show-pwd el-icon-view" @click="showPwd" style="margin: 10px 15px 15px 15px;font-size: 20px"></i>
                     </el-input>
@@ -42,13 +42,13 @@ export default {
             },
             loginRules: {
                 username: [
-                    { required: true, message: '项目标识不能为空', trigger: 'blur' }
+                    { required: true, message: this.$t('login.usernameRules'), trigger: 'blur' }
                 ],
                 password: [
-                    { required: true, message: '项目密钥不能为空', trigger: 'blur' }
+                    { required: true, message: this.$t('login.passwordRules'), trigger: 'blur' }
                 ]
             },
-            logButtonLabel: '登录',
+            logButtonLabel: this.$t('login.loginButton'),
             loadingStatus: false,
             pwdType: 'password'
         }
