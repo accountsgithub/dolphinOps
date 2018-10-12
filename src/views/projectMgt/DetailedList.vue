@@ -610,7 +610,7 @@ export default {
                 instance: this.project.instanceNumber,
                 memory: this.project.memorySize
             }
-            this.$confirm('是否确认启动项目？', '确认启动', {
+            this.$confirm('是否确认启动项目？', '确认启动？', {
                 confirmButtonText: '确认',
                 cancelButtonText: '取消',
                 type: 'warning',
@@ -634,7 +634,7 @@ export default {
         // 停止
         stopDeploy(val) {
             const _this = this
-            this.$confirm('是否确认停止项目？', '确认停止', {
+            this.$confirm('是否确认停止项目？', '确认停止？', {
                 confirmButtonText: '确认',
                 cancelButtonText: '取消',
                 type: 'warning',

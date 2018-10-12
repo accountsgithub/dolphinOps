@@ -42,7 +42,7 @@
                             <el-select
                                 style="width:100%"
                                 v-model="envConfigForm.memorySize"
-                                placeholder="请选择">
+                                placeholder="请选择内存(单位MB)">
                                 <el-option
                                     v-for="item in options"
                                     :key="item.value"
