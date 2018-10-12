@@ -11,7 +11,9 @@ export default {
         operate_label: '操作',
         sure_button: '确认',
         cancel_button: '取消',
+        // api
         networkError_message: '服务器错误，请重试',
+        // constants
         categories_label0: '后端',
         categories_label1: '前端',
         categories_label2: '组件',
@@ -29,6 +31,7 @@ export default {
         loginButton: '登陆'
     },
     projectMgt: {
+        // projectList
         name_label: '项目名称',
         name_placeholder: '请输入项目名称',
         mark_label: '项目标识',
@@ -65,9 +68,7 @@ export default {
         isStart_message: '是否确认启动项目？',
         sureStart_message: '确认启动',
         starting_message: '正在启动请稍后！',
-        start_message: '操作已取消！'
-    },
-    part: {
+        start_message: '操作已取消！',
         // DetailedList
         statusStop: '已停止',
         statusAgree: '运行中',
@@ -109,7 +110,9 @@ export default {
         startMes: '正在启动请稍后！',
         stopStartTit: '是否确认停止项目？',
         stopStartSubTit: '确认停止？',
-        stopMes: '正在停止请稍后！',
+        stopMes: '正在停止请稍后！'
+    },
+    part: {
         // EmailList
         addEmail: '添加邮箱',
         email: '邮箱地址:',
