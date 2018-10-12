@@ -6,13 +6,13 @@ export const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss'
  */
 export const CATEGORIES = [
     {
-        label: '后端',
+        label: this.$t('common.categories_label0'),
         value: 0
     }, {
-        label: '前端',
+        label: this.$t('common.categories_label1'),
         value: 1
     }, {
-        label: '组件',
+        label: this.$t('common.categories_label2'),
         value: 2
     }
 ]

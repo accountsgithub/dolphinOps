@@ -14,7 +14,9 @@ import './icons' // icon
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-Vue.use(ElementUI)
+Vue.use(ElementUI, {
+    i18n: (key, value) => i18n.t(key, value)
+})
 
 axios.setConfig = function(config) {
     axios.defaults.baseURL = config.BASE_URL
