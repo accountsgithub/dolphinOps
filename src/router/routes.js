@@ -24,7 +24,7 @@ export const constantRouterMap = [
                 path: '/detailedList/:id/:proName',
                 name: 'detailedList',
                 component: resolve => require(['@/views/projectMgt/DetailedList'], resolve),
-                meta: {...meta, title: '详细信息'}
+                meta: {...meta, title: 'detailed'}
             }
         ]
     },
@@ -38,7 +38,7 @@ export const constantRouterMap = [
                 path: '/projectItem',
                 name: 'projectItem',
                 component: resolve => require(['@/views/projectMgt/DetailedList'], resolve),
-                meta: {...meta, title: '详细信息'}
+                meta: {...meta, title: 'detailed'}
             }
         ]
     },
@@ -57,7 +57,7 @@ export const constantRouterMap = [
                 path: 'index',
                 name: 'projectManagement',
                 component: resolve => require(['@/views/projectMgt/ProjectList'], resolve),
-                meta: {...meta, title: '项目管理', icon: 'project'}
+                meta: {...meta, title: 'projectMgt', icon: 'project'}
             }
         ]
     },

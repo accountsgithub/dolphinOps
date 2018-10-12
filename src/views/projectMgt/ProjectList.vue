@@ -25,7 +25,7 @@
                 <el-form-item>
                     <el-button
                         type="primary"
-                        @click="searchProject" class="tableLastButtonStyleB icon iconfont icon-ic-search">{{$t('common.searchButton')}}</el-button>
+                        @click="searchProject" class="tableLastButtonStyleB icon iconfont icon-ic-search">{{$t('common.search_button')}}</el-button>
                     <el-button @click="reset" class="tableLastButtonStyleW icon iconfont icon-ic-refresh" style="margin-right: -10px;">重置</el-button>
                 </el-form-item>
             </el-form>
