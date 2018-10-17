@@ -4,40 +4,40 @@
             <div slot="header" class="clearfix">
                 <div class="title-style">
                     {{proName}}
-                    <span v-if="project.stateTxt == '已停止'" class="prj-status">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '运行中'" class="prj-status prj-status-agree">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '故障'" class="prj-status prj-status-back">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '初始'" class="prj-status prj-status-default">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '启动中'" class="prj-status prj-status-begin">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '系统崩溃'" class="prj-status prj-status-error">{{project.stateTxt}}</span>
-                    
-                    <el-button class="prj-btn import-btn " type="primary" @click="importDialog" icon="el-icon-upload">导入部署包</el-button>
-                    <el-button class="prj-btn" type="default" @click="startUp" v-if="project.state !== 1 && project.state !== 3">启动</el-button>
-                    <el-button class="prj-btn" type="default" @click="stopDeploy(project)" v-if="project.state === 1">停止</el-button>
-                    <el-button class="prj-btn" type="default" @click="beginDeploy(project)" v-if="project.deployStatus && project.deployStatus === 5">开始部署</el-button>
-                    <el-button class="prj-btn" type="default" @click="whiteIpConfig(project)" v-if="ifprod">白名单设置</el-button>
-                    <el-button class="prj-btn" type="default" @click="dialogChange" v-if="project.state !== 4 && project.state !== 3">变更</el-button>
+                    <span v-if="project.stateTxt == '已停止' || project.stateTxt == 'Stopped'" class="prj-status">{{project.stateTxt}}</span>
+                    <span v-else-if="project.stateTxt == '运行中' || project.stateTxt == 'Operating'" class="prj-status prj-status-agree">{{project.stateTxt}}</span>
+                    <span v-else-if="project.stateTxt == '故障' || project.stateTxt == 'Faulty/Deployment Failed'" class="prj-status prj-status-back">{{project.stateTxt}}</span>
+                    <span v-else-if="project.stateTxt == '初始' || project.stateTxt == 'Deploying'" class="prj-status prj-status-default">{{project.stateTxt}}</span>
+                    <span v-else-if="project.stateTxt == '启动中' || project.stateTxt == 'Starting'" class="prj-status prj-status-begin">{{project.stateTxt}}</span>
+                    <span v-else-if="project.stateTxt == '系统崩溃' || project.stateTxt == 'System Crash'" class="prj-status prj-status-error">{{project.stateTxt}}</span>
+
+                    <el-button class="prj-btn import-btn " type="primary" @click="importDialog" icon="el-icon-upload">{{$t('projectMgt.importPackage')}}</el-button>
+                    <el-button class="prj-btn" type="default" @click="startUp" v-if="project.state !== 1 && project.state !== 3">{{$t('projectMgt.begin')}}</el-button>
+                    <el-button class="prj-btn" type="default" @click="stopDeploy(project)" v-if="project.state === 1">{{$t('projectMgt.stop')}}</el-button>
+                    <el-button class="prj-btn" type="default" @click="beginDeploy(project)" v-if="project.deployStatus && project.deployStatus === 5">{{$t('projectMgt.beiginDeploy')}}</el-button>
+                    <el-button class="prj-btn" type="default" @click="whiteIpConfig(project)" v-if="ifprod">{{$t('projectMgt.whiteIpConfig')}}</el-button>
+                    <el-button class="prj-btn" type="default" @click="dialogChange" v-if="project.state !== 4 && project.state !== 3">{{$t('projectMgt.modify')}}</el-button>
                 </div>
             </div>
             <el-row :gutter="20">
                 <el-form>
                     <el-col :span="3">
-                        <el-form-item label="实例数:">
+                        <el-form-item :label="$t('projectMgt.instanceNumber')">
                             {{project.instanceNumber}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="5">
-                        <el-form-item label="内存（MB）:">
+                        <el-form-item :label="$t('projectMgt.memorySize')">
                             {{project.memorySize}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="5">
-                        <el-form-item label="当前版本：">
+                        <el-form-item :label="$t('projectMgt.currVersion')">
                             {{project.version}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="11">
-                        <el-form-item label="外部路径：">
+                        <el-form-item :label="$t('projectMgt.pathHerf')">
                             <a class="pathHerf" :href="getPath(project.path)" target="_blank">{{getPath(project.path)}}</a>
                         </el-form-item>
                     </el-col>
@@ -46,7 +46,7 @@
         </el-card>
         <div style="margin-top: 8px">
             <el-tabs type="border-card" @tab-click="tabChange">
-                <el-tab-pane label="实例数列表">
+                <el-tab-pane :label="$t('projectMgt.dataList_label')">
                     <list-panel>
                         <!-- main start -->
                         <template slot="main">
@@ -64,18 +64,18 @@
                                     label="Ip"/>
                                 <el-table-column
                                     prop="port"
-                                    label="端口"/>
+                                    :label="$t('projectMgt.port')"/>
                                 <el-table-column
                                     prop="node"
                                     label="node"/>
                                 <el-table-column
                                     align="center"
                                     fixed="right"
-                                    label="操作">
+                                    :label="$t('projectMgt.operation')">
                                     <template slot-scope="scope">
-                                        <a class="tableActionStyle" @click.prevent="openTerminal(scope.row.podName)">终端</a>
-                                        <a class="tableActionStyle" :href="downloadHref(scope.row.podName)" target="_blank">下载日志</a>
-                                        <a class="tableActionStyle" v-if="scope.row.monitorUrl != '<no value>'" :href="scope.row.monitorUrl" target="_blank">监控</a>
+                                        <a class="tableActionStyle" @click.prevent="openTerminal(scope.row.podName)">{{$t('projectMgt.terminal')}}</a>
+                                        <a class="tableActionStyle" :href="downloadHref(scope.row.podName)" target="_blank">{{$t('projectMgt.downloadButton')}}</a>
+                                        <a class="tableActionStyle" v-if="scope.row.monitorUrl != '<no value>'" :href="scope.row.monitorUrl" target="_blank">{{$t('projectMgt.monitor')}}</a>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -96,7 +96,7 @@
                         <!-- pagination end -->
                     </list-panel>
                 </el-tab-pane>
-                <el-tab-pane label="部署历史">
+                <el-tab-pane :label="$t('projectMgt.deployHistory')">
                     <list-panel>
                         <!-- main start -->
                         <template slot="main">
@@ -108,24 +108,24 @@
                                 stripe>
                                 <el-table-column
                                     prop="version"
-                                    label="版本号"/>
+                                    :label="$t('projectMgt.version')"/>
                                 <el-table-column
                                     prop="uploadMode"
-                                    label="发布方式">
+                                    :label="$t('projectMgt.uploadMode')">
                                     <template slot-scope="scope">
                                         {{ mappingUploadMode(+scope.row.uploadMode) }}
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                     prop="uploadType"
-                                    label="发布类型">
+                                    :label="$t('projectMgt.uploadType')">
                                     <template slot-scope="scope">
                                         {{ mappingUploadType(+scope.row.uploadType) }}
                                     </template>
                                 </el-table-column>
                                 <el-table-column
                                     prop="statusLabel"
-                                    label="状态">
+                                    :label="$t('projectMgt.statusLabel')">
                                     <template slot-scope="scope">
                                         <span class="status-wrap">
                                             <span v-if="depolyErrorStatusLabel.indexOf(scope.row.statusLabel) !== -1" class="el_state_dot status-error">{{scope.row.statusLabel}}</span>
@@ -136,14 +136,14 @@
                                 <el-table-column
                                     :formatter="formatterUpdatedTime"
                                     prop="createTime"
-                                    label="部署时间">
+                                    :label="$t('projectMgt.createTime')">
                                 </el-table-column>
                                 <el-table-column
                                     align="center"
                                     width="120"
-                                    label="操作">
+                                    :label="$t('projectMgt.operation')">
                                     <template slot-scope="scope">
-                                        <el-button class="icon iconfont icon-ic-change" :class="[{tableLastButtonStyleW: true}]" @click="changeType(scope.row.id)">版本切换</el-button>
+                                        <el-button class="icon iconfont icon-ic-change" :class="[{tableLastButtonStyleW: true}]" @click="changeType(scope.row.id)">{{$t('projectMgt.changeTypeButton')}}</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -166,7 +166,7 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
-        <el-dialog class="terminal-dialog" title="终端"
+        <el-dialog class="terminal-dialog" :title="$t('projectMgt.terminal')"
                    :visible.sync="dialogVisible"
                    @close="closeTerminal"
                    width="800px">
@@ -178,13 +178,13 @@
             v-on:delete:item="deleteItem"
             v-on:update:uploadType="handelUploadType"
             :onClose="envDialogOnClose"
-            :envConfigDialog.sync="envConfigDialog" 
-            :envConfigForm.sync="envConfigForm" 
-            :dialogType.sync="dialogType" 
-            :importId.sync="importId" 
+            :envConfigDialog.sync="envConfigDialog"
+            :envConfigForm.sync="envConfigForm"
+            :dialogType.sync="dialogType"
+            :importId.sync="importId"
             isAdmin="0">
         </env-modify>
-        <import-package 
+        <import-package
             v-on:update:close="handleImportDialogClose"
             v-on:env:dialog:open="handleEnvDialogOpen"
             :dialogExpoVisible.sync="dialogExpoVisible">
@@ -269,7 +269,11 @@ export default {
             ifprod: false,
             currentPodName: '',
             interval: null,
-            depolyErrorStatusLabel: ['jenkins失败','docker构建失败','部署失败','已取消']
+            depolyErrorStatusLabel: [
+                this.$t('projectMgt.depolyErrorStatusLabel1'),
+                this.$t('projectMgt.depolyErrorStatusLabel2'),
+                this.$t('projectMgt.depolyErrorStatusLabel3'),
+                this.$t('projectMgt.depolyErrorStatusLabel4')]
         }
     },
     created: function() {
@@ -348,7 +352,6 @@ export default {
             this.websocket = new WebSocket(`${this.g_Config.WEBSOCKET_URL}/webterm`)
             // this.websocket = new WebSocket(`ws://prod.ctsp.kedacom.com/dolphin-ops/webterm`)
             this.websocket.onopen = () => {
-                console.log('连接成功')
                 this.websocket.send(JSON.stringify({'pod': param, 'termId': this.uuid, 'type': 'init'}))
             }
             this.websocket.onmessage = (res) => {
@@ -392,7 +395,7 @@ export default {
                 }
                 else if (cmdStr=='\u0003') {
                     term.write(wirteData)
-                } 
+                }
                 else {
                     term.write(wirteData)
                 }
@@ -434,12 +437,12 @@ export default {
                         path = path.replace(/[#|\s]/g, '')
                         fileName = trim(fileName)
                         this.downloadFile(`${this.g_Config.BASE_URL}${API.WEBTERMLOG}?podName=${this.currentPodName}&filePath=${path}/${fileName}`)
-                        this.commondStr = '' 
+                        this.commondStr = ''
                         return true
                     } else {
-                        this.commondStr = ''     
+                        this.commondStr = ''
                         return true
-                    }       
+                    }
                 } else if (e.keyCode == 8) {
                     let str = this.commondStr
                     if (str.length > 0) {
@@ -525,9 +528,9 @@ export default {
         },
         // 切换版本
         changeType(id) {
-            this.$confirm('切换后，线上将变更为此版本，是否继续？','确定将线上版本切换至此版本？', {
-                confirmButtonText: '确认',
-                cancelButtonText: '取消',
+            this.$confirm(this.$t('projectMgt.changeTypeTit'),this.$t('projectMgt.changeTypeSubTit'), {
+                confirmButtonText: this.$t('projectMgt.confirmButtonText'),
+                cancelButtonText: this.$t('projectMgt.cancelButtonText'),
                 type: 'warning',
                 center: true
             }).then(() => {
@@ -536,18 +539,18 @@ export default {
                     if (res.data.result.status == '200') {
                         this.$message({
                             type: 'success',
-                            message: '切换版本成功！'
+                            message: this.$t('projectMgt.changeTypeSussess')
                         })
                     } else {
                         this.$message({
                             type: 'error',
-                            message: '切换版本失败！'
+                            message: this.$t('projectMgt.changeTypeError')
                         })
                     }
                 })
             }).catch(() => {
                 this.$message({
-                    message: '操作已取消！'
+                    message: this.$t('projectMgt.operationCancel')
                 })
             })
         },
@@ -579,15 +582,15 @@ export default {
         },
         //开始部署
         beginDeploy(val) {
-            this.$confirm('是否确认部署项目？', '确认部署', {
-                confirmButtonText: '确认',
-                cancelButtonText: '取消',
+            this.$confirm(this.$t('projectMgt.beginDeployTit'), this.$t('projectMgt.beginDeploySubTit'), {
+                confirmButtonText: this.$t('projectMgt.confirmButtonText'),
+                cancelButtonText: this.$t('projectMgt.cancelButtonText'),
                 type: 'warning',
                 center: true
             }).then(() => {
                 this.$message({
                     type: 'success',
-                    message: '正在部署请稍后！'
+                    message: this.$t('projectMgt.deployingMes'),
                 })
                 let params = Object.assign({id: val.desireDeployId})
                 this.getProjectDeploy(params).then(res => {
@@ -598,7 +601,7 @@ export default {
             }).catch((
             ) => {
                 this.$message({
-                    message: '操作已取消！'
+                    message: this.$t('projectMgt.operationCancel'),
                 })
             })
         },
@@ -610,15 +613,15 @@ export default {
                 instance: this.project.instanceNumber,
                 memory: this.project.memorySize
             }
-            this.$confirm('是否确认启动项目？', '确认启动？', {
-                confirmButtonText: '确认',
-                cancelButtonText: '取消',
+            this.$confirm(this.$t('projectMgt.beginStartTit'), this.$t('projectMgt.beginStartSubTit'), {
+                confirmButtonText: this.$t('projectMgt.confirmButtonText'),
+                cancelButtonText: this.$t('projectMgt.cancelButtonText'),
                 type: 'warning',
                 center: true
             }).then(() => {
                 this.$message({
                     type: 'success',
-                    message: '正在启动请稍后！'
+                    message: this.$t('projectMgt.startMes'),
                 })
                 this.getProjectStart(params).then(res => {
                     if (res.status === 200) {
@@ -627,22 +630,22 @@ export default {
                 })
             }).catch(() => {
                 this.$message({
-                    message: '操作已取消！'
+                    message: this.$t('projectMgt.operationCancel'),
                 })
             })
         },
         // 停止
         stopDeploy(val) {
             const _this = this
-            this.$confirm('是否确认停止项目？', '确认停止？', {
-                confirmButtonText: '确认',
-                cancelButtonText: '取消',
+            this.$confirm(this.$t('projectMgt.stopStartTit'), this.$t('projectMgt.stopStartSubTit'), {
+                confirmButtonText: this.$t('projectMgt.confirmButtonText'),
+                cancelButtonText: this.$t('projectMgt.cancelButtonText'),
                 type: 'warning',
                 center: true
             }).then(() => {
                 this.$message({
                     type: 'success',
-                    message: '正在停止请稍后！'
+                    message: this.$t('projectMgt.stopMes')
                 })
                 let params = Object.assign({name: val.mark})
                 this.getProjectStop(params).then(res => {
@@ -652,7 +655,7 @@ export default {
                 })
             }).catch(() => {
                 this.$message({
-                    message: '操作已取消！'
+                    message: this.$t('projectMgt.operationCancel'),
                 })
             })
         },
@@ -796,7 +799,7 @@ export default {
     .searchPanel  {
         margin: 0;
         padding: 0;
-        padding-top: 10px; 
+        padding-top: 10px;
     }
 
     /deep/ .el-form-item {

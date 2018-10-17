@@ -72,6 +72,13 @@ export default {
         starting_message: '正在启动请稍后！',
         start_message: '操作已取消！',
         // DetailedList
+        downloadButton: '下载日志', // 变更1
+        monitor: '监控', // 变更1
+        dataList_label: '实例数列表', // 变更1
+        depolyErrorStatusLabel1: 'jenkins失败', // 变更1
+        depolyErrorStatusLabel2: 'docker构建失败', // 变更1
+        depolyErrorStatusLabel3: '部署失败', // 变更1
+        depolyErrorStatusLabel4: '已取消', // 变更1
         statusStop: '已停止',
         statusAgree: '运行中',
         statusBack: '故障',
@@ -97,6 +104,7 @@ export default {
         statusLabel: '状态',
         createTime: '部署时间',
         terminal: '终端',
+        changeTypeButton: '版本切换',
         changeTypeTit: '切换后，线上将变更为此版本，是否继续？',
         changeTypeSubTit: '确定将线上版本切换至此版本？',
         changeTypeSussess: '切换版本成功！',
