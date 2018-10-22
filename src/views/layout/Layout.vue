@@ -84,6 +84,7 @@ export default {
   .side-logo.hideSidebar {
       transition: width 0.28s;
       width: 60px !important;
+      height: 60px;
       background-position: 4px;
   }
 </style>

@@ -136,7 +136,7 @@ export default {
     }
 
     .navbar {
-        padding: 12px 30px 10px 0px;
+        padding: 5px 30px 5px 0px;
         border-radius: 0 !important;
         display: flex;
         justify-content: space-between;
