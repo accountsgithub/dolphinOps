@@ -86,7 +86,7 @@
                     </el-table-column>
                     <el-table-column
                         :label="$t('common.operate_label')"
-                        width="300">
+                        :width="list && list.length > 0 ? 250 : 100">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" @click="dialogInfo(scope.row)" v-if="scope.row.state !== 4 && scope.row.state !== 5">{{$t('projectMgt.showDetail_button')}}</a>
                             <a class="tableActionStyle" @click="dialogChange(scope.row)" v-if="scope.row.state !== 4 && scope.row.state !== 5">{{$t('projectMgt.change_button')}}</a>
