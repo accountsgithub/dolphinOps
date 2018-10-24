@@ -68,10 +68,7 @@
                                 <!-- <el-form-item prop="countName"> -->
                                 <el-input size="small" v-if="scope.row.isNew" v-model="scope.row.key" :placeholder="$t('part.varPlaceholder')" class="validate-style"></el-input>
                                 <!-- </el-form-item> -->
-                                <el-tooltip placement="left-start" effect="light">
-                                    <div slot="content" style="width: 300px; word-wrap:break-word; word-break: break-all;">{{scope.row.key}}</div>
-                                    <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.key}}</span>
-                                </el-tooltip>
+                                <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.key}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column property="value" :label="$t('part.value')">
