@@ -36,6 +36,7 @@ export default {
         name_placeholder: 'Project name',
         mark_label: 'Project Mark ',
         mark_placeholder: 'Project mark',
+        password_placeholder: 'Project password',
         project_list_title: 'Project List',
         import_button: 'Import Deployment Package',
         status_label: 'Operating Status',
