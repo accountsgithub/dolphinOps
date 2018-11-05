@@ -83,7 +83,8 @@
                                       highlight-current-row
                                       style="width: 100%"
                                       stripe>
-                                <el-table-column prop="podName"
+                                <el-table-column width="300"
+                                                 prop="podName"
                                                  label="podName" />
                                 <el-table-column prop="ip"
                                                  label="Ip" />
