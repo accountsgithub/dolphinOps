@@ -63,13 +63,15 @@ export default {
             this.displayFileList = [];
         },
         beforeAvatarUpload(file) {
-            let isZip = file.type.indexOf('zip') !== -1 || file.type.indexOf('rar') !== -1
+            // let isZip = file.type.indexOf('zip') !== -1 || file.type.indexOf('rar') !== -1
+            let fileExt = file.name.split('.').splice(-1).join('')
+            let isZip = fileExt === 'zip' || fileExt === 'rar'
             const isLtM = file.size / 1024 / 1024 < 300
-            if (file.type == '' && file.name) {
-                let arrayTemp = file.name.split('.')
-                let fileType = arrayTemp[1]
-                isZip = fileType === 'rar'
-            }
+            // if (file.type == '' && file.name) {
+            //     let arrayTemp = file.name.split('.')
+            //     let fileType = arrayTemp[1]
+            //     isZip = fileType === 'rar'
+            // }
             if (!isZip) {
                 this.$message.error('上传文件类型只能是 rar/zip 格式!')
             }
@@ -130,7 +132,7 @@ export default {
             } else {
                 this.upLoadStatus = '0';
             }
-            
+
         },
         onremove() {
             this.upLoadStatus = '0';
@@ -138,7 +140,7 @@ export default {
             return false;
         }
     }
-    
+
 }
 </script>
 <style lang="scss" scoped>
