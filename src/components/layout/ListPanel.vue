@@ -43,7 +43,7 @@ export default {
   }
 
   @include e(body) {
-    padding: 0 30px;
+    padding: 0 20px;
     .list {
       padding: 0 30px;
       &.el-table::before {

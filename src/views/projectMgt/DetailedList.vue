@@ -53,12 +53,12 @@
                     </el-col>
                     <el-col :span="5">
                         <el-form-item :label="$t('projectMgt.memorySize')">
-                            {{project.memorySize}}
+                            {{project.memorySize ? project.memorySize : '—'}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="5">
                         <el-form-item :label="$t('projectMgt.currVersion')">
-                            {{project.version}}
+                            {{project.version ? project.version : '—'}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="11">
@@ -75,118 +75,118 @@
             <el-tabs type="border-card"
                      @tab-click="tabChange">
                 <el-tab-pane :label="$t('projectMgt.dataList_label')">
-                    <list-panel>
-                        <!-- main start -->
-                        <template slot="main">
-                            <el-table :data="searchList"
-                                      class="list"
-                                      highlight-current-row
-                                      style="width: 100%"
-                                      stripe>
-                                <el-table-column width="300"
-                                                 prop="podName"
-                                                 label="podName" />
-                                <el-table-column prop="ip"
-                                                 label="Ip" />
-                                <el-table-column prop="port"
-                                                 :label="$t('projectMgt.port')" />
-                                <el-table-column prop="node"
-                                                 label="node" />
-                                <el-table-column align="center"
-                                                 fixed="right"
-                                                 :label="$t('projectMgt.operation')">
-                                    <template slot-scope="scope">
-                                        <a class="tableActionStyle"
-                                           @click.prevent="openTerminal(scope.row.podName)">{{$t('projectMgt.terminal')}}</a>
-                                        <a class="tableActionStyle"
-                                           :href="downloadHref(scope.row.podName)"
-                                           target="_blank">{{$t('projectMgt.downloadButton')}}</a>
-                                        <a class="tableActionStyle"
-                                           v-if="scope.row.monitorUrl != '<no value>'"
-                                           :href="scope.row.monitorUrl"
-                                           target="_blank">{{$t('projectMgt.monitor')}}</a>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </template>
-                        <!-- main end -->
+                    <!-- <list-panel> -->
+                    <!-- main start -->
+                    <!-- <template slot="main"> -->
+                    <el-table :data="searchList"
+                              class="list"
+                              highlight-current-row
+                              style="width: 100%"
+                              stripe>
+                        <el-table-column width="300"
+                                         prop="podName"
+                                         label="podName" />
+                        <el-table-column prop="ip"
+                                         label="Ip" />
+                        <el-table-column prop="port"
+                                         :label="$t('projectMgt.port')" />
+                        <el-table-column prop="node"
+                                         label="node" />
+                        <el-table-column width="200"
+                                         fixed="right"
+                                         :label="$t('projectMgt.operation')">
+                            <template slot-scope="scope">
+                                <a class="tableActionStyle"
+                                   @click.prevent="openTerminal(scope.row.podName)">{{$t('projectMgt.terminal')}}</a>
+                                <a class="tableActionStyle"
+                                   :href="downloadHref(scope.row.podName)"
+                                   target="_blank">{{$t('projectMgt.downloadButton')}}</a>
+                                <a class="tableActionStyle"
+                                   v-if="scope.row.monitorUrl != '<no value>'"
+                                   :href="scope.row.monitorUrl"
+                                   target="_blank">{{$t('projectMgt.monitor')}}</a>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <!-- </template> -->
+                    <!-- main end -->
 
-                        <!-- pagination start -->
-                        <template slot="pagination">
-                            <el-pagination :page-size="listPaging.pageSize"
-                                           :total="listPaging.total"
-                                           :current-page="listPaging.pageNo + 1"
-                                           class="pagination"
-                                           layout="total, sizes, prev, pager, next, jumper"
-                                           @size-change="handleSizeChange"
-                                           @current-change="handlePageChange" />
-                        </template>
-                        <!-- pagination end -->
-                    </list-panel>
+                    <!-- pagination start -->
+                    <!-- <template slot="pagination"> -->
+                    <el-pagination class="pagination"
+                                   :page-size="listPaging.pageSize"
+                                   :total="listPaging.total"
+                                   :current-page="listPaging.pageNo + 1"
+                                   layout="total, sizes, prev, pager, next, jumper"
+                                   @size-change="handleSizeChange"
+                                   @current-change="handlePageChange" />
+                                   <!-- </template> -->
+                                   <!-- pagination end -->
+                                   <!-- </list-panel> -->
                 </el-tab-pane>
                 <el-tab-pane :label="$t('projectMgt.deployHistory')">
-                    <list-panel>
-                        <!-- main start -->
-                        <template slot="main">
-                            <el-table :data="historyList"
-                                      class="list"
-                                      highlight-current-row
-                                      style="width: 100%"
-                                      stripe>
-                                <el-table-column prop="version"
-                                                 :label="$t('projectMgt.version')" />
-                                <el-table-column prop="uploadMode"
-                                                 :label="$t('projectMgt.uploadMode')">
-                                    <template slot-scope="scope">
-                                        {{ mappingUploadMode(+scope.row.uploadMode) }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="uploadType"
-                                                 :label="$t('projectMgt.uploadType')">
-                                    <template slot-scope="scope">
-                                        {{ mappingUploadType(+scope.row.uploadType) }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="statusLabel"
-                                                 :label="$t('projectMgt.statusLabel')">
-                                    <template slot-scope="scope">
-                                        <span class="status-wrap">
-                                            <span v-if="depolyErrorStatusLabel.indexOf(scope.row.statusLabel) !== -1"
-                                                  class="el_state_dot status-error">{{scope.row.statusLabel}}</span>
-                                            <span v-else
-                                                  class="el_state_dot status-agree">{{scope.row.statusLabel}}</span>
-                                        </span>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column :formatter="formatterUpdatedTime"
-                                                 prop="createTime"
-                                                 :label="$t('projectMgt.createTime')">
-                                </el-table-column>
-                                <el-table-column align="center"
-                                                 width="120"
-                                                 :label="$t('projectMgt.operation')">
-                                    <template slot-scope="scope">
-                                        <el-button class="icon iconfont icon-ic-change"
-                                                   :class="[{tableLastButtonStyleW: true}]"
-                                                   @click="changeType(scope.row.id)">{{$t('projectMgt.changeTypeButton')}}</el-button>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </template>
-                        <!-- main end -->
+                    <!-- <list-panel> -->
+                    <!-- main start -->
+                    <!-- <template slot="main"> -->
+                    <el-table :data="historyList"
+                              class="list"
+                              highlight-current-row
+                              style="width: 100%"
+                              stripe>
+                        <el-table-column prop="version"
+                                         :label="$t('projectMgt.version')" />
+                        <el-table-column prop="uploadMode"
+                                         :label="$t('projectMgt.uploadMode')">
+                            <template slot-scope="scope">
+                                {{ mappingUploadMode(+scope.row.uploadMode) }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="uploadType"
+                                         :label="$t('projectMgt.uploadType')">
+                            <template slot-scope="scope">
+                                {{ mappingUploadType(+scope.row.uploadType) }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="statusLabel"
+                                         :label="$t('projectMgt.statusLabel')">
+                            <template slot-scope="scope">
+                                <span class="status-wrap">
+                                    <span v-if="depolyErrorStatusLabel.indexOf(scope.row.statusLabel) !== -1"
+                                          class="el_state_dot status-error">{{scope.row.statusLabel}}</span>
+                                    <span v-else
+                                          class="el_state_dot status-agree">{{scope.row.statusLabel}}</span>
+                                </span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column :formatter="formatterUpdatedTime"
+                                         prop="createTime"
+                                         :label="$t('projectMgt.createTime')">
+                        </el-table-column>
+                        <el-table-column align="center"
+                                         width="200"
+                                         :label="$t('projectMgt.operation')">
+                            <template slot-scope="scope">
+                                <el-button class="icon iconfont icon-ic-change"
+                                           :class="[{tableLastButtonStyleW: true}]"
+                                           @click="changeType(scope.row.id)">{{$t('projectMgt.changeTypeButton')}}</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <!-- </template> -->
+                    <!-- main end -->
 
-                        <!-- pagination start -->
-                        <template slot="pagination">
-                            <el-pagination :page-size="historyListPaging.pageSize"
-                                           :total="historyListPaging.total"
-                                           :current-page="historyListPaging.pageNo + 1"
-                                           class="pagination"
-                                           layout="total, sizes, prev, pager, next, jumper"
-                                           @size-change="handleSizeChange"
-                                           @current-change="handlePageChange" />
-                        </template>
-                        <!-- pagination end -->
-                    </list-panel>
+                    <!-- pagination start -->
+                    <!-- <template slot="pagination"> -->
+                    <el-pagination :page-size="historyListPaging.pageSize"
+                                   :total="historyListPaging.total"
+                                   :current-page="historyListPaging.pageNo + 1"
+                                   class="pagination"
+                                   layout="total, sizes, prev, pager, next, jumper"
+                                   @size-change="handleSizeChange"
+                                   @current-change="handlePageChange" />
+                                   <!-- </template> -->
+                                   <!-- pagination end -->
+                                   <!-- </list-panel> -->
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -773,8 +773,9 @@ export default {
   margin-right: 10px;
 }
 /deep/ .mainContainer__header {
-  padding: 10px !important;
+  padding: 0 !important;
   border-bottom: 0;
+  height: 0;
 }
 .pathHerf {
   color: #016ad5 !important;
@@ -788,8 +789,8 @@ export default {
   color: #ffffff;
   letter-spacing: 0;
   text-align: center;
-  height: 32px;
-  line-height: 32px;
+  height: 20px;
+  line-height: 20px;
   min-width: 50px;
 }
 .prj-status-agree {

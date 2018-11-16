@@ -307,3 +307,15 @@
     .el-message-box__btns {
     }
 }
+
+// =============== tabs start ============
+.el-tabs--border-card {
+    box-shadow: none !important;
+    border: none !important;
+}
+// =============== tabs start ============
+
+.pagination {
+    text-align: right;
+    padding: 30px 40px 50px 0;
+}

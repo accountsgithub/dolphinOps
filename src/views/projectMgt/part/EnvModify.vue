@@ -1,99 +1,142 @@
 <template>
-    <el-dialog
-        :title="$t('part.envEditTit')"
-        top="30vh"
-        width="600px"
-        :close-on-click-modal="false"
-        :visible.sync="dialogVisible">
-        <el-form
-            size="small"
-            label-width="100px"
-            style="margin-top: -25px;"
-            :rules="rules"
-            ref="envForm"
-            :model="envConfigForm">
+    <el-dialog :title="$t('part.envEditTit')"
+               top="30vh"
+               width="600px"
+               :close-on-click-modal="false"
+               :visible.sync="dialogVisible">
+        <el-form size="small"
+                 label-width="100px"
+                 style="margin-top: -25px;"
+                 :rules="rules"
+                 ref="envForm"
+                 :model="envConfigForm">
             <el-tabs>
-                <el-tab-pane :label="$t('part.basicTab')" style="padding-top: 15px;">
-                    <div style="width:450px; margin: 0 auto;"> 
-                        <el-form-item :label="$t('part.uploadField')" v-if="dialogType == 'upload'">
+                <el-tab-pane :label="$t('part.basicTab')"
+                             style="padding-top: 15px;">
+                    <div style="width:450px; margin: 0 auto;">
+                        <el-form-item :label="$t('part.uploadField')"
+                                      v-if="dialogType == 'upload'">
                             <div class="uploadType">
-                                <div class="uploadField" :class="{active: envConfigForm.uploadType === 0}" @click="handelUploadType(0)">
+                                <div class="uploadField"
+                                     :class="{active: envConfigForm.uploadType === 0}"
+                                     @click="handelUploadType(0)">
                                     {{$t('part.bugFix')}}
                                 </div>
-                                <div class="uploadField" :class="{active: envConfigForm.uploadType === 1}" @click="handelUploadType(1)">
+                                <div class="uploadField"
+                                     :class="{active: envConfigForm.uploadType === 1}"
+                                     @click="handelUploadType(1)">
                                     {{$t('part.versionPub')}}
                                 </div>
                             </div>
                         </el-form-item>
 
-                        <el-form-item :label="$t('projectMgt.instanceNumber_label')" prop="instanceNumber">
-                            <el-select
-                                style="width:100%"
-                                v-model="envConfigForm.instanceNumber"
-                                :placeholder="$t('part.instancePlaceholder')">
-                                <el-option :label="1" :value="1"/>
-                                <el-option :label="2" :value="2"/>
-                                <el-option :label="3" :value="3"/>
-                                <el-option :label="4" :value="4"/>
-                                <el-option :label="5" :value="5"/>
+                        <el-form-item :label="$t('projectMgt.instanceNumber_label')"
+                                      prop="instanceNumber">
+                            <el-select style="width:100%"
+                                       v-model="envConfigForm.instanceNumber"
+                                       :placeholder="$t('part.instancePlaceholder')">
+                                <el-option :label="1"
+                                           :value="1" />
+                                <el-option :label="2"
+                                           :value="2" />
+                                <el-option :label="3"
+                                           :value="3" />
+                                <el-option :label="4"
+                                           :value="4" />
+                                <el-option :label="5"
+                                           :value="5" />
                             </el-select>
                         </el-form-item>
-                        <el-form-item :label="$t('projectMgt.memorySize')" prop="memorySize">
-                            <el-select
-                                style="width:100%"
-                                v-model="envConfigForm.memorySize"
-                                :placeholder="$t('part.selectLabel')">
-                                <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.label"/>
+                        <el-form-item :label="$t('projectMgt.memorySize')"
+                                      prop="memorySize">
+                            <el-select style="width:100%"
+                                       v-model="envConfigForm.memorySize"
+                                       :placeholder="$t('part.selectLabel')">
+                                <el-option v-for="item in options"
+                                           :key="item.value"
+                                           :label="item.label"
+                                           :value="item.label" />
                             </el-select>
                         </el-form-item>
 
-                        <el-form-item :label="$t('part.auditor')" v-if="dialogType == 'upload'">
-                            <el-input disabled v-model="envConfigForm.auditor">
+                        <el-form-item :label="$t('part.auditor')"
+                                      v-if="dialogType == 'upload'">
+                            <el-input disabled
+                                      v-model="envConfigForm.auditor">
                             </el-input>
                         </el-form-item>
-                        <el-form-item :label="$t('part.versionDesc')" prop="desc" v-if="dialogType == 'upload'">
-                            <el-input type="textarea" v-model="envConfigForm.desc"></el-input>
+                        <el-form-item :label="$t('part.versionDesc')"
+                                      prop="desc"
+                                      v-if="dialogType == 'upload'">
+                            <el-input type="textarea"
+                                      v-model="envConfigForm.desc"></el-input>
                         </el-form-item>
                     </div>
                 </el-tab-pane>
                 <!-- 环境变量 -->
-                <el-tab-pane :label="$t('part.varTab')" style="text-align: center">
-                    <el-table id="envTab" :data="envConfigForm.envVariables" width="100%" max-height="300" highlight-current-row stripe>
-                        <el-table-column property="label" :label="$t('part.variable')">
+                <el-tab-pane :label="$t('part.varTab')"
+                             style="text-align: center">
+                    <el-table id="envTab"
+                              :data="envConfigForm.envVariables"
+                              width="100%"
+                              max-height="300"
+                              highlight-current-row
+                              stripe>
+                        <el-table-column property="label"
+                                         :label="$t('part.variable')">
                             <template slot-scope="scope">
                                 <!-- <el-form-item prop="countName"> -->
-                                <el-input size="small" v-if="scope.row.isNew" v-model="scope.row.key" :placeholder="$t('part.varPlaceholder')" class="validate-style"></el-input>
+                                <el-input size="small"
+                                          v-if="scope.row.isNew"
+                                          v-model="scope.row.key"
+                                          :placeholder="$t('part.varPlaceholder')"
+                                          class="validate-style"></el-input>
                                 <!-- </el-form-item> -->
-                                <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.key}}</span>
+                                <span v-if="!scope.row.isNew"
+                                      class="noWrap">{{scope.row.key}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column property="value" :label="$t('part.value')">
+                        <el-table-column property="value"
+                                         :label="$t('part.value')">
                             <template slot-scope="scope">
                                 <el-input size="small"
                                           v-if="scope.row.isNew"
                                           v-model="scope.row.value"
-                                          :placeholder="$t('part.valuePlaceholder')" class="validate-style"></el-input>
-                                <el-tooltip placement="left-start" effect="light">
-                                    <div slot="content" style="width: 300px; word-wrap:break-word; word-break: break-all;">{{scope.row.value}}</div>
-                                    <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.value}}</span>
+                                          :placeholder="$t('part.valuePlaceholder')"
+                                          class="validate-style"></el-input>
+                                <el-tooltip placement="left-start"
+                                            effect="light">
+                                    <div slot="content"
+                                         style="width: 300px; word-wrap:break-word; word-break: break-all;">{{scope.row.value}}</div>
+                                    <span v-if="!scope.row.isNew"
+                                          class="noWrap">{{scope.row.value}}</span>
                                 </el-tooltip>
                             </template>
                         </el-table-column>
-                        <el-table-column property="value" width="50" :label="$t('common.operate_label')">
+                        <el-table-column property="value"
+                                         width="50"
+                                         :label="$t('common.operate_label')">
                             <template slot-scope="scope">
-                                <a href="javascript:;" class="del" @click="deleteItem(scope.row, 'envVariables')" >{{$t('part.deleteLabel')}}</a>
+                                <a href="javascript:;"
+                                   class="del"
+                                   @click="deleteItem(scope.row, 'envVariables')">{{$t('part.deleteLabel')}}</a>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-button class="addRowBtn" icon="el-icon-plus" size="mini" @click="addNewItem('envVariables')">{{$t('part.addEnv')}}</el-button>
+                    <el-button class="addRowBtn"
+                               icon="el-icon-plus"
+                               size="mini"
+                               @click="addNewItem('envVariables')">{{$t('part.addEnv')}}</el-button>
                 </el-tab-pane>
-                <el-tab-pane :label="$t('part.ipLabal')" style="text-align: center">
-                    <el-table :data="envConfigForm.ipAlias" width="100%" max-height="300" highlight-current-row stripe>
-                        <el-table-column property="label" :label="$t('part.ipLabal')">
+                <el-tab-pane :label="$t('part.ipLabal')"
+                             style="text-align: center">
+                    <el-table :data="envConfigForm.ipAlias"
+                              width="100%"
+                              max-height="300"
+                              highlight-current-row
+                              stripe>
+                        <el-table-column property="label"
+                                         :label="$t('part.ipLabal')">
                             <template slot-scope="scope">
                                 <el-input size="small"
                                           v-if="scope.row.isNew"
@@ -103,9 +146,11 @@
                                 <span v-if="!scope.row.isNew">{{scope.row.key}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column property="value" label="IP">
-                            <template slot-scope="scope" >
-                                <el-form-item prop="IP" class="VF-style">
+                        <el-table-column property="value"
+                                         label="IP">
+                            <template slot-scope="scope">
+                                <el-form-item prop="IP"
+                                              class="VF-style">
                                     <el-input size="small"
                                               v-if="scope.row.isNew"
                                               v-model="scope.row.value"
@@ -115,38 +160,51 @@
                                 <span v-if="!scope.row.isNew">{{scope.row.value}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column property="value" :label="$t('part.ipDesc')">
+                        <el-table-column property="value"
+                                         :label="$t('part.ipDesc')">
                             <template slot-scope="scope">
                                 <el-input size="small"
                                           v-if="scope.row.isNew"
                                           v-model="scope.row.desc"
                                           :placeholder="$t('part.ipDescPlaceholder')"
                                           class="validate-style"></el-input>
-                                <el-tooltip placement="left-start" effect="light">
-                                    <div slot="content" style="width: 300px; word-wrap:break-word; word-break: break-all;">{{scope.row.desc}}</div>
-                                    <span v-if="!scope.row.isNew" class="noWrap">{{scope.row.desc ? scope.row.desc : '--'}}</span>
+                                <el-tooltip placement="left-start"
+                                            effect="light">
+                                    <div slot="content"
+                                         style="width: 300px; word-wrap:break-word; word-break: break-all;">{{scope.row.desc}}</div>
+                                    <span v-if="!scope.row.isNew"
+                                          class="noWrap">{{scope.row.desc ? scope.row.desc : '--'}}</span>
                                 </el-tooltip>
                             </template>
                         </el-table-column>
-                        <el-table-column property="value" width="50" :label="$t('common.operate_label')">
+                        <el-table-column property="value"
+                                         width="50"
+                                         :label="$t('common.operate_label')">
                             <template slot-scope="scope">
-                                <a href="javascript:;" class="del" @click="deleteItem(scope.row, 'ipAlias')" >{{$t('part.deleteLabel')}}</a>
+                                <a href="javascript:;"
+                                   class="del"
+                                   @click="deleteItem(scope.row, 'ipAlias')">{{$t('part.deleteLabel')}}</a>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-button class="addRowBtn" icon="el-icon-plus" size="mini" @click="addNewItem('ipAlias')">{{$t('part.addEnv')}}</el-button>
+                    <el-button class="addRowBtn"
+                               icon="el-icon-plus"
+                               size="mini"
+                               @click="addNewItem('ipAlias')">{{$t('part.addEnv')}}</el-button>
                 </el-tab-pane>
             </el-tabs>
         </el-form>
-        <span slot="footer" class="dialog-footer">
+        <span slot="footer"
+              class="dialog-footer">
             <el-button @click="closeEnvDialog">{{$t('part.cancelLabel')}}</el-button>
-            <el-button type="primary" @click="saveEnvConfig">{{$t('part.saveLabel')}}</el-button>
+            <el-button type="primary"
+                       @click="saveEnvConfig">{{$t('part.saveLabel')}}</el-button>
         </span>
     </el-dialog>
 </template>
 <script>
 import { mapActions } from 'vuex';
-import {MEMORY_SIZE} from '@/constants'
+import { MEMORY_SIZE } from '@/constants'
 export default {
     name: 'EnvModify',
     props: {
@@ -213,13 +271,13 @@ export default {
         hasEnvValidErr(envVariables) {
             let has = false
             has = envVariables.some(item => {
-                if (!item.key || (item.key !== '' && /^[A-Za-z_][A-Za-z0-9_]$/.test(item.key ))) {
+                if (!item.key || (item.key !== '' && /^[A-Za-z_][A-Za-z0-9_]$/.test(item.key))) {
                     this.$message({
                         type: 'error',
-                        message: this.$t('part.variableMes')
+                        message: this.$t('part.valueMes')
                     })
                     return true
-                }  else if (!item.value) {
+                } else if (!item.value) {
                     this.$message({
                         type: 'error',
                         message: this.$t('part.valueMes')
@@ -235,7 +293,7 @@ export default {
         hasIpValidErr(ipAlias) {
             let has = false
             has = ipAlias.some(item => {
-                if (!item.value ||  (item.value != '' && /^((25[0-5]|2[0-4]\\d|[1]{1}\\d{1}\\d{1}|[1-9]{1}\\d{1}|\\d{1})($|(?!\\.$)\\.)){4}$/.test(item.value))) {
+                if (!item.value || (item.value != '' && /^((25[0-5]|2[0-4]\\d|[1]{1}\\d{1}\\d{1}|[1-9]{1}\\d{1}|\\d{1})($|(?!\\.$)\\.)){4}$/.test(item.value))) {
                     this.$message({
                         type: 'error',
                         message: this.$t('part.ipMes')
@@ -290,7 +348,7 @@ export default {
                     if (envVariables.length > 0 && this.hasEnvValidErr(envVariables)) {
                         return;
                     }
-                    if (ipAlias.length > 0 &&  this.hasIpValidErr(ipAlias)) {
+                    if (ipAlias.length > 0 && this.hasIpValidErr(ipAlias)) {
                         return;
                     }
                     if (this.dialogType == 'upload') {
@@ -336,81 +394,82 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-    @import '~@/styles/common.scss';
+@import '~@/styles/common.scss';
 
-    .addRowBtn {
-        padding: 7px 15px !important;
-        margin-top: 18px;
-        &:hover {
-            color: #016ad5;
-        }
-    }
-    .noWrap {
-        white-space: nowrap !important;
-    }
+.addRowBtn {
+  padding: 7px 15px !important;
+  margin-top: 18px;
+  &:hover {
+    color: #016ad5;
+  }
+}
+.noWrap {
+  white-space: nowrap !important;
+}
 
-    @include e(body) {
-        padding: 0 30px;
-        .list {
-            padding: 0 30px;
-            &.el-table::before {
-                height: 0 !important;
-            }
-        }
+@include e(body) {
+  padding: 0 30px;
+  .list {
+    padding: 0 30px;
+    &.el-table::before {
+      height: 0 !important;
     }
+  }
+}
 
-    // 验证样式
-    .validate-style {
-        margin-bottom: 0;
-    }
-    .validate-text {
-        margin-left: -100px;
-        width: 120px;
-    }
-    .el-table__body-wrapper .VF-style {
-         margin-bottom: 0;
-        /deep/ .el-form-item__error {
-            left: -100px!important;
-        }
-    }
+// 验证样式
+.validate-style {
+  margin-bottom: 0;
+}
+.validate-text {
+  margin-left: -100px;
+  width: 120px;
+}
+.el-table__body-wrapper .VF-style {
+  margin-bottom: 0;
+  /deep/ .el-form-item__error {
+    left: -100px !important;
+  }
+}
 
-    // 上传类型button
-    .uploadType {
-        display: flex;
-        height: 30px;
-        line-height: 1px;
-        align-items: center;
-        .uploadField {
-            text-align: center;
-            font-family:PingFangSC-Medium;
-            font-size:12px;
-            color: #606266;
-            letter-spacing:0;
-            border: 1px solid #dcdfe6;;
-            border-radius: 4px;
-            width: 78px;
-            height: 30px;
-            line-height: 28px;
-            cursor: pointer;
-            margin-right: 20px;
-            &:hover, &.active {
-                border-color: #016ad5;
-                color: #016ad5;
-            }
-        }
+// 上传类型button
+.uploadType {
+  display: flex;
+  height: 30px;
+  line-height: 1px;
+  align-items: center;
+  .uploadField {
+    text-align: center;
+    font-family: PingFangSC-Medium;
+    font-size: 12px;
+    color: #606266;
+    letter-spacing: 0;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    width: 78px;
+    height: 30px;
+    line-height: 28px;
+    cursor: pointer;
+    margin-right: 20px;
+    &:hover,
+    &.active {
+      border-color: #016ad5;
+      color: #016ad5;
     }
+  }
+}
 
-    .formPanel {
-        width: 100% !important;
-        display: flex;
-        justify-content: space-between;
-    }
+.formPanel {
+  width: 100% !important;
+  display: flex;
+  justify-content: space-between;
+}
 
-    .del {
-        color:#016ad5;
-    }
+.del {
+  color: #016ad5;
+}
 
-    .el-tabs__header {
-        margin-bottom: 25px;
-    }
+/deep/ .el-tabs__header {
+  margin-bottom: 0;
+}
 </style>
