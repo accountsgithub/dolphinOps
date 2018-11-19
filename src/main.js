@@ -14,10 +14,12 @@ import './icons' // icon
 
 const isProduction = process.env.NODE_ENV === 'production'
 
+// 国际化处理
 Vue.use(ElementUI, {
     i18n: (key, value) => i18n.t(key, value)
 })
 
+// 设置 baseURL
 axios.setConfig = function(config) {
     axios.defaults.baseURL = config.BASE_URL
     axios.defaults.timeout = config.AJAX_TIMEOUT
