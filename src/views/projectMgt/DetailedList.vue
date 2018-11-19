@@ -71,7 +71,7 @@
                 </el-form>
             </el-row>
         </el-card>
-        <div style="margin-top: 8px">
+        <div style="margin-top: 10px">
             <el-tabs type="border-card"
                      @tab-click="tabChange">
                 <el-tab-pane :label="$t('projectMgt.dataList_label')">
@@ -92,7 +92,7 @@
                                          :label="$t('projectMgt.port')" />
                         <el-table-column prop="node"
                                          label="node" />
-                        <el-table-column width="120"
+                        <el-table-column width="130"
                                          fixed="right"
                                          :label="$t('projectMgt.operation')">
                             <template slot-scope="scope">
@@ -162,7 +162,7 @@
                                          prop="createTime"
                                          :label="$t('projectMgt.createTime')">
                         </el-table-column>
-                        <el-table-column width="120"
+                        <el-table-column width="130"
                                          :label="$t('projectMgt.operation')">
                             <template slot-scope="scope">
                                 <el-button class="icon iconfont icon-ic-change"

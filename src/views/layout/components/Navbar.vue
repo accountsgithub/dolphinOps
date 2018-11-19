@@ -1,30 +1,28 @@
 <template>
-    <div
-        class="navbar"
-        mode="horizontal">
+    <div class="navbar"
+         mode="horizontal">
         <div class="breadcrumb">
-            <hamburger
-                :toggle-click="toggleSideBar"
-                :is-active="sidebar.opened"
-                class="hamburger-container"/>
-            <breadcrumb/>
+            <hamburger :toggle-click="toggleSideBar"
+                       :is-active="sidebar.opened"
+                       class="hamburger-container" />
+            <breadcrumb />
         </div>
         <div style="display: flex;">
             <div class="langSelectStyle">
-                <lang-select :lang="lang" class="international right-menu-item"></lang-select>
+                <lang-select :lang="lang"
+                             class="international right-menu-item"></lang-select>
             </div>
-            <el-dropdown
-                @command="handleCommand"
-                class="avatar-container"
-                trigger="click">
+            <el-dropdown @command="handleCommand"
+                         class="avatar-container"
+                         trigger="click">
                 <div class="avatar-wrapper">
-                    <img :src="avatar" class="avatar"/>
+                    <img :src="avatar"
+                         class="avatar" />
                     <div class="userName"><span>{{userName}}</span></div>
-                    <i class="el-icon-caret-bottom"/>
+                    <i class="el-icon-caret-bottom" />
                 </div>
-                <el-dropdown-menu
-                    slot="dropdown"
-                    class="user-dropdown">
+                <el-dropdown-menu slot="dropdown"
+                                  class="user-dropdown">
                     <el-dropdown-item command="logout">
                         <span>{{$t('common.logout')}}</span>
                     </el-dropdown-item>
@@ -100,68 +98,72 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-    .langSelectStyle{
-        top: 8px;
-        position: relative;
-        display: inline-table;
-        width: 83px;
-        /*right: 35px;*/
-        /deep/.el-input {
-            background:#ffffff;
-            border:1px solid #dcdfe6;
-            border-radius:4px;
-            height:30px !important;
-            width: 83px;
-            font-size: 12px;
-        }
-        /deep/.el-input__inner{
-            background:#ffffff;
-            border:1px solid #dcdfe6;
-            border-radius:4px;
-            height:30px !important;
-            width: 83px;
-            font-size: 12px;
-        }
-        /deep/.el-input--suffix .el-input__inner{
-            height:30px !important;
-        }
-    }
+.langSelectStyle {
+  top: 8px;
+  position: relative;
+  display: inline-table;
+  width: 83px;
+  /*right: 35px;*/
+  /deep/.el-input {
+    background: #ffffff;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    height: 30px !important;
+    width: 83px;
+    font-size: 12px;
+  }
+  /deep/.el-input__inner {
+    background: #ffffff;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    height: 30px !important;
+    width: 83px;
+    font-size: 12px;
+  }
+  /deep/.el-input--suffix .el-input__inner {
+    height: 30px !important;
+  }
+}
 
-    .international{
-        vertical-align: top;
-    }
-    .right-menu-item {
-        display: inline-block;
-        margin: 0;
-    }
+.international {
+  vertical-align: top;
+}
+.right-menu-item {
+  display: inline-block;
+  margin: 0;
+}
 
-    .navbar {
-        padding: 5px 30px 5px 0px;
-        border-radius: 0 !important;
-        display: flex;
-        justify-content: space-between;
-        background-color: #ffffff;
-        .avatar-container {
-            .avatar-wrapper {
-                margin-top: 10px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            .avatar {
-                height: 32px;
-                width: 32px;
-            }
-            .userName {
-                margin: 0 10px;
-            }
-        }
-
-        .breadcrumb{
-            display: flex;
-            align-items: center;
-            margin-left: 15px;
-        }
+.navbar {
+  position: absolute;
+  top: 0;
+  width: calc(100% + 10px);
+  left: -10px;
+  padding: 5px 30px 5px 0px;
+  border-radius: 0 !important;
+  display: flex;
+  justify-content: space-between;
+  background-color: #ffffff;
+  .avatar-container {
+    .avatar-wrapper {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
+    .avatar {
+      height: 32px;
+      width: 32px;
+    }
+    .userName {
+      margin: 0 10px;
+    }
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+  }
+}
 </style>
 
