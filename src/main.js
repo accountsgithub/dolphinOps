@@ -26,8 +26,10 @@ axios.setConfig = function(config) {
 }
 
 Vue.config.productionTip = false
-const glbalFilePath = isProduction ? 'static/global-config.json' : 'static/global-config-dev.json'
-axios.get(glbalFilePath).then((res) => {
+const glbalFilePath = isProduction
+    ? 'static/global-config.json'
+    : 'static/global-config-dev.json'
+axios.get(glbalFilePath).then(res => {
     Vue.prototype.g_Config = res.data
     axios.setConfig(Vue.prototype.g_Config)
     /* eslint-disable no-new */

@@ -168,6 +168,9 @@
     /deep/ .el-table__row--striped td {
         background-color: #f9fbfd !important;
     }
+    .el-button--text {
+        padding: 0;
+    }
 }
 // 按键白色
 .tableLastButtonStyleW {

@@ -92,7 +92,7 @@
                                          :label="$t('projectMgt.port')" />
                         <el-table-column prop="node"
                                          label="node" />
-                        <el-table-column width="130"
+                        <el-table-column width="150"
                                          fixed="right"
                                          :label="$t('projectMgt.operation')">
                             <template slot-scope="scope">
