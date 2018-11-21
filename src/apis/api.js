@@ -1,40 +1,47 @@
 import axios from 'axios'
-import {Message} from 'element-ui'
+import { Message } from 'element-ui'
 import NProgress from 'nprogress'
 import router from '../router'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 axios.defaults.withCredentials = true
-axios.interceptors.request.use(config => {
-    NProgress.start()
-    return config
-}, err => {
-    Message.error(this.$t('common.networkError_message'))
-    return Promise.reject(err)
-})
-axios.interceptors.response.use(response => {
-    NProgress.done()
-    const {data} = response
-
-    if (data.status == '401') {
-        router.push('/login')
-        return
+axios.interceptors.request.use(
+    config => {
+        NProgress.start()
+        return config
+    },
+    err => {
+        Message.error('Server error. Please try again.')
+        return Promise.reject(err)
     }
+)
+axios.interceptors.response.use(
+    response => {
+        NProgress.done()
+        const { data } = response
 
-    if (data.status != '200') {
-        Message.error(data.message || '')
-        return Promise.reject(data)
+        if (data.status == '401') {
+            router.push('/login')
+            return
+        }
+
+        if (data.status != '200') {
+            Message.error(data.message || '')
+            return Promise.reject(data)
+        }
+        return response
+    },
+    err => {
+        NProgress.done()
+        Message.error('Server error. Please try again.')
+        return Promise.reject(err)
     }
-    return response
-}, err => {
-    NProgress.done()
-    Message.error(this.$t('common.networkError_message'))
-    return Promise.reject(err)
-})
+)
 
 let API = {
     LOGIN: '/oauth/password',
     LOGIN_OUT: '/user/logout',
+    UPDATE_PASSWORD: '/user/password',
 
     //项目主列表
     PROJECT_LIST: '/project/list.do',
@@ -76,4 +83,3 @@ let API = {
 // }
 
 export default API
-

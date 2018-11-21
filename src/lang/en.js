@@ -3,6 +3,16 @@ export default {
         detailed: 'Details',
         projectMgt: 'Project'
     },
+    modifyPW: {
+        modifyPW_oldPassword: '旧密码',
+        modifyPW_password: '新密码',
+        modifyPW_newPassword: '确认密码',
+        vilidata_oldPassword: '旧密码不能为空',
+        vilidata_password: '新密码不能为空',
+        vilidata_newPassword: '确认密码不能为空',
+        vilidata_differPW: '密码不一致',
+        modifySuccessMes: 'modified',
+    },
     common: {
         title: 'Dolphin',
         index_title: 'Dolphin Deployment System',
@@ -22,7 +32,9 @@ export default {
         uploadMode_label0: 'Publish Online',
         uploadMode_label1: 'Import',
         uploadType_label0: 'Fix Bug',
-        uploadType_label1: 'Release Version'
+        uploadType_label1: 'Release Version',
+        logout: 'Logout',
+        modifyPassword: 'Modify Password'
     },
     login: {
         title: 'Dolphin Deployment System',
@@ -96,7 +108,8 @@ export default {
         statusLabel: 'Status',
         createTime: 'Deployed On',
         terminal: 'Real-Time Log',
-        changeTypeTit: 'Proceeding with this operation will cause the current version to switch to the selected version. Are you sure you want to proceed?',
+        changeTypeTit:
+            'Proceeding with this operation will cause the current version to switch to the selected version. Are you sure you want to proceed?',
         changeTypeSubTit: 'Switch Version',
         changeTypeSussess: 'Version Switched',
         changeTypeError: 'Version Switching Failed',
@@ -117,7 +130,8 @@ export default {
         // EmailList
         addEmail: 'Add Mail Address',
         email: 'Mail Address:',
-        emailPlaceholder: 'Enter mail addresses which can be separated by a comma.',
+        emailPlaceholder:
+            'Enter mail addresses which can be separated by a comma.',
         // EnvModify
         envEditTit: 'Environment-Edit',
         basicTab: 'Basic',
@@ -156,7 +170,8 @@ export default {
         uploadMes1: 'Drag the target file here or click ',
         uploadMes2: 'Upload.',
         uploadMes3: 'Please wait while one file is being uploaded.',
-        uploadMes4: 'The file fails to be uploaded. Please delete it and upload it again.',
+        uploadMes4:
+            'The file fails to be uploaded. Please delete it and upload it again.',
         uploadErrMes1: 'Only .rar and .zip files are supported.',
         uploadErrMes2: 'The file size cannot exceed 300 MB.',
         uploadErrMes3: 'Please upload the target file.',
@@ -164,13 +179,15 @@ export default {
         // WhiteList
         addWhiteList: 'Add Whitelist',
         whiteIp: 'IP:',
-        whiteIpPlaceholder: 'Enter IP addresses which can be separated by a comma.',
+        whiteIpPlaceholder:
+            'Enter IP addresses which can be separated by a comma.',
         okLabel: 'OK',
         whiteIpSuccessMes: 'Added'
     },
     error404: {
         noPage_message: 'This page does not exist.',
-        error404_message: 'Please check whether you have entered a correct IP address and click one of the following buttons to return to the home page or send an error report.',
+        error404_message:
+            'Please check whether you have entered a correct IP address and click one of the following buttons to return to the home page or send an error report.',
         error404_backButton: 'Back to Home'
     }
 }

@@ -1,4 +1,6 @@
 import * as TYPES from '../mutationTypes'
+import axios from 'axios'
+import API from '@/apis/api'
 // import Cookies from 'js-cookie' // cookie
 
 export default {
@@ -17,5 +19,13 @@ export default {
 
     updateDialog({ commit }, value) {
         commit('MODEL_STATUS', value)
+    },
+    async modifyPW(data, params) {
+        return axios
+            .put(API.UPDATE_PASSWORD, params)
+            .then(response => {
+                return response
+            })
+            .catch(error => Promise.reject(error))
     }
 }

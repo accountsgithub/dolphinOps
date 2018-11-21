@@ -3,6 +3,16 @@ export default {
         detailed: '详细信息',
         projectMgt: '项目管理'
     },
+    modifyPW: {
+        modifyPW_oldPassword: '旧密码',
+        modifyPW_password: '新密码',
+        modifyPW_newPassword: '确认密码',
+        vilidata_oldPassword: '旧密码不能为空',
+        vilidata_password: '新密码不能为空',
+        vilidata_newPassword: '确认密码不能为空',
+        vilidata_differPW: '密码不一致',
+        modifySuccessMes: '修改成功'
+    },
     common: {
         title: '海豚平台',
         index_title: '海豚运维平台',
@@ -23,7 +33,8 @@ export default {
         uploadMode_label1: '手动导入',
         uploadType_label0: 'bug修复',
         uploadType_label1: '版本发布',
-        logout: '登出' // 变更1
+        logout: '登出', // 变更1
+        modifyPassword: '修改密码' // 变更1
     },
     login: {
         title: '海豚运维平台',
@@ -179,7 +190,8 @@ export default {
     },
     error404: {
         noPage_message: '该页面不存在。。。。',
-        error404_message: '请检查您输入的网址是否正确，请点击以下按钮返回主页或者发送错误报告',
+        error404_message:
+            '请检查您输入的网址是否正确，请点击以下按钮返回主页或者发送错误报告',
         error404_backButton: '返回首页'
     }
 }
