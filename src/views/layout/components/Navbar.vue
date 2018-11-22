@@ -26,9 +26,9 @@
                     <el-dropdown-item command="logout">
                         <span>{{$t('common.logout')}}</span>
                     </el-dropdown-item>
-                    <el-dropdown-item command="modifyPassword">
+                    <!-- <el-dropdown-item command="modifyPassword">
                         <span>{{$t('common.modifyPassword')}}</span>
-                    </el-dropdown-item>
+                    </el-dropdown-item> -->
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
@@ -85,7 +85,7 @@ export default {
         Breadcrumb,
         Hamburger
     },
-    created() {
+    created () {
         if (!this.$i18n.getLocaleMessage('en')[viewName]) {
             this.$i18n.mergeLocaleMessage('zh', local.zh)
             this.$i18n.mergeLocaleMessage('en', local.en)
@@ -94,21 +94,21 @@ export default {
     computed: {
         ...mapGetters(['sidebar']),
 
-        userName: function() {
+        userName: function () {
             return ''
         },
         lang: {
-            get() {
+            get () {
                 return this.$store.state.app.language
             },
-            set(lang) {
+            set (lang) {
                 this.$i18n.locale = lang
                 this.$store.dispatch('setLanguage', lang)
             }
         }
     },
 
-    data() {
+    data () {
         const validatepw = (rule, value, callback) => {
             if (value != this.pwEditForm.password && value != '') {
                 callback(new Error(this.$t('modifyPW.vilidata_differPW')))
@@ -144,10 +144,10 @@ export default {
         ...mapActions([
             'ToggleSideBar', 'logout', 'modifyPW'
         ]),
-        toggleSideBar() {
+        toggleSideBar () {
             this.ToggleSideBar()
         },
-        handleCommand(command) {
+        handleCommand (command) {
             if (command === 'logout') {
                 this.logout().then(() => {
                     this.$router.push('/login')
@@ -159,11 +159,11 @@ export default {
             //   location.reload() // 为了重新实例化vue-router对象
             // })
         },
-        closeDialog() {
+        closeDialog () {
             this.$refs['pwEditForm'].resetFields()
             this.dialogVisible = false
         },
-        submitForm(name) {
+        submitForm (name) {
             this.$refs[name].validate((valid) => {
                 if (valid) {
                     let params = Object.assign(this.pwEditForm)
