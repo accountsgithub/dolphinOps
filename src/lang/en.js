@@ -173,7 +173,7 @@ export default {
         uploadMes4:
             'The file fails to be uploaded. Please delete it and upload it again.',
         uploadErrMes1: 'Only .rar and .zip files are supported.',
-        uploadErrMes2: 'The file size cannot exceed 300 MB.',
+        uploadErrMes2: 'The file size cannot exceed 1 G.',
         uploadErrMes3: 'Please upload the target file.',
         uploadErrMes4: 'Only one file can be uploaded at one time.',
         // WhiteList
