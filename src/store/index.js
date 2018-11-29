@@ -5,10 +5,13 @@ import app from './modules/app/index'
 import login from './modules/login'
 import project from './modules/projectMgt'
 import getters from './getters'
+// 版本1.1.7
+import testReport from './modules/testReport'
 
 Vue.use(Vuex)
 const storeTree = {
     modules: {
+        testReport,
         app,
         login,
         project

@@ -65,7 +65,11 @@ let API = {
     //添加告警邮箱
     EMAIL_SETTING: '/project/email_set',
     //sz 命令下载
-    WEBTERMLOG: '/project/WebtermLog/log'
+    WEBTERMLOG: '/project/WebtermLog/log',
+
+    // 版本1.1.7
+    // 获取测试报告列表
+    TESTREPORT_LIST: 'rap_log/test'
 }
 
 // if (process.env.NODE_ENV === 'development') {

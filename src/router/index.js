@@ -28,8 +28,11 @@ router.beforeEach((to, from, next) => {
     // 验证当前路由所有的匹配中是否需要有登陆验证的
     // 是滞已经登录的
     // 是否已经分配到权限
+    console.log(to)
+    console.log(to.matched)
     if (!to.matched.some(r => r.meta.requiresAuth)
         || _.isEmpty(token)|| !token ) {
+        debugger
         redirectToLogin(to.path)
     }
 

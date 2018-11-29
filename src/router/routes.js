@@ -15,6 +15,23 @@ export const constantRouterMap = [
         name: 'projectMgt',
         hidden: true
     },
+    // 版本1.1.7
+    // 测试报告页
+    {
+        path: '/projectMgt',
+        component: resolve => require(['@/views/layout/Layout'], resolve),
+        name: 'taskList',
+        meta: { title: 'projectMgt', icon: 'project' },
+        hidden: false,
+        children: [
+            {
+                path: 'testReport/:mark',
+                name: 'testReport',
+                component: resolve => require(['@/views/projectMgt/testReport/testReportList'], resolve),
+                meta: { ...meta, title: 'testReport' }
+            }
+        ]
+    },
     // projectManagement
     {
         path: '/projectMgt',
