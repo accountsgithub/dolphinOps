@@ -97,6 +97,9 @@
                             <a class="tableActionStyle"
                                v-if="ifprod"
                                @click="whiteIpConfig(scope.row)">{{$t('projectMgt.whitelist_set_button')}}</a>
+                            <a class="tableActionStyle" style="color:red"
+                               v-if="scope.row.state === 0 || scope.row.state === 1 || scope.row.state === 4"
+                               @click="monitorcharts(scope.row)">{{$t('projectMgt.monitorcharts')}}</a>
                             <el-dropdown trigger="click">
                                 <el-button size="small"
                                            type="text">
@@ -162,6 +165,8 @@
         <email-list v-on:update:close="handleEmailListDialogClose"
                     :EmailDialog.sync="EmailDialog"
                     :EmailForm.sync="EmailForm"></email-list>
+        <charts :chartsDialog.sync="chartsDialog" :layerType="baseImageType"
+                :project.sync ="CurrentProject" v-on:update:close="chartsDialogOnClose"></charts>
     </div>
 
 </template>
@@ -174,10 +179,12 @@ import EnvModify from './part/EnvModify'
 import ImportPackage from './part/ImportPackage'
 import WhiteList from './part/WhiteList'
 import EmailList from './part/EmailList'
+import charts from './part/ProjectMonitor'
 export default {
     components: {
         SearchPanel,
         tableStatus,
+        charts,
         'env-modify': EnvModify,
         'import-package': ImportPackage,
         'white-list': WhiteList,
@@ -232,7 +239,11 @@ export default {
                 this.$t('projectMgt.init_data'),
                 this.$t('projectMgt.systemError_data')],
             basePath: '',
-            ifprod: false
+            ifprod: false,
+            // 基础监控
+            chartsDialog: false,
+            CurrentProject: Object,
+            baseImageType: null
         }
     },
     created: function() {
@@ -399,6 +410,36 @@ export default {
                 })
             })
         },
+        // 基础监控
+        monitorcharts(item) {
+            // console.log(item.baseImage)
+            // console.log(this.trasBaseImage(item.baseImage))
+            let baseImageType =  this.trasBaseImage(item.baseImage)
+            console.log('baseImageType', baseImageType)
+            if (baseImageType === 'tomcat') {
+                console.log('tomcat弹出')
+                this.chartsDialog = true
+                this.CurrentProject = item
+                this.baseImageType = 'tomcat'
+            } else if (baseImageType === 'others') {
+                console.log('orthers弹出')
+                this.chartsDialog = true
+                this.CurrentProject = item
+                this.baseImageType = 'orthers'
+            } else {
+                console.log('没有图表数据')
+            }
+        },
+        // baseImage处理
+        trasBaseImage(type) {
+            if (type.length && type.indexOf('tomcat') != -1) {
+                return 'tomcat'
+            } else if (type.length) {
+                return 'others'
+            } else {
+                return false
+            }
+        },
         //白名单设置
         whiteIpConfig(row) {
             this.whiteIpDialog = true
@@ -417,6 +458,11 @@ export default {
         },
         handleEmailListDialogClose() {
             this.EmailDialog = false
+        },
+        chartsDialogOnClose() {
+            console.log('进入关闭')
+            this.chartsDialog = false
+            // this.CurrentProject = {}
         }
     },
 

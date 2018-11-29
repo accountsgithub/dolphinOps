@@ -90,6 +90,7 @@ export default {
         begin: '启动',
         stop: '停止',
         beiginDeploy: '开始部署',
+        monitorcharts: '基础监控',
         whiteIpConfig: '白名单设置',
         modify: '变更',
         instanceNumber: '实例数',
