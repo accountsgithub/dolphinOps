@@ -186,7 +186,7 @@ export default {
         error404_backButton: '返回首页'
     },
     // 版本1.1.7
-    // 测试报告页面
+    // 测试报告页面 变更1
     testPage: {
         apiName_label: '接口名称',
         testResult_label: '测试结果',
@@ -200,6 +200,8 @@ export default {
         success_message: '成功',
         fail_message: '失败',
         showHistoryRecord_button: '查看历史纪录',
-        downloadApiDetail_button: '下载接口明细'
+        downloadApiDetail_button: '下载接口明细',
+        summarySuccess_label: '成功笔数',
+        summaryFail_label: '失败笔数'
     }
 }
