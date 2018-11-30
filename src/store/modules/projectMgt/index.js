@@ -33,7 +33,9 @@ const state = {
         pagerCount: 6
     },
     // 审核人
-    auditor: ''
+    auditor: '',
+    // 基础监控页面获取图表数据
+
 }
 
 export default {

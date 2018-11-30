@@ -44,8 +44,8 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 import {updateChart, setChartData} from '@/utils/initCharts.js'
-import axios from 'axios'
 import echarts from 'echarts'
 export default {
     data() {
@@ -391,38 +391,49 @@ export default {
         }
     },
     methods: {
+        ...mapActions([
+            'monitorApi'
+        ]),
         updateChart,
         setChartData,
         // tomcat项目
         getChartData(params, env, project) {
+            debugger
             let url1 = `/tomcat/${env}/${project}/cpu_usage`
             let url2 = `/tomcat/${env}/${project}/transmission`
             let url3 = `/common/${env}/${project}/fs_status`
             let url4 = `/tomcat/${env}/${project}/jvm_memory`
             console.log(url1,url2,url3,url4)
+            let setParams = {
+                url: url1,
+                params: params
+            }
             // tomcat项目--CPU使用率
-            this.api(url1, params).then(cpuChartData => {
+            this.monitorApi(setParams).then(cpuChartData => {
                 this.optionCpu.xAxis = cpuChartData.xAxis
                 this.optionCpu.legend = cpuChartData.legend
                 this.optionCpu.series = setChartData(cpuChartData.series)
                 updateChart(this.line1, this.optionCpu)
             })
             //tomcat项目--进出流量
-            this.api(url2, params).then(transmission => {
+            setParams.url = url2
+            this.monitorApi(setParams).then(transmission => {
                 this.optionIO.xAxis = transmission.xAxis
                 this.optionIO.legend = transmission.legend
                 this.optionIO.series = setChartData(transmission.series)
                 updateChart(this.line2, this.optionIO)
             })
             // // 磁盘IO(读写)/使用率
-            this.api(url3, params).then(fs_status => {
+            setParams.url = url3
+            this.monitorApi(setParams).then(fs_status => {
                 this.optionPan.xAxis = fs_status.xAxis
                 this.optionPan.legend = fs_status.legend
                 this.optionPan.series = setChartData(fs_status.series)
                 updateChart(this.line3, this.optionPan)
             })
             // // tomcat项目--JVM堆内存
-            this.api(url4, params).then(jvm_memory => {
+            setParams.url = url4
+            this.monitorApi(setParams).then(jvm_memory => {
                 this.optionJVM.xAxis = jvm_memory.xAxis
                 this.optionJVM.legend = jvm_memory.legend
                 this.optionJVM.series = setChartData(jvm_memory.series)
@@ -437,7 +448,7 @@ export default {
             let url8 = `/nonTomcat/${env}/${project}/memory`
             // console.log(url5, url6, url7, url8)
             // 非tomcat项目--CPU使用率
-            this.api(url5, params).then(noTomcatCpu => {
+            this.monitorApi(url5, params).then(noTomcatCpu => {
                 console.log(noTomcatCpu)
                 this.noTomcatCpu.xAxis = noTomcatCpu.xAxis
                 this.noTomcatCpu.legend = noTomcatCpu.legend
@@ -445,7 +456,7 @@ export default {
                 updateChart(this.line5, this.noTomcatCpu)
             })
             // 非tomcat项目--进出流量
-            this.api(url6, params).then(noTomcatTrans => {
+            this.monitorApi(url6, params).then(noTomcatTrans => {
                 console.log(noTomcatTrans)
                 this.noTomcatTrans.xAxis = noTomcatTrans.xAxis
                 this.noTomcatTrans.legend = noTomcatTrans.legend
@@ -453,7 +464,7 @@ export default {
                 updateChart(this.line6, this.noTomcatTrans)
             })
             //  磁盘IO(读写)/使用率
-            this.api(url7, params).then(nofs_status => {
+            this.monitorApi(url7, params).then(nofs_status => {
                 console.log(nofs_status)
                 this.nofs_status.xAxis = nofs_status.xAxis
                 this.nofs_status.legend = nofs_status.legend
@@ -461,7 +472,7 @@ export default {
                 updateChart(this.line7, this.nofs_status)
             })
             // 非 tomcat项目--JVM堆内存
-            this.api(url8, params).then(noTomcatJvm => {
+            this.monitorApi(url8, params).then(noTomcatJvm => {
                 console.log(noTomcatJvm)
                 this.noTomcatJvm.xAxis = noTomcatJvm.xAxis
                 this.noTomcatJvm.legend = noTomcatJvm.legend
@@ -490,16 +501,6 @@ export default {
             } else {
                 console.log('no')
             }
-        },
-        api(url, params) {
-            return  axios.get(url, {params})
-                .then(response => {
-                    if (response.data.code == 0) {
-                        return response.data.result
-                    }
-                })
-                // .then(({result}) => {commit(TYPES.GET_EAMIL_SETTING,result)})
-                .catch(error => Promise.reject(error))
         }
     }
 }

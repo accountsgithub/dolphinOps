@@ -59,5 +59,6 @@ export default {
     [TYPES.GET_WHITE_IP_SETTING]() {},
 
     //保存邮箱
-    [TYPES.GET_EAMIL_SETTING]() {}
+    [TYPES.GET_EAMIL_SETTING]() {},
+
 }

@@ -106,5 +106,18 @@ export default {
             .then(response => response.data)
             .then(({result}) => {commit(TYPES.GET_PROJECT_CHANGEVERSION, result)})
             .catch(error => Promise.reject(error))
+    },
+    // 基础监控页面获取图表数据
+    monitorApi(commit, data) {
+        console.log(data, 222)
+        debugger
+        return  axios.get(data.url, data)
+            .then(response => {
+                if (response.data.code == 0) {
+                    return response.data.result
+                }
+            })
+            // .then(({result}) => {commit(TYPES.GET_MONITOR_CHARTS,result)})
+            .catch(error => Promise.reject(error))
     }
 }
