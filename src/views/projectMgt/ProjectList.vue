@@ -425,9 +425,10 @@ export default {
                 console.log('orthers弹出')
                 this.chartsDialog = true
                 this.CurrentProject = item
-                this.baseImageType = 'orthers'
+                this.baseImageType = 'others'
             } else {
                 console.log('没有图表数据')
+                this.baseImageType = ''
             }
         },
         // baseImage处理
