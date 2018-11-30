@@ -2,7 +2,8 @@ export default {
     route: {
         detailed: '详细信息',
         projectMgt: '项目管理',
-        projectMor: '项目监控'
+        projectMor: '项目监控',
+        testReport: '查看测试报告 '
     },
     common: {
         title: '海豚平台',
