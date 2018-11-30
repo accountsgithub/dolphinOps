@@ -16,28 +16,35 @@
             <div style="flex = 1;">
                 <span class="demonstration">日期选择</span>
                 <el-date-picker
-                    v-model="timer"
+                    v-model="selectTime"
                     type="datetimerange"
                     :picker-options="pickerOptions2"
                     range-separator="至"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
                     align="right"
+                    @change="getTime"
                     @blur="getTime">
                 </el-date-picker>
             </div>
         </div>
-        <div class="tomcat">
+        <div class="tomcat" v-show="layerType === 'tomcat'">
             <div class="chart" id="line1"></div>
             <div class="chart" id="line2"></div>
             <div class="chart" id="line3"></div>
             <div class="chart" id="line4"></div>
         </div>
+        <div class="tomcat" v-show="layerType === 'others'">
+            <div class="chart" id="line5"></div>
+            <div class="chart" id="line6"></div>
+            <div class="chart" id="line7"></div>
+            <div class="chart" id="line8"></div>
+        </div>
     </el-dialog>
 </template>
 
 <script>
-import {initLineChart} from '@/utils/initCharts.js'
+import {updateChart, setChartData} from '@/utils/initCharts.js'
 import axios from 'axios'
 import echarts from 'echarts'
 export default {
@@ -58,28 +65,28 @@ export default {
                     text: '最近15分钟',
                     onClick(picker) {
                         console.log(picker)
-                        // const end = new Date();
-                        // const start = new Date();
-                        // start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                        // picker.$emit('pick', [start, end]);
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 900 * 1000);
+                        picker.$emit('pick', [start, end]);
                     }
                 }, {
                     text: '最近30分钟',
                     onClick(picker) {
                         console.log(picker)
-                        // const end = new Date();
-                        // const start = new Date();
-                        // start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                        // picker.$emit('pick', [start, end]);
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 1800 * 1000);
+                        picker.$emit('pick', [start, end]);
                     }
                 }, {
                     text: '最近1小时',
                     onClick(picker) {
                         console.log(picker)
-                        // const end = new Date();
-                        // const start = new Date();
-                        // start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                        // picker.$emit('pick', [start, end]);
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000);
+                        picker.$emit('pick', [start, end]);
                     }
                 }, {
                     text: '今日',
@@ -87,7 +94,7 @@ export default {
                         console.log(picker)
                         // const end = new Date();
                         // const start = new Date();
-                        // start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                        // start.setTime(start.getTime() - 3600 * 1000 * 24);
                         // picker.$emit('pick', [start, end]);
                     }
                 }, {
@@ -103,22 +110,22 @@ export default {
                     text: '最近一周',
                     onClick(picker) {
                         console.log(picker)
-                        // const end = new Date();
-                        // const start = new Date();
-                        // start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                        // picker.$emit('pick', [start, end]);
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                        picker.$emit('pick', [start, end]);
                     }
                 }]
             },
-            timer: '', // 时间选择
             refrash: '0', // 刷新频率选择
+            selectTime: [],
             chat1: null,
             chat2: null,
             chat3: null,
             chat4: null,
-            // json数据模拟
+            // json数据模拟tomcat
             optionCpu: {
-                title: '在Vue中使用setOptionCpu',
+                title: 'CPU使用率',
                 legend: ['cup使用率'],
                 // xAxis: ['衬衫','羊毛衫','雪纺衫','裤子','高跟鞋','袜子'],
                 xAxis: [],
@@ -167,7 +174,7 @@ export default {
                 }]
             },
             optionPan: {
-                title: '流量访问次数',
+                title: '容器磁盘I/O及磁盘使用率',
                 legend: ['容器流入流量', '容器流出流量', '每秒访问次数'],
                 xAxis: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
                 yAxis: [
@@ -198,7 +205,7 @@ export default {
                 }]
             },
             optionJVM: {
-                title: '在Vue中使用setOptionJVM',
+                title: 'JVM内存使用率',
                 legend: ['JVM使用率'],
                 xAxis: ['衬衫','羊毛衫','雪纺衫','裤子','高跟鞋','袜子'],
                 yAxis: [
@@ -212,10 +219,107 @@ export default {
                     data: [5, 20, 36, 10, 10, 20],
                     yAxisIndex: 0
                 }]
+            },
+            // 非tomcat
+            noTomcatCpu: {
+                title: 'CPU使用率',
+                legend: ['cup使用率'],
+                // xAxis: ['衬衫','羊毛衫','雪纺衫','裤子','高跟鞋','袜子'],
+                xAxis: [],
+                yAxis: [
+                    {
+                        name: 'cup使用率',
+                        formatter: '{value}'
+                    }],
+                series: [{
+                    title: 'cup使用率',
+                    color: '#00BFFF',
+                    // data: [5, 20, 36, 10, 10, 20],
+                    data: [],
+                    yAxisIndex: 0
+                }]
+            },
+            noTomcatTrans: {
+                title: '容器流入流量每秒访问次数',
+                legend: ['容器流入流量', '容器流出流量', '每秒访问次数'],
+                xAxis: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                yAxis: [
+                    {
+                        name: '容器进出流量 B/s',
+                        formatter: '{value}'
+                    },
+                    {
+                        name: '每秒访问次数 /次',
+                        formatter: '{value}'
+                    }
+                ],
+                series: [{
+                    title: '容器流入流量',
+                    color: '#00BFFF',
+                    yAxisIndex: 0,
+                    data: [1741.9, 977, 1742.2, 1431.1, 1636.2, 1447, 1711.7, 1921.2, 2609.6, 3332.6, 3647.3, 2498.1]
+                },{
+                    title: '容器流出流量',
+                    color: '#DC143C',
+                    yAxisIndex: 0,
+                    data: [2609, 1162.9, 2942.9, 5174.6, 5114.4, 5065.8, 3956.1, 3691.1, 4637.6, 4603.8, 6401.1, 4988.4]
+                },{
+                    title: '每秒访问次数',
+                    color: '#FFD700',
+                    yAxisIndex: 1,
+                    data: [49.8, 19, 68.9, 261.6, 212.6, 250.1, 131.1, 92.1, 77.7, 38.1, 75.5, 99.7]
+                }]
+            },
+            nofs_status: {
+                title: '容器磁盘I/O及磁盘使用率',
+                legend: ['容器流入流量', '容器流出流量', '每秒访问次数'],
+                xAxis: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                yAxis: [
+                    {
+                        name: '容器进出流量 B/s',
+                        formatter: '{value}'
+                    },
+                    {
+                        name: '每秒访问次数 /次',
+                        formatter: '{value}'
+                    }
+                ],
+                series: [{
+                    title: '容器流入流量',
+                    color: '#00BFFF',
+                    yAxisIndex: 0,
+                    data: [1741.9, 977, 1742.2, 1431.1, 1636.2, 1447, 1711.7, 1921.2, 2609.6, 3332.6, 3647.3, 2498.1]
+                },{
+                    title: '容器流出流量',
+                    color: '#DC143C',
+                    yAxisIndex: 0,
+                    data: [2609, 1162.9, 2942.9, 5174.6, 5114.4, 5065.8, 3956.1, 3691.1, 4637.6, 4603.8, 6401.1, 4988.4]
+                },{
+                    title: '每秒访问次数',
+                    color: '#FFD700',
+                    yAxisIndex: 1,
+                    data: [49.8, 19, 68.9, 261.6, 212.6, 250.1, 131.1, 92.1, 77.7, 38.1, 75.5, 99.7]
+                }]
+            },
+            noTomcatJvm: {
+                title: '内存使用率',
+                legend: ['内存使用率'],
+                xAxis: ['衬衫','羊毛衫','雪纺衫','裤子','高跟鞋','袜子'],
+                yAxis: [
+                    {
+                        name: '内存使用率',
+                        formatter: '{value}'
+                    }],
+                series: [{
+                    title: '内存使用率',
+                    color: '#00BFFF',
+                    data: [5, 20, 36, 10, 10, 20],
+                    yAxisIndex: 0
+                }]
             }
         }
     },
-    props: ['chartsDialog', 'project'],
+    props: ['chartsDialog', 'project', 'layerType'],
     computed: {
         dialogVisible: {
             get() {
@@ -231,37 +335,65 @@ export default {
             },
             set() {
             }
+        }
+    },
+    watch: {
+        'selectTime': function() {
+            this.getTime()
         },
-        type: {
-            get() {
-                return this.layerType
-            },
-            set() {
+        'chartsDialog': function() {
+            if (this.chartsDialog == true) {
+                this.selectTime = [new Date()- 60 * 15 * 1000, new Date()]
             }
         },
+        'layerType': function() {
+            console.log('layerType', this.layerType)
+        }
     },
-    updated() {
-        // 初始化表1
-        this.line1 = echarts.init(document.getElementById('line1'))
-        // 初始化表2
-        this.line2 = echarts.init(document.getElementById('line2'))
-        // 初始化表3
-        this.line3 = echarts.init(document.getElementById('line3'))
-        // 初始化表4
-        this.line4 = echarts.init(document.getElementById('line4'))
+    created() {
+        console.log('created 111', document.getElementById('line1'))
     },
     before() {
-        // console.log('before 111', document.getElementById('line1'))
+        console.log('before 111', document.getElementById('line1'))
     },
     beforeMount() {
-        // console.log('beforeMount 111', document.getElementById('line1'))
+        console.log('beforeMount 111', document.getElementById('line1'))
     },
     mounted() {
-        // console.log('mounted 111', document.getElementById('line1'))
+        console.log('mounted 111', document.getElementById('line1'))
         console.log((document.body.clientWidth - 200) / 2)
     },
+    beforeUpdate() {
+        console.log('beforeUpdate 111', document.getElementById('line1'))
+    },
+    updated() {
+        console.log('updated 111', document.getElementById('line1'))
+        if (this.layerType === 'tomcat') {
+            console.log('layerType', this.layerType)
+            // 初始化表1
+            this.line1 = echarts.init(document.getElementById('line1'))
+            // 初始化表2
+            this.line2 = echarts.init(document.getElementById('line2'))
+            // 初始化表3
+            this.line3 = echarts.init(document.getElementById('line3'))
+            // 初始化表4
+            this.line4 = echarts.init(document.getElementById('line4'))
+        } else if (this.layerType === 'others') {
+            console.log('layerType', document.getElementById('line5'))
+            // 初始化表5
+            this.line5 = echarts.init(document.getElementById('line5'))
+            // 初始化表6
+            this.line6 = echarts.init(document.getElementById('line6'))
+            // 初始化表7
+            this.line7 = echarts.init(document.getElementById('line7'))
+            // 初始化表8
+            this.line8 = echarts.init(document.getElementById('line8'))
+        }
+    },
     methods: {
-        initLineChart,
+        updateChart,
+        setChartData,
+        // tomcat项目
         getChartData(params, env, project) {
             let url1 = `/tomcat/${env}/${project}/cpu_usage`
             let url2 = `/tomcat/${env}/${project}/transmission`
@@ -270,80 +402,104 @@ export default {
             console.log(url1,url2,url3,url4)
             // tomcat项目--CPU使用率
             this.api(url1, params).then(cpuChartData => {
-                // this.setChartData(cpuChartData)
                 this.optionCpu.xAxis = cpuChartData.xAxis
                 this.optionCpu.legend = cpuChartData.legend
-                this.optionCpu.series = this.setChartData(cpuChartData.series)
-                initLineChart(this.line1, this.optionCpu)
+                this.optionCpu.series = setChartData(cpuChartData.series)
+                updateChart(this.line1, this.optionCpu)
             })
             //tomcat项目--进出流量
             this.api(url2, params).then(transmission => {
-                // console.log('chart', transmission)
                 this.optionIO.xAxis = transmission.xAxis
                 this.optionIO.legend = transmission.legend
-                this.optionIO.series = this.setChartData(transmission.series)
-                initLineChart(this.line2, this.optionIO)
+                this.optionIO.series = setChartData(transmission.series)
+                updateChart(this.line2, this.optionIO)
             })
             // // 磁盘IO(读写)/使用率
             this.api(url3, params).then(fs_status => {
-                // console.log('chart', fs_status)
                 this.optionPan.xAxis = fs_status.xAxis
                 this.optionPan.legend = fs_status.legend
-                this.optionPan.series = this.setChartData(fs_status.series)
-                initLineChart(this.line3, this.optionPan)
+                this.optionPan.series = setChartData(fs_status.series)
+                updateChart(this.line3, this.optionPan)
             })
             // // tomcat项目--JVM堆内存
             this.api(url4, params).then(jvm_memory => {
-                // console.log('chart', jvm_memory)
                 this.optionJVM.xAxis = jvm_memory.xAxis
                 this.optionJVM.legend = jvm_memory.legend
-                this.optionJVM.series = this.setChartData(jvm_memory.series)
-                initLineChart(this.line4, this.optionJVM)
+                this.optionJVM.series = setChartData(jvm_memory.series)
+                updateChart(this.line4, this.optionJVM)
+            })
+        },
+        // 非tomcat项目
+        getNoTomcatData(params, env, project) {
+            let url5 = `/nonTomcat/${env}/${project}/cpu_usage`
+            let url6 = `/nonTomcat/${env}/${project}/transmission`
+            let url7 = `/common/${env}/${project}/fs_status`
+            let url8 = `/nonTomcat/${env}/${project}/memory`
+            // console.log(url5, url6, url7, url8)
+            // 非tomcat项目--CPU使用率
+            this.api(url5, params).then(noTomcatCpu => {
+                console.log(noTomcatCpu)
+                this.noTomcatCpu.xAxis = noTomcatCpu.xAxis
+                this.noTomcatCpu.legend = noTomcatCpu.legend
+                this.noTomcatCpu.series = setChartData(noTomcatCpu.series)
+                updateChart(this.line5, this.noTomcatCpu)
+            })
+            // 非tomcat项目--进出流量
+            this.api(url6, params).then(noTomcatTrans => {
+                console.log(noTomcatTrans)
+                this.noTomcatTrans.xAxis = noTomcatTrans.xAxis
+                this.noTomcatTrans.legend = noTomcatTrans.legend
+                this.noTomcatTrans.series = setChartData(noTomcatTrans.series)
+                updateChart(this.line6, this.noTomcatTrans)
+            })
+            //  磁盘IO(读写)/使用率
+            this.api(url7, params).then(nofs_status => {
+                console.log(nofs_status)
+                this.nofs_status.xAxis = nofs_status.xAxis
+                this.nofs_status.legend = nofs_status.legend
+                this.nofs_status.series = setChartData(nofs_status.series)
+                updateChart(this.line7, this.nofs_status)
+            })
+            // 非 tomcat项目--JVM堆内存
+            this.api(url8, params).then(noTomcatJvm => {
+                console.log(noTomcatJvm)
+                this.noTomcatJvm.xAxis = noTomcatJvm.xAxis
+                this.noTomcatJvm.legend = noTomcatJvm.legend
+                this.noTomcatJvm.series = setChartData(noTomcatJvm.series)
+                updateChart(this.line8, this.noTomcatJvm)
             })
         },
         getTime() {
-            var start = new Date(this.timer[0]);
-            var end = new Date(this.timer[1]);
-            console.log(start.getTime(), end.getTime())
-            this.startTime = start.getTime()/1000
-            this.endTime = end.getTime()/1000
+            if (!this.selectTime.length) {
+                return
+            }
+            var start = new Date(this.selectTime[0]);
+            var end = new Date(this.selectTime[1]);
+            this.startTime = Math.ceil(start.getTime()/1000)
+            this.endTime = Math.ceil(end.getTime()/1000)
             let params = {
                 start: this.startTime,
                 end: this.endTime,
             }
             let env = this.projectdetail.deployEnv
             let project = this.projectdetail.mark
-            this.getChartData(params, env, project)
+            if (this.layerType === 'tomcat') {
+                this.getChartData(params, env, project)
+            } else if (this.layerType === 'others') {
+                this.getNoTomcatData(params, env, project)
+            } else {
+                console.log('no')
+            }
         },
-        api(url1, params) {
-            return  axios.get(url1, {params})
+        api(url, params) {
+            return  axios.get(url, {params})
                 .then(response => {
-                    console.log('response', response)
                     if (response.data.code == 0) {
                         return response.data.result
                     }
                 })
                 // .then(({result}) => {commit(TYPES.GET_EAMIL_SETTING,result)})
                 .catch(error => Promise.reject(error))
-        },
-        setChartData(seriesData) {
-            let series = new Array
-            if (!seriesData.length) {
-                return seriesData
-            }
-            let colors = ['#EDB10C', '#F56E6A ', '#4EA9F9']
-            seriesData.map((item, index) => {
-                let seriesItem = new Object
-                // seriesItem.title = item.name
-                // console.log('item.color', index)
-                seriesItem.color = colors[index]
-                seriesItem.yAxisIndex = item.position
-                seriesItem.data = item.data
-                console.log('item.color', index, colors[index], seriesItem)
-                series.push(seriesItem)
-            })
-            // console.log('item.color', series)
-            return series
         }
     }
 }

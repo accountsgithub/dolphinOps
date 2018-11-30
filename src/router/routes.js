@@ -44,13 +44,13 @@ export const constantRouterMap = [
                     require(['@/views/projectMgt/ProjectList'], resolve),
                 meta: { ...meta, title: 'projectMgt', icon: 'project' }
             },
-            {
-                path: 'monitor',
-                name: 'projectmonitor',
-                component: resolve =>
-                    require(['@/views/projectMgt/ProjectMonitor'], resolve),
-                meta: { ...meta, title: 'projectMor', icon: 'project' }
-            }
+            // {
+            //     path: 'monitor',
+            //     name: 'projectmonitor',
+            //     component: resolve =>
+            //         require(['@/views/projectMgt/ProjectMonitor'], resolve),
+            //     meta: { ...meta, title: 'projectMor', icon: 'project' }
+            // }
         ]
     },
     // 详情

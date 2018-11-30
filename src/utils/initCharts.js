@@ -1,5 +1,5 @@
 // 处理option中的数据
-export function initLineChart(myChartLine1, option) {
+export function updateChart(myChartLine, option) {
     // cpuChart初始化数据
     // console.log('option', option)
     // 处理Y轴
@@ -54,10 +54,7 @@ export function initLineChart(myChartLine1, option) {
         series = []
     }
 
-    // console.log('options series', option.title, option.legend, option.xAxis, yAxis, series)
-    // console.log('options series x', option.xAxis)
-
-    let setOptionCpu = {
+    let setOption = {
         title: { 
             text: option.title,
             textStyle: {
@@ -84,9 +81,23 @@ export function initLineChart(myChartLine1, option) {
         series: series
     }
     
-    myChartLine1.setOption(setOptionCpu)
+    myChartLine.setOption(setOption, true)
 }
-// 初始化echart
-export function initchart(myChartLine1, setOption) {
-    myChartLine1.setOption(setOption)
+// 处理series
+export function setChartData(seriesData) {
+    let series = []
+    if (!seriesData.length) {
+        return seriesData
+    }
+    let colors = ['#EDB10C', '#F56E6A ', '#4EA9F9', '#818BF7', '#6EC71E']
+    seriesData.map((item, index) => {
+        let seriesItem = new Object
+        seriesItem.color = colors[index]
+        seriesItem.yAxisIndex = item.position
+        seriesItem.data = item.data
+        // console.log('item.color', index, colors[index], seriesItem)
+        series.push(seriesItem)
+    })
+    // console.log('series series', series.length)
+    return series
 }
