@@ -69,7 +69,7 @@ let API = {
 
     // 版本1.1.7
     // 获取测试报告列表
-    TESTREPORT_LIST: 'rap_log/test'
+    TESTREPORT_LIST: '/rap_log'
 }
 
 // if (process.env.NODE_ENV === 'development') {

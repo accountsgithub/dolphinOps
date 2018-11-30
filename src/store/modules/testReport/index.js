@@ -1,11 +1,11 @@
-import action from './actions'
+import actions from './actions'
 import mutations from './mutations'
 
 const state = {
-
+    testReportList: []
 }
 export default {
     state,
-    action,
+    actions,
     mutations
 }

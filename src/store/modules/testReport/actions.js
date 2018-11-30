@@ -1,15 +1,14 @@
-// import * as types from './mutationTypes'
-import api from '@/apis/api'
 import axios from 'axios'
+import api from '@/apis/api'
+// import * as types from './mutationTypes'
 
 export default {
+    // 获取测试报告列表数据集
     getTestReportListApi(params) {
         return axios.get(api.TESTREPORT_LIST, {params}).then(
-            response => {
-                return response.data
-            }
+            response => response.data
         ).catch(
-            error => Promise.reject(error)
+            response => response.data
         )
     }
 }

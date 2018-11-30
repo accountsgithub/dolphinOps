@@ -184,5 +184,22 @@ export default {
         noPage_message: '该页面不存在。。。。',
         error404_message: '请检查您输入的网址是否正确，请点击以下按钮返回主页或者发送错误报告',
         error404_backButton: '返回首页'
+    },
+    // 版本1.1.7
+    // 测试报告页面
+    testPage: {
+        apiName_label: '接口名称',
+        testResult_label: '测试结果',
+        requestPath_label: '请求地址',
+        requestType_label: '请求方法',
+        requestValue_label: '请求内容',
+        responseStatus_label: '返回状态',
+        responseValue_label: '返回内容',
+        exceptionInfo_label: '异常信息',
+        operation: '操作',
+        success_message: '成功',
+        fail_message: '失败',
+        showHistoryRecord_button: '查看历史纪录',
+        downloadApiDetail_button: '下载接口明细'
     }
 }
