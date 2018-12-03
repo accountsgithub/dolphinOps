@@ -109,8 +109,6 @@ export default {
     },
     // 基础监控页面获取图表数据
     monitorApi(commit, data) {
-        console.log(data, 222)
-        debugger
         return  axios.get(data.url, data)
             .then(response => {
                 if (response.data.code == 0) {
