@@ -202,6 +202,8 @@ export default {
         showHistoryRecord_button: '查看历史纪录',
         downloadApiDetail_button: '下载接口明细',
         summarySuccess_label: '成功笔数',
-        summaryFail_label: '失败笔数'
+        summaryFail_label: '失败笔数',
+        probabilitySuccess_label: '成功率',
+        probabilityFail_label: '失败率'
     }
 }

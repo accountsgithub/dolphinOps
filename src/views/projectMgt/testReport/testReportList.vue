@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="status-div-style">
-                <proportion-com :data="summaryData"></proportion-com>
+                <proportion-com :statusData="summaryData"></proportion-com>
             </div>
             <div>
                 <el-table :data="testReportList">
@@ -67,7 +67,7 @@ export default {
         }
     },
     mounted() {
-        this.getTestReportListMethod('first')
+        // this.getTestReportListMethod('first')
         this.getSummaryDataMethod()
     },
     methods: {
@@ -80,6 +80,7 @@ export default {
         getSummaryDataMethod() {
             let params = Object.assign({mark: this.$route.params.mark})
             this.getSummaryDataApi(params).then(data => {
+                debugger
                 if (data.result && data.result.data) {
                     this.summaryData = data.result.data
                     this.serialNo = data.result.serialNo
