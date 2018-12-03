@@ -14,15 +14,14 @@ const router = new VueRouter({
  * 权限验证
  */
 router.beforeEach((to, from, next) => {
-    next()
-    /*const redirectToLogin = (path) => {
+    const redirectToLogin = (path) => {
         if (path === '/login') {
             next();  //如果是登录页面路径，就直接next()
         } else {
             next('/login');//不然就跳转到登录；
             NProgress.done();
         }
-    }*/
+    }
     NProgress.start()
     const token = localStorage.getItem('token')
     // const hasPermissions = store.getters.permission && !_.isEmpty(store.getters.permission)
@@ -31,7 +30,7 @@ router.beforeEach((to, from, next) => {
     // 是否已经分配到权限
     if (!to.matched.some(r => r.meta.requiresAuth)
         || _.isEmpty(token)|| !token ) {
-        // redirectToLogin(to.path)
+        redirectToLogin(to.path)
     }
 
     //查看权限

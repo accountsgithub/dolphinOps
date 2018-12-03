@@ -16,7 +16,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 // mock测试
 if (process.env.NODE_ENV === 'development') {
-    require('./mockjs/index')
+    // require('./mockjs/index')
 }
 
 // 国际化处理
