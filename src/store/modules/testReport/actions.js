@@ -4,9 +4,17 @@ import api from '@/apis/api'
 
 export default {
     // 获取测试报告列表数据集
-    getTestReportListApi(params) {
+    getTestReportListApi(data, params) {
         return axios.get(api.TESTREPORT_LIST, {params}).then(
+            response => response.data.result
+        ).catch(
             response => response.data
+        )
+    },
+    // 获取状态图数据
+    getSummaryDataApi(data, params) {
+        return axios.get(api.SUMMARY_DATA, {params}).then(
+            response => response.data.result
         ).catch(
             response => response.data
         )

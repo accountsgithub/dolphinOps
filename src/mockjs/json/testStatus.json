@@ -1,0 +1,19 @@
+{
+    "code": "0",
+    "result": {
+        "data": [
+            {
+                "name": "成功笔数",
+                "value": 2
+            },
+            {
+                "name": "失败笔数",
+                "value": 1
+            }
+        ],
+        "mark": "rap2",
+        "serialNo": "2c94a087671b43b401671b4ee3160000"
+    },
+    "status": 200,
+    "timestamp": 1542353298575
+}

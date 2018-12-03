@@ -69,7 +69,9 @@ let API = {
 
     // 版本1.1.7
     // 获取测试报告列表
-    TESTREPORT_LIST: '/rap_log'
+    TESTREPORT_LIST: '/rap_log',
+    // 获取状态图方法
+    SUMMARY_DATA: '/rap_summary/summary'
 }
 
 // if (process.env.NODE_ENV === 'development') {

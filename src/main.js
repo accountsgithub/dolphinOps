@@ -14,6 +14,11 @@ import './icons' // icon
 
 const isProduction = process.env.NODE_ENV === 'production'
 
+// mock测试
+if (process.env.NODE_ENV === 'development') {
+    // require('./mockjs/index')
+}
+
 // 国际化处理
 Vue.use(ElementUI, {
     i18n: (key, value) => i18n.t(key, value)
