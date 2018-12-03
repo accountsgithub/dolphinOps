@@ -9,10 +9,10 @@
                     <el-button type="primary" class="tableLastButtonStyleW icon iconfont icon-ic-refresh" @click="getTestReportListMethod('first')"></el-button>
                 </div>
             </div>
-            <div class="status-div-style">
+            <div v-show="summaryData.length > 0" class="status-div-style">
                 <proportion-com :statusData="summaryData"></proportion-com>
             </div>
-            <div>
+            <div v-show="testReportList.length > 0">
                 <el-table :data="testReportList">
                     <el-table-column prop="name" :label="$t('testPage.apiName_label')"></el-table-column>
                     <el-table-column prop="responseCode" :label="$t('testPage.testResult_label')">
@@ -34,6 +34,7 @@
                 </el-table>
                 <el-pagination v-if="paginationData.total != 0" :current-page="paginationData.pageNo + 1" class="paginationStyle" @size-change="sizeChange" @current-change="currentChange" :page-size="paginationData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.total"></el-pagination>
             </div>
+            <div v-show="summaryData.length < 1 || testReportList.length < 1" class="no-data-background"></div>
         </div>
     </el-row>
 </template>
@@ -67,8 +68,7 @@ export default {
         }
     },
     mounted() {
-        // this.getTestReportListMethod('first')
-        this.getSummaryDataMethod()
+        this.getTestReportListMethod('first')
     },
     methods: {
         ...mapActions([
@@ -79,11 +79,9 @@ export default {
         // 获取状态图方法
         getSummaryDataMethod() {
             let params = Object.assign({mark: this.$route.params.mark})
-            this.getSummaryDataApi(params).then(data => {
-                debugger
-                if (data.result && data.result.data) {
-                    this.summaryData = data.result.data
-                    this.serialNo = data.result.serialNo
+            this.getSummaryDataApi(params).then(result => {
+                if (result && result.data.length > 0) {
+                    this.summaryData = result.data
                 } else {
                     this.summaryData = []
                 }
@@ -100,6 +98,9 @@ export default {
         // 查询测试报告数据列表
         getTestReportListMethod(type) {
             this.isLoading = true
+            if (type == 'first') {
+                this.getSummaryDataMethod()
+            }
             let jsonTemp = {
                 pageNo: type == 'first' ? 0 : this.paginationData.pageNo,
                 pageSize: type == 'first' ? 10 : this.paginationData.pageSize,
@@ -167,6 +168,9 @@ export default {
         width: auto;
         background-color: #F9FBFD;;
         margin: 35px 22px;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
     }
     /*测试结果字体颜色样式*/
     .test-fail-style {
@@ -180,5 +184,14 @@ export default {
         letter-spacing: 0.86px;
         text-align: left;
         margin-right: 10px;
+    }
+    /*无数据展示样式*/
+    .no-data-background {
+        background-image: url('~@/assets/images/pic-no-data.png');
+        background-repeat: no-repeat;
+        height: 80vh;
+        width: auto;
+        background-position-x: center;
+        background-position-y: center ;
     }
 </style>

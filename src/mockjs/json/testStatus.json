@@ -7,8 +7,8 @@
                 "value": 2
             },
             {
-                "name": "成功笔数",
-                "value": 2
+                "name": "失败笔数",
+                "value": 1
             }
         ],
         "mark": "rap2",
