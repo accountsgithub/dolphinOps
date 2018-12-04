@@ -423,14 +423,14 @@ export default {
             // console.log(item.baseImage)
             // console.log(this.trasBaseImage(item.baseImage))
             let baseImageType =  this.trasBaseImage(item.baseImage)
-            console.log('baseImageType', baseImageType)
+            // console.log('baseImageType', baseImageType)
             if (baseImageType === 'tomcat') {
-                console.log('tomcat弹出')
+                // console.log('tomcat弹出')
                 this.chartsDialog = true
                 this.CurrentProject = item
                 this.baseImageType = 'tomcat'
             } else if (baseImageType === 'others') {
-                console.log('orthers弹出')
+                // console.log('orthers弹出')
                 this.chartsDialog = true
                 this.CurrentProject = item
                 this.baseImageType = 'others'
