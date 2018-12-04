@@ -78,7 +78,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="$t('testPage.operation')" align="center">
+                    <el-table-column :label="$t('testPage.operation')" width="200" align="center">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" target="_blank" :href="downloadApiDetailMethod(scope.row)">{{$t('testPage.downloadApiDetail_button')}}</a>
                         </template>

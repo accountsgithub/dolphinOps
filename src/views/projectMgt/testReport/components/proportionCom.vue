@@ -3,11 +3,11 @@
         <div class="status-info-div-style">
             <div>
                 <span>{{this.successValue.value}}%</span><br/>
-                <span>{{this.successValue.name}}</span>
+                <span>{{$t('testPage.probabilitySuccess_label')}}</span>
             </div>
             <div>
                 <span>{{this.failValue.value}}%</span><br/>
-                <span style="float: right">{{this.failValue.name}}</span>
+                <span style="float: right">{{$t('testPage.probabilityFail_label')}}</span>
             </div>
         </div>
         <div class="status-line-div-style">
@@ -18,10 +18,10 @@
             </div>
             <div class="line-div-style">
                 <div class="success-line-style">
-                    <div></div>
+                    <div v-if="!(this.successValue.value == 0 || this.failValue.value == 0)"></div>
                 </div>
                 <div class="fail-line-style">
-                    <div></div>
+                    <div v-if="!(this.successValue.value == 0 || this.failValue.value == 0)"></div>
                 </div>
             </div>
             <div class="fail-tag-style-white">
@@ -44,11 +44,11 @@ export default {
     data() {
         return {
             successValue: {
-                name: this.$t('testPage.probabilitySuccess_label'),
+                name: '',
                 value: 0
             },
             failValue: {
-                name: this.$t('testPage.probabilityFail_label'),
+                name: '',
                 value: 0
             }
         }
@@ -65,8 +65,14 @@ export default {
     methods: {
         drawStatusLineMethod() {
             let divWidth = document.getElementsByClassName('line-div-style')[0].clientWidth
-            document.getElementsByClassName('success-line-style')[0].style.width = `${divWidth*this.successValue.value/100}px`
-            document.getElementsByClassName('fail-line-style')[0].style.width = `${divWidth*this.failValue.value/100}px`
+            let addCount = 0
+            if (this.failValue.value == 0 || this.successValue.value == 0) {
+                addCount = 0
+            } else {
+                addCount = 10
+            }
+            document.getElementsByClassName('success-line-style')[0].style.width = `${divWidth*this.successValue.value/100+addCount}px`
+            document.getElementsByClassName('fail-line-style')[0].style.width = `${divWidth*this.failValue.value/100+addCount}px`
         }
     }
 }

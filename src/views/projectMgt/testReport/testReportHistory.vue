@@ -15,10 +15,10 @@
                             {{timestampToTimeFun(scope.row.createTime)}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="interfaceCount" :label="$t('testPage.apiCount_label')" align="center"></el-table-column>
-                    <el-table-column prop="successCount" :label="$t('testPage.summarySuccess_label')" align="center"></el-table-column>
-                    <el-table-column prop="failCount" :label="$t('testPage.summaryFail_label')" align="center"></el-table-column>
-                    <el-table-column :label="$t('testPage.operation')" align="center">
+                    <el-table-column prop="interfaceCount" :label="$t('testPage.apiCount_label')" align="right"></el-table-column>
+                    <el-table-column prop="successCount" :label="$t('testPage.summarySuccess_label')" align="right"></el-table-column>
+                    <el-table-column prop="failCount" :label="$t('testPage.summaryFail_label')" align="right"></el-table-column>
+                    <el-table-column :label="$t('testPage.operation')" width="300" align="center">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" target="_blank" @click="linkReasonPageMethod(scope.row)">{{$t('testPage.linkReasonPage_button')}}</a>
                         </template>
