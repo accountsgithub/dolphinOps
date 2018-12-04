@@ -148,7 +148,7 @@ $light_gray: #eee;
 }
 .title {
   font-family: MFDianHei_Noncommercial-ExLight;
-  font-size: 24px;
+  font-size: 23px;
   color: #333333;
   margin: 0 auto 0 auto;
   text-align: center;

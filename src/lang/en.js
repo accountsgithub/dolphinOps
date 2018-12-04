@@ -11,7 +11,7 @@ export default {
         vilidata_password: '新密码不能为空',
         vilidata_newPassword: '确认密码不能为空',
         vilidata_differPW: '密码不一致',
-        modifySuccessMes: 'modified',
+        modifySuccessMes: 'modified'
     },
     common: {
         title: 'Dolphin',
@@ -34,7 +34,8 @@ export default {
         uploadType_label0: 'Fix Bug',
         uploadType_label1: 'Release Version',
         logout: 'Logout',
-        modifyPassword: 'Modify Password'
+        modifyPassword: 'Modify Password',
+        more: 'More'
     },
     login: {
         title: 'Dolphin Deployment System',
@@ -83,7 +84,9 @@ export default {
         starting_message: 'Please wait while the project is being started.',
         start_message: 'Operation Cancelled',
         // DetailedList
+        downloadButton: 'Download Log',
         statusStop: 'Stopped',
+        dataList_label: 'Instances List',
         statusAgree: 'Operating',
         statusBack: 'Faulty/Deployment Failed',
         statusDefault: 'Deploying',
@@ -108,6 +111,7 @@ export default {
         statusLabel: 'Status',
         createTime: 'Deployed On',
         terminal: 'Real-Time Log',
+        changeTypeButton: 'Change Verison',
         changeTypeTit:
             'Proceeding with this operation will cause the current version to switch to the selected version. Are you sure you want to proceed?',
         changeTypeSubTit: 'Switch Version',

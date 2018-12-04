@@ -92,7 +92,7 @@
                                          :label="$t('projectMgt.port')" />
                         <el-table-column prop="node"
                                          label="node" />
-                        <el-table-column width="180"
+                        <el-table-column width="230"
                                          fixed="right"
                                          :label="$t('projectMgt.operation')">
                             <template slot-scope="scope">
@@ -164,7 +164,7 @@
                                          prop="createTime"
                                          :label="$t('projectMgt.createTime')">
                         </el-table-column>
-                        <el-table-column width="130"
+                        <el-table-column width="160"
                                          :label="$t('projectMgt.operation')">
                             <template slot-scope="scope">
                                 <el-button class="icon iconfont icon-ic-change"

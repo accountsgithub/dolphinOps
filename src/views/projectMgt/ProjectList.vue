@@ -6,7 +6,7 @@
                      size="small"
                      :model="searchCriteria"
                      class="formPanel"
-                     label-width="80px">
+                     label-width="95px">
                 <div>
                     <el-form-item :label="$t('projectMgt.name_label')">
                         <el-input v-model="searchCriteria.name"
@@ -51,7 +51,7 @@
                     <el-table-column prop="mark"
                                      :label="$t('projectMgt.mark_label')" />
                     <el-table-column prop="state"
-                                     width="120"
+                                     width="140"
                                      :label="$t('projectMgt.status_label')">
                         <template slot-scope="scope">
                             <tableStatus :statusType="statusArray[+scope.row.state]"></tableStatus>
@@ -101,7 +101,7 @@
                                          v-if="(scope.row.state !== 4 && scope.row.state !== 5) || !isOffLine">
                                 <el-button size="small"
                                            type="text">
-                                    更多
+                                    {{$t('common.more')}}
                                     <i class="el-icon-arrow-down el-icon--right"></i>
                                 </el-button>
                                 <el-dropdown-menu slot="dropdown"

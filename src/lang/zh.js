@@ -34,7 +34,8 @@ export default {
         uploadType_label0: 'bug修复',
         uploadType_label1: '版本发布',
         logout: '登出', // 变更1
-        modifyPassword: '修改密码' // 变更1
+        modifyPassword: '修改密码', // 变更1
+        more: '更多',
     },
     login: {
         title: '海豚运维平台',

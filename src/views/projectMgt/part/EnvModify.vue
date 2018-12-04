@@ -5,7 +5,7 @@
                :close-on-click-modal="false"
                :visible.sync="dialogVisible">
         <el-form size="small"
-                 label-width="100px"
+                 label-width="120px"
                  style="margin-top: -25px;"
                  :rules="rules"
                  ref="envForm"
@@ -114,7 +114,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column property="value"
-                                         width="50"
+                                         width="100"
                                          :label="$t('common.operate_label')">
                             <template slot-scope="scope">
                                 <a href="javascript:;"
@@ -178,7 +178,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column property="value"
-                                         width="50"
+                                         width="100"
                                          :label="$t('common.operate_label')">
                             <template slot-scope="scope">
                                 <a href="javascript:;"
@@ -208,7 +208,7 @@ import { MEMORY_SIZE } from '@/constants'
 export default {
     name: 'EnvModify',
     props: {
-        // 是否是管理员
+    // 是否是管理员
         isAdmin: {
             type: String
         },
@@ -394,7 +394,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import '~@/styles/common.scss';
+@import "~@/styles/common.scss";
 
 .addRowBtn {
   padding: 7px 15px !important;
