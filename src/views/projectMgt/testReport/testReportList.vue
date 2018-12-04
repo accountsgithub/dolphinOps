@@ -140,7 +140,6 @@ export default {
         getSummaryDataMethod() {
             let params = Object.assign({mark: this.$route.params.mark})
             this.getSummaryDataApi(params).then(result => {
-                debugger
                 if (result && result.data.length > 0) {
                     this.serialNo = result.serialNo
                     this.summaryData = result.data

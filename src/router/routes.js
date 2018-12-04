@@ -32,6 +32,12 @@ export const constantRouterMap = [
                 hidden: true
             },
             {
+                path: 'reasonList/:mark',
+                name: 'reasonList',
+                component: resolve => require(['@/views/projectMgt/testReport/apiReasonList'], resolve),
+                meta: { ...meta, title: 'reasonList' }
+            },
+            {
                 path: 'historyList/:mark',
                 name: 'historyList',
                 component: resolve => require(['@/views/projectMgt/testReport/testReportHistory'], resolve),
