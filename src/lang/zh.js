@@ -4,7 +4,8 @@ export default {
         projectMgt: '项目管理',
         dashboard: 'dashboard',
         projectMor: '项目监控',
-        testReport: '查看测试报告 '
+        testReport: '查看测试报告 ',
+        historyList: '历史纪录'
     },
     common: {
         title: '海豚平台',
@@ -205,6 +206,9 @@ export default {
         summarySuccess_label: '成功笔数',
         summaryFail_label: '失败笔数',
         probabilitySuccess_label: '成功率',
-        probabilityFail_label: '失败率'
+        probabilityFail_label: '失败率',
+        executeTime_label: '执行时间',
+        apiCount_label: '接口笔数',
+        autoTest_button: '自动化测试'
     }
 }

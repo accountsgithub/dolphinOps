@@ -65,7 +65,6 @@ export default {
     methods: {
         drawStatusLineMethod() {
             let divWidth = document.getElementsByClassName('line-div-style')[0].clientWidth
-            console.log(document.getElementsByClassName('success-line-style')[0].style)
             document.getElementsByClassName('success-line-style')[0].style.width = `${divWidth*this.successValue.value/100}px`
             document.getElementsByClassName('fail-line-style')[0].style.width = `${divWidth*this.failValue.value/100}px`
         }

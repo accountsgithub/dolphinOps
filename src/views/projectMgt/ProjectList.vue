@@ -100,6 +100,9 @@
                             <a class="tableActionStyle" style="color:red"
                                v-if="scope.row.state === 0 || scope.row.state === 1 || scope.row.state === 4"
                                @click="monitorcharts(scope.row)">{{$t('projectMgt.monitorcharts')}}</a>
+                            <a class="tableActionStyle"
+                               v-if="scope.row.state === 0 || scope.row.state === 1 || scope.row.state === 4"
+                               @click="testPageMethod(scope.row)">{{$t('testPage.autoTest_button')}}</a>
                             <el-dropdown trigger="click">
                                 <el-button size="small"
                                            type="text">
@@ -409,6 +412,11 @@ export default {
                     message: this.$t('projectMgt.stop_message')
                 })
             })
+        },
+        // 自动化测试
+        testPageMethod(row) {
+            console.log(row.mark)
+            this.$router.push({name: 'testReport', params: {mark: 'dolphin-release'}})
         },
         // 基础监控
         monitorcharts(item) {
