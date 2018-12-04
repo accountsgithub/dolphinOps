@@ -97,7 +97,8 @@
                             <a class="tableActionStyle"
                                v-if="ifprod"
                                @click="whiteIpConfig(scope.row)">{{$t('projectMgt.whitelist_set_button')}}</a>
-                            <el-dropdown trigger="click">
+                            <el-dropdown trigger="click"
+                                         v-if="(scope.row.state !== 4 && scope.row.state !== 5) || !isOffLine">
                                 <el-button size="small"
                                            type="text">
                                     更多
@@ -116,7 +117,7 @@
                                            @click="dialogInfo(scope.row)"
                                            v-if="scope.row.state !== 4 && scope.row.state !== 5">{{$t('projectMgt.showDetail_button')}}</a>
                                     </el-dropdown-item>
-                                    <el-dropdown-item>
+                                    <el-dropdown-item v-if="!isOffLine">
                                         <a class="tableActionStyle"
                                            @click="addEmail(scope.row)">{{$t('projectMgt.addEmail_button')}}</a>
                                     </el-dropdown-item>
@@ -284,6 +285,7 @@ export default {
             this.envConfigForm.uploadType = 0
 
             this.envConfigDialog = true
+            this.envConfigForm.uploadType = record.uploadType
             this.envConfigForm.projectId = record.id
             this.envConfigForm.instanceNumber = record.instanceNumber
             this.envConfigForm.memorySize = record.memorySize
@@ -293,7 +295,7 @@ export default {
         // 变更取消
         envDialogOnClose() {
             this.envConfigDialog = false;
-            this.envConfigForm.uploadType = '0';
+            this.envConfigForm.uploadType = 0;
         },
         addNewItem(prop) {
             this.envConfigForm[prop].push({ isNew: true })
@@ -428,7 +430,10 @@ export default {
             paging: state => state.project.paging,
             auditor: 'admin',
             searchCriteria: state => state.project.searchCriteria
-        })
+        }),
+        isOffLine() {
+            return this.g_Config.ISOFFLINE === '1'
+        }
     },
 
 
@@ -446,25 +451,25 @@ export default {
         clearInterval(this.interval)
     },
     /*eslint-disable*/
-    beforeRouteEnter (to, from, next) {
-        try {
-            if (JSON.parse(localStorage.getItem('token')) === 'project') {
-                next(vm => {
-                    vm.$router.replace({ name: 'projectItem' })
-                })
-            } else {
-                next()
-            }
-        }
-        catch (err) {
-            console.log(err)
-        }
+  beforeRouteEnter (to, from, next) {
+    try {
+      if (JSON.parse(localStorage.getItem('token')) === 'project') {
+        next(vm => {
+          vm.$router.replace({ name: 'projectItem' })
+        })
+      } else {
+        next()
+      }
     }
+    catch (err) {
+      console.log(err)
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '~@/styles/common.scss';
+@import "~@/styles/common.scss";
 
 // 操作标签样式
 .tableActionStyle {

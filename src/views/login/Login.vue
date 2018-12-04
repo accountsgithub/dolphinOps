@@ -44,6 +44,9 @@
                     </el-button>
                 </el-form-item>
             </el-form>
+            <span class="version">
+                {{g_Config.VERSION}}
+            </span>
         </div>
     </div>
 </template>
@@ -193,6 +196,11 @@ $light_gray: #eee;
     padding-top: 86px;
     width: 350px;
     height: auto;
+  }
+  .version {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
   }
 }
 .textStyle {
