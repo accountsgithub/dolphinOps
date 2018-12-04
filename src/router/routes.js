@@ -22,13 +22,36 @@ export const constantRouterMap = [
         component: resolve => require(['@/views/layout/Layout'], resolve),
         name: 'taskList',
         meta: { title: 'projectMgt', icon: 'project' },
-        hidden: false,
+        hidden: true,
         children: [
             {
                 path: 'testReport/:mark',
                 name: 'testReport',
                 component: resolve => require(['@/views/projectMgt/testReport/testReportList'], resolve),
-                meta: { ...meta, title: 'testReport' }
+                meta: { ...meta, title: 'testReport' },
+                hidden: true
+            },
+            {
+                path: 'historyList/:mark',
+                name: 'historyList',
+                component: resolve => require(['@/views/projectMgt/testReport/testReportHistory'], resolve),
+                meta: { ...meta, title: 'historyList' }
+            }
+        ]
+    },
+    // 历史纪录页
+    {
+        path: '/projectMgt',
+        component: resolve => require(['@/views/layout/Layout'], resolve),
+        name: 'taskList',
+        meta: { title: 'projectMgt', icon: 'project' },
+        hidden: true,
+        children: [
+            {
+                path: 'testReport/historyList/:mark',
+                name: 'historyList',
+                component: resolve => require(['@/views/projectMgt/testReport/testReportHistory'], resolve),
+                meta: { ...meta, title: 'historyList' }
             }
         ]
     },
