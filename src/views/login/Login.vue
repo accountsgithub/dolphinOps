@@ -111,7 +111,7 @@ export default {
 
                 } else {
                     this.loadingStatus = false
-                    this.logButtonLabel = this.$t('login.button_login')
+                    this.logButtonLabel = this.$t('login.loginButton')
                     return false
                 }
             })
@@ -167,7 +167,7 @@ $dark_gray: #889aa4;
 $light_gray: #eee;
 .login-background {
   position: fixed;
-  background-image: url('~@/assets/images/login-bg-1920.png');
+  background-image: url("~@/assets/images/login-bg-1920.png");
   background-repeat: no-repeat;
   height: 100%;
   width: 100%;
@@ -175,7 +175,7 @@ $light_gray: #eee;
   background-position-y: center;
 }
 .login-form-background {
-  background-image: url('~@/assets/images/login-box-01.png');
+  background-image: url("~@/assets/images/login-box-01.png");
   background-repeat: no-repeat;
   width: 950px;
   height: 560px;

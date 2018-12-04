@@ -40,7 +40,7 @@ export default {
         title: '海豚运维平台',
         usernameRules: '项目标识不能为空',
         passwordRules: '项目密钥不能为空',
-        loginButton: '登陆'
+        loginButton: '登录'
     },
     projectMgt: {
         // projectList
