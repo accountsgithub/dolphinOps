@@ -87,7 +87,7 @@ export function updateChart(myChartLine, option) {
 export function setChartData(seriesData) {
     let series = []
     if (!seriesData.length) {
-        return seriesData
+        return series
     }
     let colors = ['#EDB10C', '#F56E6A ', '#4EA9F9', '#818BF7', '#6EC71E']
     seriesData.map((item, index) => {

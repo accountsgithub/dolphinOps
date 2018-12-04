@@ -66,14 +66,21 @@ export const constantRouterMap = [
                 component: resolve =>
                     require(['@/views/projectMgt/ProjectList'], resolve),
                 meta: { ...meta, title: 'projectMgt', icon: 'project' }
-            },
-            // {
-            //     path: 'monitor',
-            //     name: 'projectmonitor',
-            //     component: resolve =>
-            //         require(['@/views/projectMgt/ProjectMonitor'], resolve),
-            //     meta: { ...meta, title: 'projectMor', icon: 'project' }
-            // }
+            }
+        ]
+    },
+    // dashboard
+    {
+        path: '/dashboard',
+        component: resolve => require(['@/views/layout/dashboard'], resolve),
+        children: [
+            {
+                path: 'index',
+                name: 'dashboard',
+                component: resolve =>
+                    require(['@/views/dashboard/index'], resolve),
+                meta: { ...meta, title: 'dashboard', icon: 'project' }
+            }
         ]
     },
     // 详情

@@ -10,7 +10,8 @@
                         v-for="item in refrashOptions"
                         :key="item.value"
                         :label="item.label"
-                        :value="item.value"></el-option>
+                        :value="item.value"
+                        @change="changeFreash"></el-option>
                 </el-select>
             </div>
             <div style="flex = 1;">
@@ -316,7 +317,9 @@ export default {
                     data: [5, 20, 36, 10, 10, 20],
                     yAxisIndex: 0
                 }]
-            }
+            },
+            // 是否开启刷新flag
+            setFlag: true
         }
     },
     props: ['chartsDialog', 'project', 'layerType'],
@@ -351,23 +354,33 @@ export default {
         }
     },
     created() {
-        console.log('created 111', document.getElementById('line1'))
+        // console.log('created 111', document.getElementById('line1'))
     },
     before() {
-        console.log('before 111', document.getElementById('line1'))
+        // console.log('before 111', document.getElementById('line1'))
     },
     beforeMount() {
-        console.log('beforeMount 111', document.getElementById('line1'))
+        // console.log('beforeMount 111', document.getElementById('line1'))
     },
     mounted() {
-        console.log('mounted 111', document.getElementById('line1'))
-        console.log((document.body.clientWidth - 200) / 2)
+        // console.log('mounted 111', document.getElementById('line1'))
     },
     beforeUpdate() {
-        console.log('beforeUpdate 111', document.getElementById('line1'))
+        // console.log('beforeUpdate 111', document.getElementById('line1'))
     },
     updated() {
         console.log('updated 111', document.getElementById('line1'))
+        console.log('updated width', (document.body.clientWidth - 200) / 2)
+        this.width = `${(document.body.clientWidth - 300) / 2}px`
+        // 根据屏幕初始化容器大小
+        document.getElementById('line1').style.width = this.width
+        document.getElementById('line2').style.width = this.width
+        document.getElementById('line3').style.width = this.width
+        document.getElementById('line4').style.width = this.width
+        document.getElementById('line5').style.width = this.width
+        document.getElementById('line6').style.width = this.width
+        document.getElementById('line7').style.width = this.width
+        document.getElementById('line8').style.width = this.width
         if (this.layerType === 'tomcat') {
             console.log('layerType', this.layerType)
             // 初始化表1
@@ -398,7 +411,6 @@ export default {
         setChartData,
         // tomcat项目
         getChartData(params, env, project) {
-            debugger
             let url1 = `/tomcat/${env}/${project}/cpu_usage`
             let url2 = `/tomcat/${env}/${project}/transmission`
             let url3 = `/common/${env}/${project}/fs_status`
@@ -447,32 +459,39 @@ export default {
             let url7 = `/common/${env}/${project}/fs_status`
             let url8 = `/nonTomcat/${env}/${project}/memory`
             // console.log(url5, url6, url7, url8)
+            let setParams = {
+                url: url5,
+                params: params
+            }
             // 非tomcat项目--CPU使用率
-            this.monitorApi(url5, params).then(noTomcatCpu => {
+            this.monitorApi(setParams).then(noTomcatCpu => {
                 console.log(noTomcatCpu)
                 this.noTomcatCpu.xAxis = noTomcatCpu.xAxis
                 this.noTomcatCpu.legend = noTomcatCpu.legend
                 this.noTomcatCpu.series = setChartData(noTomcatCpu.series)
                 updateChart(this.line5, this.noTomcatCpu)
             })
+            setParams.url = url6
             // 非tomcat项目--进出流量
-            this.monitorApi(url6, params).then(noTomcatTrans => {
+            this.monitorApi(setParams).then(noTomcatTrans => {
                 console.log(noTomcatTrans)
                 this.noTomcatTrans.xAxis = noTomcatTrans.xAxis
                 this.noTomcatTrans.legend = noTomcatTrans.legend
                 this.noTomcatTrans.series = setChartData(noTomcatTrans.series)
                 updateChart(this.line6, this.noTomcatTrans)
             })
+            setParams.url = url7
             //  磁盘IO(读写)/使用率
-            this.monitorApi(url7, params).then(nofs_status => {
+            this.monitorApi(setParams).then(nofs_status => {
                 console.log(nofs_status)
                 this.nofs_status.xAxis = nofs_status.xAxis
                 this.nofs_status.legend = nofs_status.legend
                 this.nofs_status.series = setChartData(nofs_status.series)
                 updateChart(this.line7, this.nofs_status)
             })
+            setParams.url = url8
             // 非 tomcat项目--JVM堆内存
-            this.monitorApi(url8, params).then(noTomcatJvm => {
+            this.monitorApi(setParams).then(noTomcatJvm => {
                 console.log(noTomcatJvm)
                 this.noTomcatJvm.xAxis = noTomcatJvm.xAxis
                 this.noTomcatJvm.legend = noTomcatJvm.legend
@@ -501,6 +520,20 @@ export default {
             } else {
                 console.log('no')
             }
+        },
+        changeFreash(val) {
+            console.log('timer', val)
+            this.setInter(val, this.getTime())
+        },
+        // 刷新机制
+        setInter(time, fun) {
+            fun
+            if (!this.setFlag) {
+                return
+            }
+            setInterval({
+                fun
+            }, time)
         }
     }
 }
