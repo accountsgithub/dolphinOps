@@ -178,7 +178,7 @@ export default {
         uploadMes3: '文件上传中，请勿重复上传',
         uploadMes4: '文件上传失败，请删除后重新上传',
         uploadErrMes1: '文件类型只能是 rar/zip 格式!',
-        uploadErrMes2: '文件大小不能超过 300MB!',
+        uploadErrMes2: '文件大小不能超过 1G!',
         uploadErrMes3: '请上传文件!',
         uploadErrMes4: '只允许上传一个文件！',
         // WhiteList

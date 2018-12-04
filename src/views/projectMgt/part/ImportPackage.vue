@@ -66,7 +66,7 @@ export default {
             // let isZip = file.type.indexOf('zip') !== -1 || file.type.indexOf('rar') !== -1
             let fileExt = file.name.split('.').splice(-1).join('')
             let isZip = fileExt === 'zip' || fileExt === 'rar'
-            const isLtM = file.size / 1024 / 1024 < 300
+            const isLtM = file.size / 1024 / 1024 < 1024
             // if (file.type == '' && file.name) {
             //     let arrayTemp = file.name.split('.')
             //     let fileType = arrayTemp[1]
@@ -76,7 +76,7 @@ export default {
                 this.$message.error('上传文件类型只能是 rar/zip 格式!')
             }
             if (!isLtM) {
-                this.$message.error('上传文件大小不能超过 300MB!')
+                this.$message.error('上传文件大小不能超过 1G!')
             }
             if (!isZip || !isLtM) {
                 this.upLoadStatus = '0'
