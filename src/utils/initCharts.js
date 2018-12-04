@@ -1,4 +1,4 @@
-// 处理option中的数据
+// 基础监控--处理option中的数据
 export function updateChart(myChartLine, option) {
     // cpuChart初始化数据
     // console.log('option', option)
@@ -83,7 +83,7 @@ export function updateChart(myChartLine, option) {
     
     myChartLine.setOption(setOption, true)
 }
-// 处理series
+// 基础监控--处理series
 export function setChartData(seriesData) {
     let series = []
     if (!seriesData.length) {
@@ -101,3 +101,5 @@ export function setChartData(seriesData) {
     // console.log('series series', series.length)
     return series
 }
+// dashboard页面处理option中数据
+// export function set
