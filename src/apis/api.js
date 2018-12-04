@@ -71,7 +71,9 @@ let API = {
     // 获取测试报告列表
     TESTREPORT_LIST: '/rap_log',
     // 获取状态图方法
-    SUMMARY_DATA: '/rap_summary/summary'
+    SUMMARY_DATA: '/rap_summary/summary',
+    // 获取测试历史数据
+    TESTHISTORY_LIST: '/rap_summary'
 }
 
 // if (process.env.NODE_ENV === 'development') {

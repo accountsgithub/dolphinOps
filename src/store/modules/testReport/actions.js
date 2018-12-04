@@ -18,5 +18,13 @@ export default {
         ).catch(
             response => response.data
         )
+    },
+    // 获取测试历史数据
+    getTestHistoryListApi(data, params) {
+        return axios.get(api.TESTHISTORY_LIST, {params}).then(
+            response => response.data.result
+        ).catch(
+            response => response.data
+        )
     }
 }

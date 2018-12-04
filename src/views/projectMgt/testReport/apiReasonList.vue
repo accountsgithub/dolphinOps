@@ -1,8 +1,11 @@
 <template>
     <el-row>
         <div v-loading="isLoading" style="background-color: #ffffff">
+            <div class="mark-title-style">
+                <span>{{this.$route.params.mark}}</span>
+            </div>
             <div>
-                <el-table :data="testReportList"
+                <el-table :data="testApiReasonList"
                           class="list"
                           highlight-current-row
                           style="width: 100%"
@@ -75,7 +78,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="$t('testPage.operation')" align="center">
+                    <el-table-column :label="$t('testPage.operation')" width="200" align="center">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" target="_blank" :href="downloadApiDetailMethod(scope.row)">{{$t('testPage.downloadApiDetail_button')}}</a>
                         </template>
@@ -88,6 +91,7 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 export default {
     name: 'apiReasonList',
     data() {
@@ -108,6 +112,9 @@ export default {
         this.getTestApiReasonListMethod('first')
     },
     methods: {
+        ...mapActions([
+            'getTestReportListApi'
+        ]),
         getTestApiReasonListMethod(type) {
             this.isLoading = true
             let jsonTemp = {
@@ -128,13 +135,35 @@ export default {
                     this.testApiReasonList = []
                 }
             })
+        },
+        // 切换每页数据个数
+        sizeChange(val) {
+            this.paginationData.pageSize = val
+            this.getTestApiReasonListMethod()
+        },
+        // 翻页方法
+        currentChange(val) {
+            this.paginationData.pageNo = val - 1
+            this.getTestApiReasonListMethod()
+        },
+        // 转换测试结果
+        testResultMethod(row) {
+            if (row.responseCode == '0') {
+                return this.$t('testPage.success_message')
+            } else {
+                return this.$t('testPage.fail_message')
+            }
+        },
+        // 下载接口明细
+        downloadApiDetailMethod(row) {
+            return `${this.g_Config.BASE_URL}/rap_log/down?id=${row.id}`
         }
     }
 }
 </script>
 
 <style type="less" scoped>
-    // popover样式
+    /*popover样式*/
     .popover-style {
         font-family: PingFangSC-Regular;
         font-size: 12px;
@@ -143,5 +172,30 @@ export default {
         word-wrap: break-word;
         max-height: 100px;
         overflow-y: auto;
+    }
+    /*操作标签样式*/
+    .tableActionStyle {
+        font-family: PingFangSC-Medium;
+        font-size: 12px;
+        color: #016ad5;
+        letter-spacing: 0.86px;
+        text-align: left;
+        margin-right: 10px;
+    }
+    /*table间距样式*/
+    .list {
+        padding: 0 30px;
+        &.el-table::before {
+            height: 0 !important;
+        }
+    }
+    /*项目标识样式*/
+    .mark-title-style {
+        height: 60px;
+        line-height: 60px;
+        border-bottom: solid 1px #EDEFF4;
+        padding-left: 30px;
+        font-size: 14px;
+        color: #686F79;
     }
 </style>

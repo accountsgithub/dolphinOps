@@ -1,22 +1,26 @@
 <template>
     <el-row>
         <div v-loading="isLoading" style="background-color: #ffffff">
+            <div class="mark-title-style">
+                <span>{{this.$route.params.mark}}</span>
+            </div>
             <div>
-                <el-table :data="testApiReasonList">
+                <el-table :data="testHistoryList"
+                          class="list"
+                          highlight-current-row
+                          style="width: 100%"
+                          stripe>
                     <el-table-column prop="name" :label="$t('testPage.apiName_label')" align="center">
                         <template slot-scope="scope">
                             {{timestampToTimeFun(scope.row.createTime)}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="url" :label="$t('testPage.requestPath_label')"></el-table-column>
-                    <el-table-column prop="httpMethod" :label="$t('testPage.requestType_label')"></el-table-column>
-                    <el-table-column prop="requestBody" :label="$t('testPage.requestValue_label')"></el-table-column>
-                    <el-table-column prop="responseStatus" :label="$t('testPage.responseStatus_label')"></el-table-column>
-                    <el-table-column prop="responseBody" :label="$t('testPage.responseValue_label')"></el-table-column>
-                    <el-table-column prop="message" :label="$t('testPage.exceptionInfo_label')"></el-table-column>
-                    <el-table-column :label="$t('testPage.operation')" align="center">
+                    <el-table-column prop="interfaceCount" :label="$t('testPage.apiCount_label')" align="right"></el-table-column>
+                    <el-table-column prop="successCount" :label="$t('testPage.summarySuccess_label')" align="right"></el-table-column>
+                    <el-table-column prop="failCount" :label="$t('testPage.summaryFail_label')" align="right"></el-table-column>
+                    <el-table-column :label="$t('testPage.operation')" width="300" align="center">
                         <template slot-scope="scope">
-                            <a class="tableActionStyle" target="_blank" :href="downloadApiDetailMethod(scope.row)">{{$t('testPage.downloadApiDetail_button')}}</a>
+                            <a class="tableActionStyle" target="_blank" @click="linkReasonPageMethod(scope.row)">{{$t('testPage.linkReasonPage_button')}}</a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -27,13 +31,14 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 import util from '@/utils/util.js'
 export default {
     name: 'testReportHistory',
     data() {
         return {
             isLoading: false,
-            testApiReasonList: [],
+            testHistoryList: [],
             // 分页数据集合
             paginationData: {
                 pageNo: 0,
@@ -45,27 +50,29 @@ export default {
         }
     },
     mounted() {
-        this.getTestApiReasonListMethod('first')
+        this.getTestHistoryListMethod('first')
     },
     methods: {
-        getTestApiReasonListMethod(type) {
+        ...mapActions([
+            'getTestHistoryListApi'
+        ]),
+        getTestHistoryListMethod(type) {
             this.isLoading = true
             let jsonTemp = {
                 pageNo: type == 'first' ? 0 : this.paginationData.pageNo,
                 pageSize: type == 'first' ? 10 : this.paginationData.pageSize,
-                f_eq_mark: this.$route.params.mark,
-                f_eq_serialNo: this.serialNo
+                f_eq_mark: this.$route.params.mark
             }
             let params = Object.assign(jsonTemp)
-            this.getTestReportListApi(params).then(result => {
+            this.getTestHistoryListApi(params).then(result => {
                 this.isLoading = false
                 if (result && result.data) {
-                    this.testApiReasonList = result.data
+                    this.testHistoryList = result.data
                     this.paginationData.pageNo = result.pageNo
                     this.paginationData.pageSize = result.pageSize
                     this.paginationData.total = result.total
                 } else {
-                    this.testApiReasonList = []
+                    this.testHistoryList = []
                 }
             })
         },
@@ -76,11 +83,49 @@ export default {
             } else {
                 return '---'
             }
+        },
+        // 跳转查询失败接口原因
+        linkReasonPageMethod(val) {
+            this.$router.push({name: 'reasonList', params: {mark: val.mark}})
+        },
+        // 切换每页数据个数
+        sizeChange(val) {
+            this.paginationData.pageSize = val
+            this.getTestHistoryListMethod()
+        },
+        // 翻页方法
+        currentChange(val) {
+            this.paginationData.pageNo = val - 1
+            this.getTestHistoryListMethod()
         }
     }
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+    /*操作标签样式*/
+    .tableActionStyle {
+        font-family: PingFangSC-Medium;
+        font-size: 12px;
+        color: #016ad5;
+        letter-spacing: 0.86px;
+        text-align: left;
+        margin-right: 10px;
+    }
+    /*table间距样式*/
+    .list {
+        padding: 0 30px;
+        &.el-table::before {
+            height: 0 !important;
+        }
+    }
+    /*项目标识样式*/
+    .mark-title-style {
+        height: 60px;
+        line-height: 60px;
+        border-bottom: solid 1px #EDEFF4;
+        padding-left: 30px;
+        font-size: 14px;
+        color: #686F79;
+    }
 </style>

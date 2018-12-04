@@ -4,9 +4,9 @@
             <div class="page-title-style">
                 <span>Requests Summary</span>
                 <div>
-                    <el-button type="primary" class="tableLastButtonStyleW" @click="linkHistoryMethod">{{$t('testPage.showHistoryRecord_button')}}</el-button>
-                    <el-button :disabled="!serialNo" type="primary" class="tableLastButtonStyleW icon iconfont icon-ic-loaddown" @click="downloadAllDetailMethod"></el-button>
-                    <el-button type="primary" class="tableLastButtonStyleW icon iconfont icon-ic-refresh" @click="getTestReportListMethod('first')"></el-button>
+                    <el-button class="tableLastButtonStyleW" @click="linkHistoryMethod">{{$t('testPage.showHistoryRecord_button')}}</el-button>
+                    <el-button :disabled="!serialNo" class="tableLastButtonStyleW icon iconfont icon-ic-loaddown" @click="downloadAllDetailMethod"></el-button>
+                    <el-button class="tableLastButtonStyleW icon iconfont icon-ic-refresh" @click="getTestReportListMethod('first')"></el-button>
                 </div>
             </div>
             <div v-show="summaryData.length > 0" class="status-div-style">
@@ -19,7 +19,7 @@
                           style="width: 100%"
                           stripe>
                     <el-table-column prop="name" :label="$t('testPage.apiName_label')"></el-table-column>
-                    <el-table-column prop="responseCode" :label="$t('testPage.testResult_label')">
+                    <el-table-column prop="responseCode" :label="$t('testPage.testResult_label')" align="center">
                         <template class="test-fail-style" slot-scope="scope">
                             {{testResultMethod(scope.row)}}
                         </template>
@@ -39,7 +39,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="httpMethod" :label="$t('testPage.requestType_label')"></el-table-column>
+                    <el-table-column prop="httpMethod" :label="$t('testPage.requestType_label')" align="center"></el-table-column>
                     <el-table-column prop="requestBody" :label="$t('testPage.requestValue_label')">
                         <template slot-scope="scope">
                             <div slot="reference">
@@ -55,7 +55,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="responseStatus" :label="$t('testPage.responseStatus_label')"></el-table-column>
+                    <el-table-column prop="responseStatus" :label="$t('testPage.responseStatus_label')" align="center"></el-table-column>
                     <el-table-column prop="responseBody" :label="$t('testPage.responseValue_label')">
                         <template slot-scope="scope">
                             <div slot="reference">
@@ -86,7 +86,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="$t('testPage.operation')" align="center">
+                    <el-table-column :label="$t('testPage.operation')" width="200" align="center">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" target="_blank" :href="downloadApiDetailMethod(scope.row)">{{$t('testPage.downloadApiDetail_button')}}</a>
                         </template>
@@ -140,7 +140,6 @@ export default {
         getSummaryDataMethod() {
             let params = Object.assign({mark: this.$route.params.mark})
             this.getSummaryDataApi(params).then(result => {
-                debugger
                 if (result && result.data.length > 0) {
                     this.serialNo = result.serialNo
                     this.summaryData = result.data
@@ -209,6 +208,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~@/styles/common.scss';
     /*页面介绍及基本按键div样式*/
     .page-title-style{
         height: 60px;

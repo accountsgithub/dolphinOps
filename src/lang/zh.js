@@ -5,7 +5,8 @@ export default {
         dashboard: 'dashboard',
         projectMor: '项目监控',
         testReport: '查看测试报告 ',
-        historyList: '历史纪录'
+        historyList: '历史纪录',
+        reasonList: '失败接口原因'
     },
     common: {
         title: '海豚平台',
@@ -209,6 +210,7 @@ export default {
         probabilityFail_label: '失败率',
         executeTime_label: '执行时间',
         apiCount_label: '接口笔数',
-        autoTest_button: '自动化测试'
+        autoTest_button: '自动化测试',
+        linkReasonPage_button: '跳转查询失败接口原因'
     }
 }
