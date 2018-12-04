@@ -90,7 +90,7 @@
                                v-if="scope.row.state === 1">{{$t('projectMgt.stop_button')}}</a>
                             <a class="tableActionStyle"
                                @click="startUp(scope.row)"
-                               v-else-if="scope.row.state !== 1 && scope.row.state !== 3">{{$t('projectMgt.start_button')}}</a>
+                               v-else-if="scope.row.state !== 1 && scope.row.state !== 3 && scope.row.deployStatus !== 5">{{$t('projectMgt.start_button')}}</a>
                             <a class="tableActionStyle"
                                @click="beginDeploy(scope.row)"
                                v-if="scope.row.deployStatus && scope.row.deployStatus === 5">{{$t('projectMgt.deploy_button')}}</a>
@@ -98,7 +98,7 @@
                                v-if="ifprod"
                                @click="whiteIpConfig(scope.row)">{{$t('projectMgt.whitelist_set_button')}}</a>
                             <el-dropdown trigger="click"
-                                         v-if="(scope.row.state !== 4 && scope.row.state !== 5) || !isOffLine">
+                                         v-if="(scope.row.state !== 5) || !isOffLine">
                                 <el-button size="small"
                                            type="text">
                                     {{$t('common.more')}}
@@ -110,12 +110,12 @@
                                     <el-dropdown-item>
                                         <a class="tableActionStyle"
                                            @click="dialogChange(scope.row)"
-                                           v-if="scope.row.state !== 4 && scope.row.state !== 5">{{$t('projectMgt.change_button')}}</a>
+                                           v-if="scope.row.state !== 5">{{$t('projectMgt.change_button')}}</a>
                                     </el-dropdown-item>
                                     <el-dropdown-item>
                                         <a class="tableActionStyle"
                                            @click="dialogInfo(scope.row)"
-                                           v-if="scope.row.state !== 4 && scope.row.state !== 5">{{$t('projectMgt.showDetail_button')}}</a>
+                                           v-if="scope.row.state !== 5">{{$t('projectMgt.showDetail_button')}}</a>
                                     </el-dropdown-item>
                                     <el-dropdown-item v-if="!isOffLine">
                                         <a class="tableActionStyle"
@@ -151,6 +151,7 @@
                     :envConfigForm.sync="envConfigForm"
                     :dialogType.sync="dialogType"
                     :importId.sync="importId"
+                    :refresh="searchProject"
                     isAdmin="0">
         </env-modify>
         <import-package v-on:update:close="handleImportDialogClose"

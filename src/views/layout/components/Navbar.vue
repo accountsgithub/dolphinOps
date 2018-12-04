@@ -26,9 +26,9 @@
                     <el-dropdown-item command="logout">
                         <span>{{$t('common.logout')}}</span>
                     </el-dropdown-item>
-                    <!-- <el-dropdown-item command="modifyPassword">
+                    <el-dropdown-item command="modifyPassword">
                         <span>{{$t('common.modifyPassword')}}</span>
-                    </el-dropdown-item> -->
+                    </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </div>

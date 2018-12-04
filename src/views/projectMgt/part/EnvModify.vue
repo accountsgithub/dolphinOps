@@ -226,6 +226,10 @@ export default {
         // 表单
         envConfigForm: {
             type: Object
+        },
+        // 表单
+        refresh: {
+            type: Function
         }
     },
     data() {
@@ -367,7 +371,8 @@ export default {
                                 message: this.$t('part.saveSuccessMes'),
                                 type: 'success'
                             });
-                            this.closeEnvDialog();
+                            this.refresh()
+                            this.closeEnvDialog()
                         });
                     } else {
                         const params = {
@@ -384,6 +389,7 @@ export default {
                                 message: this.$t('part.saveSuccessMes'),
                                 type: 'success'
                             });
+                            this.refresh()
                             this.closeEnvDialog();
                         });
                     }

@@ -4,8 +4,10 @@ import API from '@/apis/api'
 // import Cookies from 'js-cookie' // cookie
 
 export default {
-    setLanguage({ commit }, language) {
-        commit(TYPES.SETLANGUAGE, language)
+    setLanguage({ commit }, lang) {
+        const language = lang === 'en' ? 'en_US' : 'zh_CN'
+        commit(TYPES.SETLANGUAGE, lang)
+        axios.get(API.I18N, { params: { lang: language } })
     },
     ToggleSideBar: ({ commit }) => {
         commit(TYPES.TOGGLE_SIDE_BAR)

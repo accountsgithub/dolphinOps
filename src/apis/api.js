@@ -42,6 +42,7 @@ let API = {
     LOGIN: '/oauth/password',
     LOGIN_OUT: '/user/logout',
     UPDATE_PASSWORD: '/user/password',
+    I18N: '/i18n',
 
     //项目主列表
     PROJECT_LIST: '/project/list.do',

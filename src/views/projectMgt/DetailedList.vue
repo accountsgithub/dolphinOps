@@ -25,7 +25,7 @@
                     <el-button class="prj-btn"
                                type="default"
                                @click="startUp"
-                               v-if="project.state !== 1 && project.state !== 3">{{$t('projectMgt.begin')}}</el-button>
+                               v-if="project.state !== 1 && project.state !== 3 && project.deployStatus !== 5">{{$t('projectMgt.begin')}}</el-button>
                     <el-button class="prj-btn"
                                type="default"
                                @click="stopDeploy(project)"
@@ -207,6 +207,7 @@
                     :envConfigForm.sync="envConfigForm"
                     :dialogType.sync="dialogType"
                     :importId.sync="importId"
+                    :refresh="getProject"
                     isAdmin="0">
         </env-modify>
         <import-package v-on:update:close="handleImportDialogClose"
@@ -224,7 +225,6 @@ import { mapActions, mapState } from 'vuex'
 import API from '@/apis/api'
 import { DATE_FORMAT } from '@/constants'
 import { mappingValue, trim } from '@/utils'
-import { UPLOAD_MODE, UPLOAD_TYPE } from '@/constants'
 import EnvModify from './part/EnvModify'
 import ImportPackage from './part/ImportPackage'
 import WhiteList from './part/WhiteList'
@@ -586,10 +586,30 @@ export default {
     },
 
     mappingUploadMode (value) {
+      const UPLOAD_MODE = [
+        {
+          label: this.$t('common.uploadMode_label0'),
+          value: 0
+        },
+        {
+          label: this.$t('common.uploadMode_label1'),
+          value: 1
+        }
+      ]
       return mappingValue(value)(UPLOAD_MODE)
     },
 
     mappingUploadType (value) {
+      const UPLOAD_TYPE = [
+        {
+          label: this.$t('common.uploadType_label0'),
+          value: 0
+        },
+        {
+          label: this.$t('common.uploadType_label1'),
+          value: 1
+        }
+      ]
       return mappingValue(value)(UPLOAD_TYPE)
     },
     async getProject () {
