@@ -4,5 +4,5 @@
     "WEBSOCKET_URL": "ws://10.79.0.252:8091/dolphin-ops",
     "ISOFFLINE": "1",
     "VERSION": " v1.1.7.5",
-    "AJAX_TIMEOUT": "60000"
+    "AJAX_TIMEOUT": "300000"
 }
