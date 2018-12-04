@@ -131,7 +131,7 @@ export default {
             .catch(error => Promise.reject(error))
     },
     // 切换版本
-    changeVersion(actions, params) {
+    changeVersion(data, params) {
         return axios
             .get(API.PROJECT_CHANGEVERSION, { params })
             .then(response => {
