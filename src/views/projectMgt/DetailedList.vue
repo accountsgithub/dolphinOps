@@ -558,11 +558,12 @@ export default {
       }).then(() => {
         let params = Object.assign({ deployId: id })
         this.changeVersion(params).then(res => {
-          if (res.data.result.status == '200') {
+          if (res.status === 200) {
             this.$message({
               type: 'success',
               message: this.$t('projectMgt.changeTypeSussess')
             })
+            this.searchListMethod()
           } else {
             this.$message({
               type: 'error',
