@@ -1,4 +1,4 @@
-// 处理option中的数据
+// 基础监控--处理option中的数据
 export function updateChart(myChartLine, option) {
     // cpuChart初始化数据
     // console.log('option', option)
@@ -32,7 +32,7 @@ export function updateChart(myChartLine, option) {
             // console.log('item.color', item.color)
             let seriesItem = new Object
             seriesItem = {
-                name: item.title,
+                name: option.legend[i],
                 type: 'line',
                 yAxisIndex: item.yAxisIndex == 'left' ? 0 : 1,
                 itemStyle: {
@@ -66,7 +66,16 @@ export function updateChart(myChartLine, option) {
                 type: 'line' // 默认为直线，可选为：'line' | 'shadow'
             }
         },
+        grid: {
+            left: '5%',
+            right: '5%',
+            bottom: '5%',
+            top: '30%',
+            containLabel: true
+        },
         legend: {
+            show: true,
+            top: '10%',
             data: option.legend
         },
         xAxis: {
@@ -80,11 +89,12 @@ export function updateChart(myChartLine, option) {
         yAxis: yAxis,
         series: series
     }
-    
+    // console.log('setOption', setOption)
     myChartLine.setOption(setOption, true)
 }
-// 处理series
+// 基础监控--处理series
 export function setChartData(seriesData) {
+    // console.log('seriesData', seriesData)
     let series = []
     if (!seriesData.length) {
         return series
@@ -101,3 +111,5 @@ export function setChartData(seriesData) {
     // console.log('series series', series.length)
     return series
 }
+// dashboard页面处理option中数据
+// export function set
