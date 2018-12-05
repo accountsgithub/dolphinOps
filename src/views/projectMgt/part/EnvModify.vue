@@ -347,7 +347,8 @@ export default {
                         projectId,
                         auditor,
                         desc,
-                        uploadType
+                        uploadType,
+                        tempPath
                     } = this.envConfigForm;
                     if (envVariables.length > 0 && this.hasEnvValidErr(envVariables)) {
                         return;
@@ -364,7 +365,8 @@ export default {
                             instanceNumber: instanceNumber,
                             memorySize: memorySize,
                             env: JSON.stringify(envVariables),
-                            ipAlias: JSON.stringify(ipAlias)
+                            ipAlias: JSON.stringify(ipAlias),
+                            tempPath
                         };
                         this.saveUplaod(params).then(() => {
                             this.$message({
@@ -382,7 +384,8 @@ export default {
                             memory: memorySize,
                             env: JSON.stringify(envVariables),
                             ipAlias: JSON.stringify(ipAlias),
-                            searchParams: this.searchCriteria
+                            searchParams: this.searchCriteria,
+                            tempPath
                         };
                         this.saveEnv(params).then(() => {
                             this.$message({

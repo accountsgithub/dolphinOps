@@ -319,7 +319,8 @@ export default {
                 this.envConfigForm.auditor = file.result.auditorName
                 this.envConfigForm.instanceNumber = file.result.instanceNumber
                 this.envConfigForm.memorySize = file.result.memorySize
-                this.importId = file.result.id
+                this.envConfigForm.tempPath = file.result.tempPath
+                // this.importId = file.result.id
             }
             this.dialogType = 'upload'
             this.envConfigDialog = true
