@@ -53,6 +53,9 @@
                     <el-table-column prop="stateTxt"
                                      width="140"
                                      :label="$t('projectMgt.status_label')">
+                        <template slot-scope="scope">
+                            <tableStatus :statusType="scope.row.stateTxt"></tableStatus>
+                        </template>
                     </el-table-column>
                     <el-table-column prop="instanceNumber"
                                      width="120"
@@ -168,6 +171,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { SearchPanel } from '@/components/layout'
+import tableStatus from '@/components/Status'
 import EnvModify from './part/EnvModify'
 import ImportPackage from './part/ImportPackage'
 import WhiteList from './part/WhiteList'
@@ -175,6 +179,7 @@ import EmailList from './part/EmailList'
 export default {
     components: {
         SearchPanel,
+        tableStatus,
         'env-modify': EnvModify,
         'import-package': ImportPackage,
         'white-list': WhiteList,
