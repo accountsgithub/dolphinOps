@@ -1,7 +1,7 @@
 {
     "status": "200",
     "BASE_URL": "http://10.255.228.101:9091/dolphin-ops",
-    "WEBSOCKET_URL": "ws://10.79.0.252:8091/dolphin-ops",
+    "WEBSOCKET_URL": "ws://10.255.228.101:9091/dolphin-ops",
     "ISOFFLINE": "1",
     "VERSION": " v1.1.7.5",
     "AJAX_TIMEOUT": "300000"

@@ -386,7 +386,7 @@ export default {
           connectCount = 2
           term.write(wirteData)
         }
-        else if (cmdStr === '\t') {
+        else if (cmdStr && cmdStr === '\t') {
           if (escapeData.indexOf('%') !== -1) {
             if (escapeData.indexOf('%0D') !== -1) {
               escapeData = escapeData.replace(/%0D/, '')
@@ -405,7 +405,7 @@ export default {
             this.commondStr = trim(this.commondStr) + trim(unescape(escapeData))
           }
         }
-        else if (cmdStr.indexOf('\r') > -1) {
+        else if (cmdStr && cmdStr.indexOf('\r') > -1) {
           if (escapeData.indexOf('%0D') > -1) {
             atemp = escapeData.split('%0D')
             if ((atemp[atemp.length - 1].substring(0, 1)) != '%') {
@@ -415,7 +415,7 @@ export default {
           }
           term.write(wirteData)
         }
-        else if (cmdStr == '\u0003') {
+        else if (cmdStr && cmdStr == '\u0003') {
           term.write(wirteData)
         }
         else {
