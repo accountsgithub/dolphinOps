@@ -297,6 +297,8 @@ export default {
         envDialogOnClose() {
             this.envConfigDialog = false;
             this.envConfigForm.uploadType = 0;
+            this.envConfigForm.ipAlias = []
+            this.envConfigForm.envVariables = []
         },
         addNewItem(prop) {
             this.envConfigForm[prop].push({ isNew: true })
