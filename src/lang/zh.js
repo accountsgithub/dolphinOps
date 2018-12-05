@@ -218,6 +218,10 @@ export default {
     exceptionPage: {
         searchTime_label: '查询时间',
         projectName_label: '项目名称',
-        projectName_placeholder: '请输入项目名称'
+        projectName_placeholder: '请输入项目名称',
+        projectMark_label: '项目标识',
+        url_label: '接口',
+        responseStatus_label: '响应状态',
+        responseCount_label: '响应次数'
     }
 }

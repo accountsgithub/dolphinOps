@@ -13,7 +13,7 @@
                 <div style="margin-right: 10px;">
                     <el-form-item>
                         <el-button type="primary" @click="getExceptionListMethod('first')" class="tableLastButtonStyleB icon iconfont icon-ic-search">{{$t('common.search_button')}}</el-button>
-                        <el-button class="tableLastButtonStyleW icon iconfont icon-ic-refresh">{{$t('common.reset_button')}}</el-button>
+                        <el-button @click="resetSearchMethod" class="tableLastButtonStyleW icon iconfont icon-ic-refresh">{{$t('common.reset_button')}}</el-button>
                     </el-form-item>
                 </div>
             </el-form>
@@ -28,19 +28,11 @@
                           highlight-current-row
                           style="width: 100%"
                           stripe>
-                    <el-table-column prop="name" :label="$t('testPage.apiName_label')" align="center">
-                        <template slot-scope="scope">
-                            {{timestampToTimeFun(scope.row.createTime)}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="interfaceCount" :label="$t('testPage.apiCount_label')" align="right"></el-table-column>
-                    <el-table-column prop="successCount" :label="$t('testPage.summarySuccess_label')" align="right"></el-table-column>
-                    <el-table-column prop="failCount" :label="$t('testPage.summaryFail_label')" align="right"></el-table-column>
-                    <el-table-column :label="$t('testPage.operation')" width="300" align="center">
-                        <template slot-scope="scope">
-                            <a class="tableActionStyle" target="_blank" @click="linkReasonPageMethod(scope.row)">{{$t('testPage.linkReasonPage_button')}}</a>
-                        </template>
-                    </el-table-column>
+                    <el-table-column prop="project" :label="$t('exceptionPage.projectMark_label')" align="left"></el-table-column>
+                    <el-table-column prop="projectName" :label="$t('exceptionPage.projectName_label')" align="left"></el-table-column>
+                    <el-table-column prop="uri" :label="$t('exceptionPage.url_label')" align="left"></el-table-column>
+                    <el-table-column prop="statusCode" :label="$t('exceptionPage.responseStatus_label')" align="center"></el-table-column>
+                    <el-table-column prop="respCnt" :label="$t('exceptionPage.responseCount_label')" align="right"></el-table-column>
                 </el-table>
                 <el-pagination v-if="paginationData.total != 0" :current-page="paginationData.pageNo + 1" class="pagination" @size-change="sizeChange" @current-change="currentChange" :page-size="paginationData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.total"></el-pagination>
             </div>
@@ -77,6 +69,7 @@ export default {
         ...mapActions([
             'getExceptionListApi'
         ]),
+        // 获取项目异常情况数据
         getExceptionListMethod(type) {
             let jsonTemp =  {
                 start: this.searchForm.project,
@@ -93,6 +86,11 @@ export default {
                     this.exceptionList = []
                 }
             })
+        },
+        // 查询重置
+        resetSearchMethod() {
+            this.$refs['searchForm'].resetFields()
+            this.getExceptionListMethod('first')
         },
         // 切换每页数据个数
         sizeChange(val) {
