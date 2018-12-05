@@ -119,7 +119,7 @@ export default {
             this.isLoading = true
             let jsonTemp = {
                 pageNo: type == 'first' ? 0 : this.paginationData.pageNo,
-                pageSize: type == 'first' ? 10 : this.paginationData.pageSize,
+                pageSize: this.paginationData.pageSize,
                 f_eq_mark: this.$route.params.mark,
                 f_eq_serialNo: this.serialNo
             }

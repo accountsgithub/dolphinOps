@@ -45,7 +45,23 @@ export const constantRouterMap = [
             }
         ]
     },
-    // 历史纪录页
+    // 项目异常情况
+    {
+        path: '/projectMgt',
+        component: resolve => require(['@/views/layout/Layout'], resolve),
+        name: 'taskList',
+        meta: { title: 'projectMgt', icon: 'project' },
+        hidden: true,
+        children: [
+            {
+                path: 'exceptionPage',
+                name: 'exceptionPage',
+                component: resolve => require(['@/views/projectMgt/projectException/exceptionPage'], resolve),
+                meta: { ...meta, title: 'exceptionPage' }
+            }
+        ]
+    },
+    /*// 历史纪录页
     {
         path: '/projectMgt',
         component: resolve => require(['@/views/layout/Layout'], resolve),
@@ -60,7 +76,7 @@ export const constantRouterMap = [
                 meta: { ...meta, title: 'historyList' }
             }
         ]
-    },
+    },*/
     // projectManagement
     {
         path: '/projectMgt',

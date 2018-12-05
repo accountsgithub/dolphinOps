@@ -26,5 +26,13 @@ export default {
         ).catch(
             response => response.data
         )
+    },
+    // 获取项目异常情况
+    getExceptionListApi(data, params) {
+        return axios.get(api.PROJECTEXCEPTION_LIST, {params}).then(
+            response => response.data.result
+        ).catch(
+            response => response.data
+        )
     }
 }

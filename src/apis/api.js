@@ -73,7 +73,9 @@ let API = {
     // 获取状态图方法
     SUMMARY_DATA: '/rap_summary/summary',
     // 获取测试历史数据
-    TESTHISTORY_LIST: '/rap_summary'
+    TESTHISTORY_LIST: '/rap_summary',
+    // 获取项目异常情况
+    PROJECTEXCEPTION_LIST: '/comparison/test/errors'
 }
 
 // if (process.env.NODE_ENV === 'development') {

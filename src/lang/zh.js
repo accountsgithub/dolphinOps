@@ -6,7 +6,8 @@ export default {
         projectMor: '项目监控',
         testReport: '查看测试报告 ',
         historyList: '历史纪录',
-        reasonList: '失败接口原因'
+        reasonList: '失败接口原因',
+        exceptionPage: '项目异常情况'
     },
     common: {
         title: '海豚平台',
@@ -212,5 +213,11 @@ export default {
         apiCount_label: '接口笔数',
         autoTest_button: '自动化测试',
         linkReasonPage_button: '跳转查询失败接口原因'
+    },
+    // 异常情况页 变更1
+    exceptionPage: {
+        searchTime_label: '查询时间',
+        projectName_label: '项目名称',
+        projectName_placeholder: '请输入项目名称'
     }
 }
