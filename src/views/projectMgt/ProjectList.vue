@@ -50,12 +50,9 @@
                                      :label="$t('projectMgt.name_label')" />
                     <el-table-column prop="mark"
                                      :label="$t('projectMgt.mark_label')" />
-                    <el-table-column prop="state"
+                    <el-table-column prop="stateTxt"
                                      width="140"
                                      :label="$t('projectMgt.status_label')">
-                        <template slot-scope="scope">
-                            <tableStatus :statusType="statusArray[+scope.row.state]"></tableStatus>
-                        </template>
                     </el-table-column>
                     <el-table-column prop="instanceNumber"
                                      width="120"
@@ -90,7 +87,7 @@
                                v-if="scope.row.state === 1">{{$t('projectMgt.stop_button')}}</a>
                             <a class="tableActionStyle"
                                @click="startUp(scope.row)"
-                               v-else-if="scope.row.state !== 1 && scope.row.state !== 3 && scope.row.deployStatus !== 5">{{$t('projectMgt.start_button')}}</a>
+                               v-else-if="scope.row.state === 0 && scope.row.state === 4 && scope.row.deployStatus !== 5">{{$t('projectMgt.start_button')}}</a>
                             <a class="tableActionStyle"
                                @click="beginDeploy(scope.row)"
                                v-if="scope.row.deployStatus && scope.row.deployStatus === 5">{{$t('projectMgt.deploy_button')}}</a>
@@ -170,7 +167,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import tableStatus from '@/components/Status'
 import { SearchPanel } from '@/components/layout'
 import EnvModify from './part/EnvModify'
 import ImportPackage from './part/ImportPackage'
@@ -179,7 +175,6 @@ import EmailList from './part/EmailList'
 export default {
     components: {
         SearchPanel,
-        tableStatus,
         'env-modify': EnvModify,
         'import-package': ImportPackage,
         'white-list': WhiteList,
