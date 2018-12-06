@@ -5,17 +5,19 @@
                  class="clearfix">
                 <div class="title-style">
                     {{proName}}
-                    <span v-if="project.stateTxt == '已停止' || project.stateTxt == 'Stopped'"
+                    <span v-if="project.stateTxt == '已停止' || project.stateTxt == 'stop'"
                           class="prj-status prj-status-stop">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '运行中' || project.stateTxt == 'Operating'"
+                    <span v-else-if="project.stateTxt == '运行中' || project.stateTxt == 'running'"
                           class="prj-status prj-status-agree">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '故障' || project.stateTxt == 'Faulty/Deployment Failed'"
+                    <span v-else-if="project.stateTxt == '故障' || project.stateTxt == 'fault'"
                           class="prj-status prj-status-back">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '初始' || project.stateTxt == 'Deploying'"
+                    <span v-else-if="project.stateTxt == '初始' || project.stateTxt == 'init'"
                           class="prj-status prj-status-default">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '启动中' || project.stateTxt == 'Starting'"
+                    <span v-else-if="project.stateTxt == '启动中' || project.stateTxt == 'starting'"
                           class="prj-status prj-status-begin">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '系统崩溃' || project.stateTxt == 'System Crash'"
+                    <span v-else-if="project.stateTxt == '待部署' || project.stateTxt == 'pending'"
+                          class="prj-status prj-status-begin">{{project.stateTxt}}</span>
+                    <span v-else-if="project.stateTxt == '系统崩溃' || project.stateTxt == 'crash'"
                           class="prj-status prj-status-error">{{project.stateTxt}}</span>
 
                     <el-button class="prj-btn import-btn "
