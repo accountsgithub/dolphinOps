@@ -3,10 +3,18 @@
         <div class="search-div-style">
             <el-form :model="searchForm" ref="searchForm" :inline="true" size="small" label-width="100px" class="page-title-style">
                 <div>
-                    <el-form-item :label="$t('exceptionPage.searchTime_label')">
-                        <el-input v-model="searchForm.time"></el-input>
+                    <el-form-item :label="$t('exceptionPage.searchTime_label')" prop="time">
+                        <el-date-picker
+                            v-model="searchForm.time"
+                            type="datetimerange"
+                            :clearable="false"
+                            :editable="false"
+                            :range-separator="$t('exceptionPage.separator_label')"
+                            :start-placeholder="$t('exceptionPage.beginTime_label')"
+                            :end-placeholder="$t('exceptionPage.endTime_label')">
+                        </el-date-picker>
                     </el-form-item>
-                    <el-form-item :label="$t('exceptionPage.projectName_label')">
+                    <el-form-item :label="$t('exceptionPage.projectName_label')" prop="project">
                         <el-input v-model="searchForm.project" :placeholder="$t('exceptionPage.projectName_placeholder')"></el-input>
                     </el-form-item>
                 </div>
@@ -18,7 +26,7 @@
                 </div>
             </el-form>
         </div>
-        <div v-loading="isLoading" style="background-color: #ffffff">
+        <div style="background-color: #ffffff">
             <div class="mark-title-style">
                 <span>{{$t('route.exceptionPage')}}</span>
             </div>
@@ -28,13 +36,13 @@
                           highlight-current-row
                           style="width: 100%"
                           stripe>
-                    <el-table-column prop="project" :label="$t('exceptionPage.projectMark_label')" align="left"></el-table-column>
-                    <el-table-column prop="projectName" :label="$t('exceptionPage.projectName_label')" align="left"></el-table-column>
-                    <el-table-column prop="uri" :label="$t('exceptionPage.url_label')" align="left"></el-table-column>
-                    <el-table-column prop="statusCode" :label="$t('exceptionPage.responseStatus_label')" align="center"></el-table-column>
-                    <el-table-column prop="respCnt" :label="$t('exceptionPage.responseCount_label')" align="right"></el-table-column>
+                    <el-table-column prop="project" :label="$t('exceptionPage.projectMark_label')" align="left" min-width="25%"></el-table-column>
+                    <el-table-column prop="projectName" :label="$t('exceptionPage.projectName_label')" align="left" min-width="25%"></el-table-column>
+                    <el-table-column prop="uri" :label="$t('exceptionPage.url_label')" align="left" min-width="25%"></el-table-column>
+                    <el-table-column prop="statusCode" :label="$t('exceptionPage.responseStatus_label')" align="center" min-width="10%"></el-table-column>
+                    <el-table-column prop="respCnt" :label="$t('exceptionPage.responseCount_label')" align="center" min-width="10%"></el-table-column>
                 </el-table>
-                <el-pagination v-if="paginationData.total != 0" :current-page="paginationData.pageNo + 1" class="pagination" @size-change="sizeChange" @current-change="currentChange" :page-size="paginationData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.total"></el-pagination>
+                <el-pagination v-if="paginationData.total != 0" :current-page="paginationData.pageNo" class="pagination" @size-change="sizeChange" @current-change="currentChange" :page-size="paginationData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.total"></el-pagination>
             </div>
         </div>
     </el-row>
@@ -47,14 +55,13 @@ export default {
     data() {
         return {
             searchForm: {
-                time: [],
+                time: [new Date()-3600*1000*24, new Date()],
                 project: ''
             },
-            isLoading: false,
             exceptionList: [],
             // 分页数据集合
             paginationData: {
-                pageNo: 0,
+                pageNo: 1,
                 pageSize: 10,
                 total: 0,
                 totalPages: 0,
@@ -72,16 +79,19 @@ export default {
         // 获取项目异常情况数据
         getExceptionListMethod(type) {
             let jsonTemp =  {
-                start: this.searchForm.project,
-                end: this.searchForm.project,
+                start: this.searchForm.time[0].valueOf()/1000,
+                end: this.searchForm.time[1].valueOf()/1000,
                 project: this.searchForm.project,
                 pageSize: this.paginationData.pageSize,
-                pageNo: type == 'first' ? 0 : this.paginationData.pageNo
+                pageNo: type == 'first' ? 1 : this.paginationData.pageNo
             }
-            let params = Object.assign({jsonTemp})
+            let params = Object.assign(jsonTemp)
             this.getExceptionListApi(params).then(result => {
-                if (result.data) {
+                if (result && result.data) {
                     this.exceptionList = result.data
+                    this.paginationData.pageNo = result.pageNo
+                    this.paginationData.pageSize = result.pageSize
+                    this.paginationData.total = result.total
                 } else {
                     this.exceptionList = []
                 }
@@ -99,7 +109,7 @@ export default {
         },
         // 翻页方法
         currentChange(val) {
-            this.paginationData.pageNo = val - 1
+            this.paginationData.pageNo = val
             this.getExceptionListMethod()
         }
     }
@@ -121,6 +131,16 @@ export default {
         justify-content: space-between;
         min-height: 76px;
         padding-top: 21px;
+    }
+    /deep/ .el-picker-panel__footer button:nth-child(1) {
+        display: none;
+    }
+    /deep/ .el-button--text {
+        border-color: transparent;
+        color: #000;
+        background: transparent;
+        padding-left: 0;
+        padding-right: 0;
     }
     /*项目标识样式*/
     .mark-title-style {

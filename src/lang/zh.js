@@ -222,6 +222,9 @@ export default {
         projectMark_label: '项目标识',
         url_label: '接口',
         responseStatus_label: '响应状态',
-        responseCount_label: '响应次数'
+        responseCount_label: '响应次数',
+        separator_label: '至',
+        beginTime_label: '开始时间',
+        endTime_label: '结束时间'
     }
 }
