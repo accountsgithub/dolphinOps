@@ -1,0 +1,21 @@
+{
+    "code":"0",
+    "result":{
+        "data":[
+            {
+                "createTime":1542697422060,
+                "failCount":20,
+                "id":"2c94a087672fed7801672fee8cec0031",
+                "interfaceCount":48,
+                "mark":"dolphin-release",
+                "successCount":28
+            }
+        ],
+        "pageNo":0,
+        "pageSize":10,
+        "total":1,
+        "totalPages":1
+    },
+    "status":200,
+    "timestamp":1544085605701
+}
