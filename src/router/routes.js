@@ -51,7 +51,7 @@ export const constantRouterMap = [
         component: resolve => require(['@/views/layout/Layout'], resolve),
         name: 'taskList',
         meta: { title: 'projectMgt', icon: 'project' },
-        hidden: false,
+        hidden: true,
         children: [
             {
                 path: 'exceptionPage',

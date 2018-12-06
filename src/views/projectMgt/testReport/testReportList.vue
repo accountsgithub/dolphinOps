@@ -21,7 +21,7 @@
                     <el-table-column prop="name" :label="$t('testPage.apiName_label')"></el-table-column>
                     <el-table-column prop="responseCode" :label="$t('testPage.testResult_label')" align="center">
                         <template class="test-fail-style" slot-scope="scope">
-                            {{testResultMethod(scope.row)}}
+                            <span :class="{'test-response-fail-style':true,'test-response-success-style':scope.row.responseCode == '0'}">{{testResultMethod(scope.row)}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="url" :label="$t('testPage.requestPath_label')">
@@ -277,4 +277,11 @@ export default {
         max-height: 100px;
         overflow-y: auto;
     }
+/*测试结果样式*/
+.test-response-fail-style {
+    color: #EF7575;
+}
+.test-response-success-style {
+    color: #82C362;
+}
 </style>

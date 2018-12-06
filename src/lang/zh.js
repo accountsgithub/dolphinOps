@@ -217,11 +217,16 @@ export default {
     // 异常情况页 变更1
     exceptionPage: {
         searchTime_label: '查询时间',
+        searchTime_validate: '查询时间不可为空',
+        searchError_message: '查询失败',
         projectName_label: '项目名称',
         projectName_placeholder: '请输入项目名称',
         projectMark_label: '项目标识',
         url_label: '接口',
         responseStatus_label: '响应状态',
-        responseCount_label: '响应次数'
+        responseCount_label: '响应次数',
+        separator_label: '至',
+        beginTime_label: '开始时间',
+        endTime_label: '结束时间'
     }
 }

@@ -11,9 +11,9 @@
                           style="width: 100%"
                           stripe>
                     <el-table-column prop="name" :label="$t('testPage.apiName_label')"></el-table-column>
-                    <el-table-column prop="responseCode" :label="$t('testPage.testResult_label')">
+                    <el-table-column prop="responseCode" :label="$t('testPage.testResult_label')" align="center">
                         <template class="test-fail-style" slot-scope="scope">
-                            {{testResultMethod(scope.row)}}
+                            <span :class="{'test-response-fail-style':true,'test-response-success-style':scope.row.responseCode == '0'}">{{testResultMethod(scope.row)}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="url" :label="$t('testPage.requestPath_label')">
@@ -31,7 +31,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="httpMethod" :label="$t('testPage.requestType_label')"></el-table-column>
+                    <el-table-column prop="httpMethod" :label="$t('testPage.requestType_label')" align="center"></el-table-column>
                     <el-table-column prop="requestBody" :label="$t('testPage.requestValue_label')">
                         <template slot-scope="scope">
                             <div slot="reference">
@@ -47,7 +47,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="responseStatus" :label="$t('testPage.responseStatus_label')"></el-table-column>
+                    <el-table-column prop="responseStatus" :label="$t('testPage.responseStatus_label')" align="center"></el-table-column>
                     <el-table-column prop="responseBody" :label="$t('testPage.responseValue_label')">
                         <template slot-scope="scope">
                             <div slot="reference">
@@ -197,5 +197,12 @@ export default {
         padding-left: 30px;
         font-size: 14px;
         color: #686F79;
+    }
+    /*测试结果样式*/
+    .test-response-fail-style {
+        color: #EF7575;
+    }
+    .test-response-success-style {
+        color: #82C362;
     }
 </style>
