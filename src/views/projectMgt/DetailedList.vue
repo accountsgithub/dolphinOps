@@ -25,7 +25,7 @@
                     <el-button class="prj-btn"
                                type="default"
                                @click="startUp"
-                               v-if="project.state === 0 && project.state === 4 && project.deployStatus !== 5">{{$t('projectMgt.begin')}}</el-button>
+                               v-if="(project.state === 0 || project.state === 4) && project.deployStatus !== 5">{{$t('projectMgt.begin')}}</el-button>
                     <el-button class="prj-btn"
                                type="default"
                                @click="stopDeploy(project)"

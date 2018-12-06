@@ -90,7 +90,7 @@
                                v-if="scope.row.state === 1">{{$t('projectMgt.stop_button')}}</a>
                             <a class="tableActionStyle"
                                @click="startUp(scope.row)"
-                               v-else-if="scope.row.state === 0 && scope.row.state === 4 && scope.row.deployStatus !== 5">{{$t('projectMgt.start_button')}}</a>
+                               v-else-if="(scope.row.state === 0 || scope.row.state === 4) && scope.row.deployStatus !== 5">{{$t('projectMgt.start_button')}}</a>
                             <a class="tableActionStyle"
                                @click="beginDeploy(scope.row)"
                                v-if="scope.row.deployStatus && scope.row.deployStatus === 5">{{$t('projectMgt.deploy_button')}}</a>
