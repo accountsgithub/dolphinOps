@@ -74,7 +74,8 @@ export default {
             },
             logButtonLabel: this.$t('login.loginButton'),
             loadingStatus: false,
-            pwdType: 'password'
+            pwdType: 'password',
+            language: getCookie('language')
         }
     },
 

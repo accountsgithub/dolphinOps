@@ -2,6 +2,11 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress'
 import router from '../router'
+import Cookies from 'js-cookie'
+import zh from '@/lang/zh'
+import en from '@/lang/en'
+
+let language = Cookies.get('language')
 
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 axios.defaults.withCredentials = true
@@ -18,7 +23,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     response => {
         NProgress.done()
-        const { data } = response
+        const { data, config } = response
 
         if (data.status == '401') {
             router.push('/login')
@@ -26,7 +31,19 @@ axios.interceptors.response.use(
         }
 
         if (data.status != '200') {
-            Message.error(data.message || '')
+            // /oauth/password 接口  无法进行身份识别需在前端进行中英文处理（略坑。。。）
+            if (
+                config.url.indexOf('/oauth/password') === -1 ||
+                language === 'zh'
+            ) {
+                Message.error(data.message || '')
+            } else {
+                if (data.message === zh.common.loginErrorMes1) {
+                    Message.error(en.common.loginErrorMes1)
+                } else if (data.message === zh.common.loginErrorMes2) {
+                    Message.error(en.common.loginErrorMes2)
+                }
+            }
             return Promise.reject(data)
         }
         return response

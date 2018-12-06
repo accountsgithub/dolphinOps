@@ -35,7 +35,9 @@ export default {
         uploadType_label1: 'Release Version',
         logout: 'Logout',
         modifyPassword: 'Modify Password',
-        more: 'More'
+        more: 'More',
+        loginErrorMes1: 'User does not exist',
+        loginErrorMes2: 'The password is incorrect'
     },
     login: {
         title: 'Dolphin Deployment System',

@@ -36,6 +36,8 @@ export default {
         logout: '登出', // 变更1
         modifyPassword: '修改密码', // 变更1
         more: '更多',
+        loginErrorMes1: '用户不存在',
+        loginErrorMes2: '密码错误'
     },
     login: {
         title: '海豚运维平台',
