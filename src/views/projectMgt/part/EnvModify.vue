@@ -274,11 +274,12 @@ export default {
         // 变量名校验
         hasEnvValidErr(envVariables) {
             let has = false
+            let reSpaceCheck = /^[A-Za-z_][A-Za-z0-9_]*$/
             has = envVariables.some(item => {
-                if (!item.key || (item.key !== '' && /^[A-Za-z_][A-Za-z0-9_]$/.test(item.key))) {
+                if (!item.key || (item.key !== '' && !reSpaceCheck.test(item.key))) {
                     this.$message({
                         type: 'error',
-                        message: this.$t('part.valueMes')
+                        message: this.$t('part.variableMes')
                     })
                     return true
                 } else if (!item.value) {
@@ -296,13 +297,38 @@ export default {
         // ip校验
         hasIpValidErr(ipAlias) {
             let has = false
+            let reSpaceCheck = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/
             has = ipAlias.some(item => {
-                if (!item.value || (item.value != '' && /^((25[0-5]|2[0-4]\\d|[1]{1}\\d{1}\\d{1}|[1-9]{1}\\d{1}|\\d{1})($|(?!\\.$)\\.)){4}$/.test(item.value))) {
+                if (!item.value) {
                     this.$message({
                         type: 'error',
                         message: this.$t('part.ipMes')
                     })
                     return true
+                } else if (item.value != '') {
+                    let result = false
+                    if (reSpaceCheck.test(item.value)) {
+                        item.value.match(reSpaceCheck);
+                        if (RegExp.$1 <= 255 && RegExp.$1 >= 0
+              && RegExp.$2 <= 255 && RegExp.$2 >= 0
+              && RegExp.$3 <= 255 && RegExp.$3 >= 0
+              && RegExp.$4 <= 255 && RegExp.$4 >= 0) {
+                            result = false
+                        } else {
+                            this.$message({
+                                type: 'error',
+                                message: this.$t('part.ipMes')
+                            })
+                            result = true
+                        }
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: this.$t('part.ipMes')
+                        })
+                        result = true
+                    }
+                    return result
                 } else if (!item.key) {
                     this.$message({
                         type: 'error',
@@ -438,6 +464,9 @@ export default {
   margin-bottom: 0;
   /deep/ .el-form-item__error {
     left: -100px !important;
+  }
+  /deep/ .el-form-item__content {
+    margin-left: 100px !important;
   }
 }
 
