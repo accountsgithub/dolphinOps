@@ -40,7 +40,7 @@
             <el-form :model="pwEditForm"
                      :rules="PWEditFormRules"
                      ref="pwEditForm"
-                     label-width="100px"
+                     label-width="130px"
                      class="demo-ruleForm">
                 <el-form-item :label="$t('modifyPW.modifyPW_oldPassword')"
                               prop="oldPassword">

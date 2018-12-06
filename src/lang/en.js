@@ -4,13 +4,13 @@ export default {
         projectMgt: 'Project'
     },
     modifyPW: {
-        modifyPW_oldPassword: '旧密码',
-        modifyPW_password: '新密码',
-        modifyPW_newPassword: '确认密码',
-        vilidata_oldPassword: '旧密码不能为空',
-        vilidata_password: '新密码不能为空',
-        vilidata_newPassword: '确认密码不能为空',
-        vilidata_differPW: '密码不一致',
+        modifyPW_oldPassword: 'Old Password',
+        modifyPW_password: 'New Password',
+        modifyPW_newPassword: 'Confirm Password',
+        vilidata_oldPassword: 'Please enter the old password.',
+        vilidata_password: 'Please enter a new password.',
+        vilidata_newPassword: 'Please confirm the password.',
+        vilidata_differPW: 'Passwords entered do not match.',
         modifySuccessMes: 'modified'
     },
     common: {

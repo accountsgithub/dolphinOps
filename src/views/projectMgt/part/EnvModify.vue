@@ -5,7 +5,7 @@
                :close-on-click-modal="false"
                :visible.sync="dialogVisible">
         <el-form size="small"
-                 label-width="120px"
+                 label-width="130px"
                  style="margin-top: -25px;"
                  :rules="rules"
                  ref="envForm"
@@ -455,11 +455,12 @@ export default {
     letter-spacing: 0;
     border: 1px solid #dcdfe6;
     border-radius: 4px;
-    width: 78px;
+    // width: 78px;
     height: 30px;
     line-height: 28px;
     cursor: pointer;
     margin-right: 20px;
+    padding: 0 20px;
     &:hover,
     &.active {
       border-color: #016ad5;
