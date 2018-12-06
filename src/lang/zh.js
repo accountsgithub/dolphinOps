@@ -217,6 +217,8 @@ export default {
     // 异常情况页 变更1
     exceptionPage: {
         searchTime_label: '查询时间',
+        searchTime_validate: '查询时间不可为空',
+        searchError_message: '查询失败',
         projectName_label: '项目名称',
         projectName_placeholder: '请输入项目名称',
         projectMark_label: '项目标识',

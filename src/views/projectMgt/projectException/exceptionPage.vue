@@ -55,7 +55,7 @@ export default {
     data() {
         return {
             searchForm: {
-                time: [new Date()-3600*1000*24, new Date()],
+                time: [new Date()-3600*1000*24, new Date()-60*1000],
                 project: ''
             },
             exceptionList: [],
@@ -78,24 +78,35 @@ export default {
         ]),
         // 获取项目异常情况数据
         getExceptionListMethod(type) {
-            let jsonTemp =  {
-                start: this.searchForm.time[0].valueOf()/1000,
-                end: this.searchForm.time[1].valueOf()/1000,
-                project: this.searchForm.project,
-                pageSize: this.paginationData.pageSize,
-                pageNo: type == 'first' ? 1 : this.paginationData.pageNo
-            }
-            let params = Object.assign(jsonTemp)
-            this.getExceptionListApi(params).then(result => {
-                if (result && result.data) {
-                    this.exceptionList = result.data
-                    this.paginationData.pageNo = result.pageNo
-                    this.paginationData.pageSize = result.pageSize
-                    this.paginationData.total = result.total
-                } else {
-                    this.exceptionList = []
+            if (!this.searchForm.time) {
+                this.$message({
+                    type: 'warning',
+                    message: this.$t('exceptionPage.searchTime_validate')
+                })
+            } else {
+                let jsonTemp = {
+                    start: this.searchForm.time[0].valueOf() / 1000,
+                    end: this.searchForm.time[1].valueOf() / 1000,
+                    project: this.searchForm.project,
+                    pageSize: this.paginationData.pageSize,
+                    pageNo: type == 'first' ? 1 : this.paginationData.pageNo
                 }
-            })
+                let params = Object.assign(jsonTemp)
+                this.getExceptionListApi(params).then(result => {
+                    if (result && result.data) {
+                        this.exceptionList = result.data
+                        this.paginationData.pageNo = result.pageNo
+                        this.paginationData.pageSize = result.pageSize
+                        this.paginationData.total = result.total
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: this.$t('exceptionPage.searchError_message')
+                        })
+                        this.exceptionList = []
+                    }
+                })
+            }
         },
         // 查询重置
         resetSearchMethod() {
@@ -131,16 +142,6 @@ export default {
         justify-content: space-between;
         min-height: 76px;
         padding-top: 21px;
-    }
-    /deep/ .el-picker-panel__footer button:nth-child(1) {
-        display: none;
-    }
-    /deep/ .el-button--text {
-        border-color: transparent;
-        color: #000;
-        background: transparent;
-        padding-left: 0;
-        padding-right: 0;
     }
     /*项目标识样式*/
     .mark-title-style {
