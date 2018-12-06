@@ -76,10 +76,10 @@ export default {
             let isZip = fileExt === 'zip' || fileExt === 'rar'
             const isLtM = file.size / 1024 / 1024 < 1024
             if (!isZip) {
-                this.$message.error('上传文件类型只能是 rar/zip 格式!')
+                this.$message.error(this.$t('part.uploadErrMes1'))
             }
             if (!isLtM) {
-                this.$message.error('上传文件大小不能超过 1G!')
+                this.$message.error(this.$t('part.uploadErrMes2'))
             }
             if (!isZip || !isLtM) {
                 this.upLoadStatus = '0'
@@ -92,7 +92,7 @@ export default {
         },
         handleOk() {
             if (this.fileList.length === 0) {
-                this.$message.error('请上传文件!');
+                this.$message.error(this.$t('part.uploadErrMes3'));
                 return;
             }
             this.$emit('update:close');
@@ -121,7 +121,7 @@ export default {
         },
         onexceed() {
             this.$message({
-                message: '只允许上传一个文件！',
+                message: this.$t('part.uploadErrMes4'),
                 type: 'warning'
             });
             this.upLoadStatus = '0';
