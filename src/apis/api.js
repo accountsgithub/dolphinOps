@@ -75,7 +75,11 @@ let API = {
     // 获取测试历史数据
     TESTHISTORY_LIST: '/rap_summary',
     // 获取项目异常情况
-    PROJECTEXCEPTION_LIST: '/comparison/test/errors'
+    PROJECTEXCEPTION_LIST: '/comparison/test/errors',
+    // 获取环境变量
+    ENVDATA: '/api/getEnv',
+    // 获取下拉项目列表
+    PROJECTLIST: '/common/'
 }
 
 // if (process.env.NODE_ENV === 'development') {

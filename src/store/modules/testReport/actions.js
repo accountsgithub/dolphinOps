@@ -34,5 +34,21 @@ export default {
         ).catch(
             response => response.data
         )
+    },
+    // 获取环境变量
+    getEnvApi(data, params) {
+        return axios.get(api.ENVDATA, {params}).then(
+            response => response.data
+        ).catch(
+            response => response.data
+        )
+    },
+    // 获取下拉项目列表
+    getProjectListApi(data, params) {
+        return axios.get(`${api.PROJECTLIST + params.env  }/projects`).then(
+            response => response.data
+        ).catch(
+            response => response.data
+        )
     }
 }
