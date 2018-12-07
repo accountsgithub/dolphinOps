@@ -3,8 +3,18 @@
         <!-- 标题 -->
         <el-row :gutter="20">
             <el-col :span="24">
-                <div class="grid-content bg-purple bg-dashboard">
-                    <div class="" id=""></div>
+                <div class="grid-content bg-purple bg-dashboard" style="border:none">
+                    <el-col :span="6">
+                        <div class="grid-content bg-purple bg-dashboard timer" style="border:none">{{time}}</div>
+                    </el-col>
+                    <el-col :span="12">
+                        <div class="grid-content bg-purple bg-dashboard" style="border:none">
+                            <img :src="dashboardTitle" class="titleImg" alt="dashboardTitle">
+                        </div>
+                    </el-col>
+                    <el-col :span="6">
+                        <div class="grid-content bg-purple bg-dashboard" style="border:none"></div>
+                    </el-col>
                 </div>
             </el-col>
         </el-row>
@@ -42,7 +52,9 @@
                             <p>{{nodeCount}}个</p>
                         </div>
                     </div>
-                    <div class="maimImg"></div>
+                    <div class="maimImg">
+                        <img :src="center" class="" alt="center">
+                    </div>
                 </div>
             </el-col>
             <el-col :span="6">
@@ -56,7 +68,7 @@
             </el-col>
         </el-row>
         <!-- 第一屏 第二行 -->
-        <el-row :gutter="20">
+        <el-row :gutter="20" style="position:relative;">
             <el-col :span="6">
                 <div class="grid-content bg-purple bg-dashboard">
                     <div class="chats" id="memoryChart"></div>
@@ -125,9 +137,14 @@
 import echarts from 'echarts'
 import { setgaugeData, setPieData, setLineData, setBarData } from '@/utils/initCharts.js'
 import { mapActions } from 'vuex'
+import center from '@/assets/dashboard/center.png'
+import dashboardTitle from '@/assets/dashboard/dashboardTitle.png'
 export default {
     data() {
         return {
+            time: null,
+            center,
+            dashboardTitle,
             screenWidth: null,
             cpuChart: null,
             memoryChart: null,
@@ -880,10 +897,13 @@ export default {
     },
     mounted() {
         let that = this
-        that.initEcharts()
+        that.setHeight()
+        // 初始化
+        // this.initEcharts()
         // 适配屏幕
         window.addEventListener('resize', () => {
             that.resizeCharts()
+            that.setHeight()
         })
         this.getchartData('test')
         this.getOverview('test')
@@ -894,6 +914,7 @@ export default {
         this.getMemoryInASC('test')
         this.getAvgInASC('test')
         this.getErrInASC('test')
+        this.settimer()
     },
     beforeUpdate() {
     },
@@ -908,10 +929,8 @@ export default {
         initEcharts() {
             // let that = this
             this.echartsDom.forEach((item, index) => {
-                // console.log(item)
                 // 初始化表
                 this.echartsObj[index] = echarts.init(document.getElementById(item))
-                // console.log(that.echartsObj)
                 // console.log(this.echartsData[index])
                 // 渲染数据
                 this.echartsObj[index].setOption(this.echartsData[index], true)
@@ -922,6 +941,15 @@ export default {
             this.echartsObj.forEach(item => {
                 item.resize()
             })
+        },
+        // 设置容器高度与margin
+        setHeight() {
+            let height = (window.innerHeight - 25 * 2 - 100) / 2
+            console.log('height', screen.availHeight, screen.height, window.innerHeight, height)
+            this.echartsDom.forEach((item) => {
+                document.getElementById(item).style.height = `${height}px`
+            })
+            this.initEcharts()
         },
         //center中心数据
         getOverview(env) {
@@ -1126,19 +1154,51 @@ export default {
             })
             
         },
-        
+        // 循环读取
+        settimer() {
+            setInterval(this.timer, 1000)
+        },
+        // 时间显示
+        timer() {
+            let time = new Date();//获取系统当前时间
+            let year = time.getFullYear();
+            let month = time.getMonth()+1;
+            let date= time.getDate();//系统时间月份中的日
+            let day = time.getDay();//系统时间中的星期值
+            let weeks = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            let week = weeks[day];//显示为星期几
+            let hour = time.getHours();
+            let minutes = time.getMinutes();
+            let seconds = time.getSeconds();
+            // debugger
+            if (month<10) {
+                month = `0${month}`
+            }
+            if (date<10) {
+                date =`0${date}`
+            }
+            if (hour<10) {
+                hour = `0${hour}`
+            }
+            if (minutes<10) {
+                minutes = `0${minutes}`
+            }
+            if (seconds<10) {
+                seconds = `0${seconds}`
+            }
+            this.time =  `${year}年${month}月${date}日 ${hour}:${minutes}:${seconds}  ${week}`
+        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-
     .chats {
-    width: 100%;
-    height: 400px;
-    position: relative;
-    z-index: 2;
-    background: #091549;
+        width: 100%;
+        // height: 40%;
+        position: relative;
+        z-index: 2;
+        background: #091549;
     }
     .bottomText{
         display: flex;
@@ -1173,6 +1233,13 @@ export default {
         bottom:-2px;
         right: -2px;
     }
+    .timer{
+        font-size: 18px;
+        color: #fff;
+    }
+    .titleImg{
+        width: 100%;
+    }
     .dashboardTitle{
         display: flex;
         &>div{
@@ -1199,48 +1266,55 @@ export default {
             }
         }
     }
+    .maimImg{
+            &>img{
+               width: 100%; 
+               position: absolute;
+            }
+            width: 100%;
+            position: relative;
+        }
     .addcolor {
         color: #85E86A !important;
     }
 </style>
 <style>
-.el-row {
-  margin-bottom: 20px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-.el-col {
-  border-radius: 4px;
-}
-.bg-purple bg-dashboard-dark {
-  background: #99a9bf;
-}
-.bg-dashboard {
-  background: none;
-  /* background: #d3dce6; */
-  position: relative;
-  z-index: 2;
-  border: 1px #0d2259 solid;
-  color: #D8D8D8;
-  font-weight: normal;
-}
-.bg-purple bg-dashboard-light {
-  background: #e5e9f2;
-}
-.grid-content {
-  border-radius: 4px;
-  min-height: 36px;
-}
-.row-bg {
-  padding: 10px 0;
-  background-color: #f9fafc;
-}
+    .el-row {
+    margin-bottom: 20px;
+    &:last-child {
+        margin-bottom: 0;
+    }
+    }
+    .el-col {
+    border-radius: 4px;
+    }
+    .bg-purple bg-dashboard-dark {
+    background: #99a9bf;
+    }
+    .bg-dashboard {
+    background: none;
+    /* background: #d3dce6; */
+    position: relative;
+    z-index: 2;
+    border: 1px #0d2259 solid;
+    color: #D8D8D8;
+    font-weight: normal;
+    }
+    .bg-purple bg-dashboard-light {
+    background: #e5e9f2;
+    }
+    .grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+    }
+    .row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
+    }
     .app-main {
     }
     .main_content {
         padding: 20px;
         background: #091649;
-
     }
 </style>

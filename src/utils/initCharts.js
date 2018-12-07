@@ -268,7 +268,7 @@ export function setOptionData(option, type) {
         }
     } else if (type == 'bar') {
         if (option.series && option.series.length == 1) {
-            console.log(option.series)
+            // console.log(option.series)
             option.series.map((item, index) => {
                 let seriesItem = new Object
                 seriesItem = {
@@ -282,7 +282,7 @@ export function setOptionData(option, type) {
                 series.push(seriesItem)
             })
         } else if (option.series && option.series.length > 1) {
-            console.log('option.legend', option.legend, option.series)
+            // console.log('option.legend', option.legend, option.series)
             option.series.map((item, index) => {
                 let seriesItem = new Object
                 seriesItem = {
@@ -378,7 +378,7 @@ export function setLineData(targit, res, type) {
 export function setBarData(targit, res, type) {
     let series = setOptionData(res, type)
     let showlegend = targit._dom.id // 项目异常情况legend参数
-    console.log('targit', targit._dom.id)
+    // console.log('targit', targit._dom.id)
     let barData = {
         title: {
             text: res.title,
