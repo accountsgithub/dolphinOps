@@ -405,6 +405,8 @@ export default {
                             });
                             this.refresh()
                             this.closeEnvDialog()
+                        }).catch(() => {
+                            this.isDisabled = false
                         });
                     } else {
                         const params = {
@@ -425,6 +427,8 @@ export default {
                             });
                             this.refresh()
                             this.closeEnvDialog();
+                        }).catch(() => {
+                            this.isDisabled = false
                         });
                     }
                 }
