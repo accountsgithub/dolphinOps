@@ -99,8 +99,8 @@ export function updateChart(myChartLine, option) {
         series: series
     }
     // console.log('setOption', setOption)
-    setOption(myChartLine, setOption)
-    // myChartLine.setOption(setOption, true)
+    // setOption(myChartLine, setOption)
+    myChartLine.setOption(setOption, true)
 }
 // 基础监控--处理series
 export function setChartData(seriesData) {
