@@ -57,13 +57,6 @@
                                @click="dialogInfo(scope.row)">{{scope.row.name}}</a>
                             <span v-else>{{scope.row.name}}</span>
                     </template></el-table-column>
-                    <el-table-column prop="stateTxt"
-                                     width="140"
-                                     :label="$t('projectMgt.status_label')">
-                        <template slot-scope="scope">
-                            <tableStatus :statusType="scope.row.stateTxt"></tableStatus>
-                        </template>
-                    </el-table-column>
                     <el-table-column prop="instanceNumber"
                                      width="120"
                                      :label="$t('projectMgt.instanceNumber_label')" />
@@ -79,7 +72,7 @@
                             <span v-else>—</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="path"
+                    <!-- <el-table-column prop="path"
                                      :label="$t('projectMgt.path_label')">
                         <template slot-scope="scope">
                             <a class="pathHerf"
@@ -87,6 +80,13 @@
                                :href="getPath(scope.row.path)"
                                target="_blank">{{getPath(scope.row.path)}}</a>
                             <span v-else>—</span>
+                        </template>
+                    </el-table-column> -->
+                    <el-table-column prop="stateTxt"
+                                     width="140"
+                                     :label="$t('projectMgt.status_label')">
+                        <template slot-scope="scope">
+                            <tableStatus :statusType="scope.row.stateTxt"></tableStatus>
                         </template>
                     </el-table-column>
                     <el-table-column :label="$t('common.operate_label')"
