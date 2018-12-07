@@ -46,6 +46,8 @@
                           highlight-current-row
                           style="width: 100%"
                           stripe>
+                    <el-table-column prop="mark"
+                                     :label="$t('projectMgt.mark_label')" />
                     <el-table-column prop="name"
                                      :label="$t('projectMgt.name_label')">
                         <template slot-scope="scope">
@@ -55,8 +57,6 @@
                                @click="dialogInfo(scope.row)">{{scope.row.name}}</a>
                             <span v-else>{{scope.row.name}}</span>
                     </template></el-table-column>
-                    <el-table-column prop="mark"
-                                     :label="$t('projectMgt.mark_label')" />
                     <el-table-column prop="stateTxt"
                                      width="140"
                                      :label="$t('projectMgt.status_label')">
