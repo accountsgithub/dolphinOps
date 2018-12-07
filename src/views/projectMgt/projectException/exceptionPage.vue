@@ -15,7 +15,10 @@
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item :label="$t('exceptionPage.projectName_label')" prop="project">
-                        <el-input v-model="searchForm.project" :placeholder="$t('exceptionPage.projectName_placeholder')"></el-input>
+                        <el-select v-model="searchForm.project" clearable filterable :placeholder="$t('exceptionPage.projectName_placeholder')">
+                            <el-option v-for="(item, index) in projectList" :key="index" :value="item" :label="item">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </div>
                 <div style="margin-right: 10px;">
@@ -59,6 +62,7 @@ export default {
                 project: ''
             },
             exceptionList: [],
+            projectList: [],
             // 分页数据集合
             paginationData: {
                 pageNo: 1,
@@ -71,11 +75,29 @@ export default {
     },
     mounted() {
         this.getExceptionListMethod('first')
+        this.getEnvMethod()
     },
     methods: {
         ...mapActions([
-            'getExceptionListApi'
+            'getExceptionListApi',
+            'getProjectListApi',
+            'getEnvApi'
         ]),
+        // 获取环境变量
+        getEnvMethod() {
+            this.getEnvApi().then(res => {
+                if (res.code == '0' && res.status == 200) {
+                    let params = Object.assign({env: res.result})
+                    this.getProjectListMethod(params)
+                }
+            })
+        },
+        // 获取下拉项目列表
+        getProjectListMethod(params) {
+            this.getProjectListApi(params).then(res => {
+                this.projectList = res.result
+            })
+        },
         // 获取项目异常情况数据
         getExceptionListMethod(type) {
             if (!this.searchForm.time) {
