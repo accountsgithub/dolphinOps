@@ -21,7 +21,7 @@
             </div>
             <div>
                 <span>刷新时间</span>
-                <el-select v-model="refrash" placeholder="请选择" style="height: 32px;line-height: 32px;">
+                <el-select v-model="refrash" placeholder="请选择" style="height: 32px;line-height: 32px;" :disabled="false" @change="resetinterval">
                     <el-option
                         v-for="item in refrashOptions"
                         :key="item.value"
@@ -398,7 +398,7 @@ export default {
                 this.refrash = '0' // 不刷新
                 this.refrashflag = false
             } else {
-                // this.refrashflag = false
+                this.refrashflag = true
             }
             
         },
@@ -414,20 +414,15 @@ export default {
         },
         'refrash': function() {
             // 改变轮询策略
-            console.log('改变轮询策略', this.refrashflag)
+            // this.refrashflag = false
             // 清楚前一个轮询
-            clearInterval(that.setTimeout)
-            this.refrashflag = false
-            let that = this
-            if (this.refrash != '0') {
-                setTimeout(function() {
-                    console.log('改变轮询策略', new Date(), that.refrash)
-                    that.refrashflag = true
-                    that.getTime()
-                }, 4000)
-            } else {
-                this.refrashflag = false
-            }
+            clearInterval(this.setTimeout)
+            this.setTimeout = null
+            // if (!this.refrashflag) {
+            //     clearInterval(this.setTimeout)
+            //     this.setTimeout = null
+            // }
+            
         }
     },
     created() {
@@ -449,7 +444,7 @@ export default {
         // console.log('updated 111', document.getElementById('line1'))
         // 适配屏幕
         window.addEventListener('resize', () => {
-            // that.resizeCharts()
+            this.resizeCharts()
         })
         if (this.layerType === 'tomcat') {
             // console.log('layerType', this.layerType)
@@ -574,9 +569,10 @@ export default {
         },
         getTime() {
             let that = this
-            if (!this.selectTime.length) {
+            if (this.selectTime.length > 0) {
                 return
             }
+            // debugger
             var start = new Date(that.selectTime[0]);
             var end = new Date(that.selectTime[1]);
             that.startTime = Math.ceil(start.getTime() / 1000)
@@ -596,32 +592,70 @@ export default {
                 // console.log('no')
             }
             that.setTimeout = setInterval(function() {
+                console.log(!that.refrashflag, that.refrash === '0')
                 if (!that.refrashflag) {
                     return
                 }
+                if (that.refrash === '0') {
+                    clearInterval(that.setTimeout)
+                    return
+                }
                 console.log('22222222222refrash', new Date(), that.refrash)
-                let space = (that.selectTime[1] - that.selectTime[0]) / 1000
-                that.selectTime = [new Date() - space * 1000, new Date()]
-                var start = new Date(that.selectTime[0]);
-                var end = new Date(that.selectTime[1]);
-                that.startTime = Math.ceil(start.getTime() / 1000)
-                that.endTime = Math.ceil(end.getTime() / 1000)
-                let params = {
-                    start: that.startTime,
-                    end: that.endTime,
-                }
-                let env = that.projectdetail.deployEnv
-                let project = that.projectdetail.mark
-                if (that.layerType === 'tomcat') {
-                    that.getChartData(params, env, project)
-                } else if (that.layerType === 'others') {
-                    that.getNoTomcatData(params, env, project)
-                } else {
-                    // console.log('no')
-                }
+                // let space = (that.selectTime[1] - that.selectTime[0]) / 1000
+                // that.selectTime = [new Date() - space * 1000, new Date()]
+                // var start = new Date(that.selectTime[0]);
+                // var end = new Date(that.selectTime[1]);
+                // that.startTime = Math.ceil(start.getTime() / 1000)
+                // that.endTime = Math.ceil(end.getTime() / 1000)
+                // let params = {
+                //     start: that.startTime,
+                //     end: that.endTime,
+                // }
+                // let env = that.projectdetail.deployEnv
+                // let project = that.projectdetail.mark
+                // if (that.layerType === 'tomcat') {
+                //     console.log(params, env, project)
+                //     that.getChartData(params, env, project)
+                // } else if (that.layerType === 'others') {
+                //     console.log(params, env, project)
+                //     that.getNoTomcatData(params, env, project)
+                // } else {
+                //     // console.log('no')
+                // }
             }, that.refrash * 1000)
             
         },
+        resizeCharts() {
+            if (this.layerType === 'tomcat') {
+                this.line1.resize()
+                this.line2.resize()
+                this.line3.resize()
+                this.line4.resize()
+            } else if (this.layerType === 'others') {
+                this.line5.resize()
+                this.line6.resize()
+                this.line7.resize()
+                this.line8.resize()
+            }
+        },
+        resetinterval(val) {
+            console.log(val)
+            let that = this
+            that.refrash = val
+            console.log(that.refrash != '0')
+            // 清楚前一个轮询
+            clearInterval(this.setTimeout)
+            this.setTimeout = null
+            if (that.refrash != '0') {
+                console.log('改变轮询策略,开始轮询时间11：', new Date(), 'that.refrash', that.refrash, 'this.refrashflag：', this.refrashflag)
+                // that.refrashflag = true
+                that.getTime()
+            } else {
+                console.log('改变轮询策略,开始轮询时间22：', new Date(), 'that.refrash', that.refrash, 'this.refrashflag：', this.refrashflag)
+                that.refrashflag = false
+                // clearInterval(that.setTimeout)
+            }
+        }
     }
 }
 </script>

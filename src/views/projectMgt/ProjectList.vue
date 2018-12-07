@@ -1,6 +1,6 @@
 <template>
     <!-- search -->
-    <div>
+    <div style="background-color: #eceef3">
         <SearchPanel>
             <el-form :inline="true"
                      size="small"
