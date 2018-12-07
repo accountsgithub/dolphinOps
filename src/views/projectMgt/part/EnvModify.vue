@@ -198,6 +198,7 @@
               class="dialog-footer">
             <el-button @click="closeEnvDialog">{{$t('part.cancelLabel')}}</el-button>
             <el-button type="primary"
+                       :disabled="isDisabled"
                        @click="saveEnvConfig">{{$t('part.saveLabel')}}</el-button>
         </span>
     </el-dialog>
@@ -256,7 +257,8 @@ export default {
                 uploadType: [
                     { required: true, message: this.$t('part.uploadFieldMes'), trigger: 'blur' }
                 ]
-            }
+            },
+            isDisabled: false
         };
     },
     computed: {
@@ -382,6 +384,7 @@ export default {
                     if (ipAlias.length > 0 && this.hasIpValidErr(ipAlias)) {
                         return;
                     }
+                    this.isDisabled = true
                     if (this.dialogType == 'upload') {
                         const params = {
                             importId: this.importId,
@@ -395,6 +398,7 @@ export default {
                             tempPath
                         };
                         this.saveUplaod(params).then(() => {
+                            this.isDisabled = false
                             this.$message({
                                 message: this.$t('part.saveSuccessMes'),
                                 type: 'success'
@@ -414,6 +418,7 @@ export default {
                             tempPath
                         };
                         this.saveEnv(params).then(() => {
+                            this.isDisabled = false
                             this.$message({
                                 message: this.$t('part.saveSuccessMes'),
                                 type: 'success'
