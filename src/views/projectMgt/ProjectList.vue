@@ -426,14 +426,14 @@ export default {
         },
         // 自动化测试
         testPageMethod(row) {
-            if (localStorage.getItem('path')) {
-                localStorage.removeItem('path')
-            }
-            localStorage.setItem('path', row.path)
             this.$router.push({ name: 'testReport', params: { mark: row.mark } })
         },
         // 测试报告
         goTestReport(row) {
+            if (localStorage.getItem('path')) {
+                localStorage.removeItem('path')
+            }
+            localStorage.setItem('path', row.path)
             this.$router.push({ name: 'testReport', params: { mark: row.mark } })
         },
         // 基础监控
