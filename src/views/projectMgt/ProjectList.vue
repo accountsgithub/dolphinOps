@@ -52,20 +52,13 @@
                                      :label="$t('projectMgt.name_label')">
                         <template slot-scope="scope">
                             <a href="javascript:;"
-                               class="tableActionStyle"
                                v-if="scope.row.state !== 5"
                                @click="dialogInfo(scope.row)">{{scope.row.name}}</a>
                             <span v-else>{{scope.row.name}}</span>
                     </template></el-table-column>
                     <el-table-column prop="instanceNumber"
-                                     width="120"
                                      :label="$t('projectMgt.instanceNumber_label')" />
-                    <el-table-column prop="memorySize"
-                                     width="120"
-                                     :label="$t('projectMgt.memorySize_label')">
-                    </el-table-column>
                     <el-table-column prop="version"
-                                     width="130"
                                      :label="$t('projectMgt.version_label')">
                         <template slot-scope="scope">
                             <span v-if="scope.row.version">{{scope.row.version}}</span>
@@ -75,7 +68,7 @@
                     <!-- <el-table-column prop="path"
                                      :label="$t('projectMgt.path_label')">
                         <template slot-scope="scope">
-                            <a class="pathHerf"
+                            <a class="table-link"
                                v-if="getPath(scope.row.path)"
                                :href="getPath(scope.row.path)"
                                target="_blank">{{getPath(scope.row.path)}}</a>
@@ -92,23 +85,32 @@
                     <el-table-column :label="$t('common.operate_label')"
                                      :width="165">
                         <template slot-scope="scope">
-                            <a class="tableActionStyle"
+                            <template>
+                                <i class="icon iconfont icon-qidong table-action" v-if="(scope.row.state === 0 || scope.row.state === 4) && scope.row.deployStatus !== 5" style="color:#82c362;"></i>
+                                <i class="icon iconfont icon-qidong table-action" v-else-if="scope.row.deployStatus === 5" style="color:#82c362;"></i>
+                                <i class="icon iconfont icon-tingzhi table-action" v-else-if="scope.row.state === 1" style="color:red;"></i>
+                                <i class="icon iconfont icon-qidong table-action" v-else style="color:#979797;"></i>
+                            </template>
+                            <i class="icon iconfont icon-shezhi table-action"></i>
+                            <i class="icon iconfont icon-jichujiankong table-action" @click="monitorcharts(scope.row)"></i>
+                            <i class="icon iconfont icon-gengduo table-action"></i>
+                            <!-- <a class="table-action"
                                @click="stopDeploy(scope.row)"
                                v-if="scope.row.state === 1">{{$t('projectMgt.stop_button')}}</a>
-                            <a class="tableActionStyle"
+                            <a class="table-action"
                                @click="startUp(scope.row)"
                                v-else-if="(scope.row.state === 0 || scope.row.state === 4) && scope.row.deployStatus !== 5">{{$t('projectMgt.start_button')}}</a>
-                            <a class="tableActionStyle"
+                            <a class="table-action"
                                @click="beginDeploy(scope.row)"
                                v-if="scope.row.deployStatus && scope.row.deployStatus === 5">{{$t('projectMgt.deploy_button')}}</a>
-                            <a class="tableActionStyle"
+                            <a class="table-action"
                                v-if="ifprod"
                                @click="whiteIpConfig(scope.row)">{{$t('projectMgt.whitelist_set_button')}}</a>
-                            <a class="tableActionStyle"
+                            <a class="table-action"
                                style="color:red"
                                v-if="scope.row.state === 0 || scope.row.state === 1 || scope.row.state === 4"
                                @click="monitorcharts(scope.row)">{{$t('projectMgt.monitorcharts')}}</a>
-                            <a class="tableActionStyle"
+                            <a class="table-action"
                                v-if="scope.row.state === 0 || scope.row.state === 1 || scope.row.state === 4"
                                @click="testPageMethod(scope.row)">{{$t('testPage.autoTest_button')}}</a>
                             <el-dropdown trigger="click"
@@ -120,23 +122,22 @@
                                 </el-button>
                                 <el-dropdown-menu slot="dropdown"
                                                   class="more-ops">
-                                    <!--<a class="tableActionStyle" @click="whiteIpConfig(scope.row)">白名单设置</a>-->
                                     <el-dropdown-item>
-                                        <a class="tableActionStyle"
+                                        <a class="table-action"
                                            @click="dialogChange(scope.row)"
                                            v-if="scope.row.state !== 5">{{$t('projectMgt.change_button')}}</a>
                                     </el-dropdown-item>
                                     <el-dropdown-item>
-                                        <a class="tableActionStyle"
+                                        <a class="table-action"
                                            @click="dialogInfo(scope.row)"
                                            v-if="scope.row.state !== 5">{{$t('projectMgt.showDetail_button')}}</a>
                                     </el-dropdown-item>
                                     <el-dropdown-item v-if="!isOffLine">
-                                        <a class="tableActionStyle"
+                                        <a class="table-action"
                                            @click="addEmail(scope.row)">{{$t('projectMgt.addEmail_button')}}</a>
                                     </el-dropdown-item>
                                 </el-dropdown-menu>
-                            </el-dropdown>
+                            </el-dropdown> -->
                         </template>
                     </el-table-column>
                 </el-table>
@@ -541,34 +542,16 @@ export default {
 @import "~@/styles/common.scss";
 
 // 操作标签样式
-.tableActionStyle {
+.table-link {
+  color: #016ad5;
+}
+.table-action {
   font-family: PingFangSC-Medium;
-  font-size: 12px;
+  font-size: 14px;
   color: #016ad5;
   letter-spacing: 0.86px;
   text-align: left;
   margin-right: 10px;
-}
-
-.projectDropDown {
-  font-size: 12px !important;
-  border: 1px solid $dropDown-border-color !important;
-  border-radius: 4px;
-  padding: 4px 12px;
-}
-/deep/ .el-upload-dragger {
-  width: 560px;
-}
-.pathHerf {
-  color: #016ad5 !important;
-}
-
-.addRowBtn {
-  padding: 7px 15px !important;
-  margin-top: 18px;
-}
-.noWrap {
-  white-space: nowrap !important;
 }
 
 @include e(body) {
@@ -588,11 +571,6 @@ export default {
 .validate-text {
   margin-left: -100px;
   width: 120px;
-}
-.VF-style {
-  /deep/ .el-form-item__error {
-    left: -100px !important;
-  }
 }
 
 .formPanel {

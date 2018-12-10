@@ -100,12 +100,12 @@
 </template>
 
 <script>
-import proportionCom from '@/views/projectMgt/testReport/components/proportionCom'
+// import proportionCom from '@/views/projectMgt/testReport/components/proportionCom'
 import {mapActions} from 'vuex'
 export default {
     name: 'testReportList',
     components: {
-        proportionCom
+        // proportionCom
     },
     data() {
         return {
