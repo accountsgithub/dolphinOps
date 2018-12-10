@@ -431,8 +431,11 @@ export default {
         },
         // 自动化测试
         testPageMethod(row) {
-            console.log(row.mark)
-            this.$router.push({ name: 'testReport', params: { mark: 'dolphin-release' } })
+            if (localStorage.getItem('path')) {
+                localStorage.removeItem('path')
+            }
+            localStorage.setItem('path', row.path)
+            this.$router.push({ name: 'testReport', params: { mark: row.mark } })
         },
         // 基础监控
         monitorcharts(item) {
