@@ -4,18 +4,18 @@
         <el-row :gutter="30">
             <el-col :span="24">
                 <div class="grid-content bg-purple bg-dashboard topTitle" style="border:none">
-                    <el-col :span="4">
+                    <el-col :span="4" style="padding-right: 0">
                         <div class="grid-content bg-purple bg-dashboard timer" style="border:none">{{time}}</div>
                     </el-col>
-                    <el-col :span="16">
+                    <el-col :span="16" style="padding: 0">
                         <div class="grid-content bg-purple bg-dashboard" style="border:none">
                             <img :src="dashboardTitle" class="titleImg" alt="dashboardTitle">
                         </div>
                     </el-col>
-                    <el-col :span="4">
+                    <el-col :span="4" style="padding-left: 0">
                         <div class="grid-content bg-purple bg-dashboard" style="border:none;text-align: right;">
-                            <el-button class="dashaboardBtn icon iconfont icon-ic-home" ></el-button>
-                            <el-button class="dashaboardBtn icon iconfont icon-quanping" ></el-button>
+                            <el-button class="dashaboardBtn icon iconfont icon-ic-home" @click="linktoHome"></el-button>
+                            <el-button class="dashaboardBtn icon iconfont icon-quanping" @click="sizeScreen"></el-button>
                         </div>
                     </el-col>
                 </div>
@@ -29,7 +29,7 @@
                         <div class="chats" id="cpuChart"></div>
                     </div>
                     <div class="bottomText">
-                        <span><span>高频占用：{{highCpuProject}}个</span></span>
+                        <span><span>高频占用：<span style="color: #fb65ff;font-size:16px;">{{highCpuProject}}个</span></span></span>
                     </div>
                 </div>
             </el-col>
@@ -78,9 +78,10 @@
             <el-col :span="6">
                 <div class="grid-content bg-purple bg-dashboard _box">
                     <div class="chart_box"><div class="chats" id="PanChart"></div></div>
+                    <p>磁盘使用情况</p>
                     <div class="bottomText">
-                        <span><span>磁盘已用：{{uselDisk}}G</span></span>
-                        <span><span>磁盘总量：{{totalDisk}}G</span></span>
+                        <span><span>磁盘已用：<span style="color: #735feb;font-size:16px;">{{uselDisk}}G</span></span></span>
+                        <span><span>磁盘总量：<span style="color: #247adf;font-size:16px;">{{totalDisk}}G</span></span></span>
                     </div>
                 </div>
             </el-col>
@@ -90,9 +91,10 @@
             <el-col :span="6">
                 <div class="grid-content bg-purple bg-dashboard _box" >
                     <div class="chart_box"><div class="chats" id="memoryChart"></div></div>
+                    <p>内存使用情况</p>
                     <div class="bottomText">
-                        <span><span>内存已用：{{useMemory}}G</span></span>
-                        <span><span>内存总量：{{totalMemory}}G</span></span>
+                        <span><span>内存已用：<span style="color: #86d258;font-size:16px;">{{useMemory}}G</span></span></span>
+                        <span><span>内存总量：<span style="color: #e6b564;font-size:16px;">{{totalMemory}}G</span></span></span>
                     </div>
                 </div>
             </el-col>
@@ -109,7 +111,7 @@
             
         </el-row>
         <!-- 第二屏 -->
-        <el-row :gutter="30">
+        <el-row :gutter="30" style="margin-top:60px;">
             <el-col :span="12">
                 <div class="grid-content bg-purple bg-dashboard _box">
                     <div class="chart_box"><div class="chats" id="CpuInAscChart"></div></div>
@@ -149,6 +151,11 @@
                 </div>
             </el-col>
         </el-row>
+        <div class="dots">
+            <span :class="currentPage == 0 ? 'active' : ''"></span>
+            <span :class="currentPage == 1 ? 'active' : ''"></span>
+            <span :class="currentPage == 2 ? 'active' : ''"></span>
+        </div>
     </div>
 </template>
 <script>
@@ -164,6 +171,7 @@ export default {
         return {
             env: null, // 环境变量
             time: null,
+            windowHeight: null,
             center,
             dashboardTitle,
             screenWidth: null,
@@ -321,7 +329,12 @@ export default {
             nodePercent: null,
             node: null,
             containerPercent: null,
-            container: null
+            container: null,
+            currentPage: 0,
+            fullScreen: false, // 是否全屏
+            startTime: 0,
+            endTime: 0,
+            interval: null // 循环刷新参数
         }
     },
     created() {
@@ -335,20 +348,38 @@ export default {
         // console.log('beforeMount 111', document.getElementById('cpuChart'))
     },
     mounted() {
+        // console.log('currentPage', this.currentPage)
+        // console.log('scrollTop', document.documentElement.scrollTop)
         let that = this
+        that.windowHeight = window.innerHeight
         // 初始化
-        this.setHeight()
-        this.settimer()
+        that.setHeight()
+        that.settimer()
         // 适配屏幕
         window.addEventListener('resize', () => {
+            that.windowHeight = window.innerHeight
             that.resizeCharts()
             that.setHeight()
+            that.fullScreen = document.webkitIsFullScreen
         })
-        
+        if (document.addEventListener) {
+            document.addEventListener('DOMMouseScroll', that.scrollFun, false);
+        }//W3C   
+        window.onmousewheel = document.onmousewheel = that.scrollFun;//IE/Opera/Chrome 
+        // 刷新轮询，5S一次
+        this.interval = setInterval(() => {
+            that.updateIndexData(this.env)
+        }, 5000);
+
     },
     beforeUpdate() {
     },
     updated() {
+    },
+    destroyed() {
+        this.currentPage = 0
+        clearInterval(this.interval)
+        // this.scrollTo(0)
     },
     computed: {},
     methods: {
@@ -359,11 +390,11 @@ export default {
         // 获取环境变量
         getEnvMethod() {
             this.getEnvApi().then(res => {
-                console.log(res.result)
+                // console.log(res.result)
                 if (res.code == '0' && res.status == 200) {
-                    console.log(res.result)
+                    // console.log(res.result)
                     this.env = res.result
-                    console.log(this.env)
+                    // console.log(this.env)
                 }
             }).catch(err => {
                 console.log(err)
@@ -389,6 +420,9 @@ export default {
         // 初始化、更新表格数据
         updateIndexData(env) {
             this.initEcharts()
+            if (env == null) {
+                return
+            }
             this.getchartData(env)
             this.getOverview(env)
             this.getTransMission(env)
@@ -403,13 +437,13 @@ export default {
         // 设置容器高度与margin
         setHeight() {
             let height = (window.innerHeight - 25 * 2 - 100) / 2
-            console.log('height', screen.availHeight, screen.height, window.innerHeight, height)
+            // console.log('height', screen.availHeight, screen.height, window.innerHeight, height)
             this.echartsDom.forEach((item) => {
                 document.getElementById(item).style.height = `${height}px`
             })
             // 设置容器边框
             // setBorder(document.getElementById('cpuChart'))
-            this.updateIndexData('test')
+            this.updateIndexData(this.env)
         },
         //center中心数据
         getOverview(env) {
@@ -433,7 +467,7 @@ export default {
                 this.container = this.containerPercent.replace(this.reg, '') >= 0
                 this.node = this.nodePercent.replace(this.reg, '') >= 0
                 this.access = this.accessPercent.replace(this.reg, '') >= 0
-                console.log(this.release, this.container, this.node, this.access)
+                // console.log(this.release, this.container, this.node, this.access)
             })
         },
         // 获取仪表盘、饼图数据
@@ -488,8 +522,8 @@ export default {
         },
         // 云IO
         getIOData() {
-            console.log('this', this.echartsObj)
-            console.log('this', this.echartsData)
+            // console.log('this', this.echartsObj)
+            // console.log('this', this.echartsData)
             // setBarData(this.echartsObj[3], this.echartsData[4])
             setOption(this.echartsObj[3], this.echartsData[0])
         },
@@ -530,7 +564,7 @@ export default {
                     series: result.series,
                     xAxis: result.xAxis
                 }
-                console.log('that.echartsObj[6]', that.echartsObj)
+                // console.log('that.echartsObj[6]', that.echartsObj)
                 setBarData(that.echartsObj[8], optionTtansMission, 'bar')
             })
         },
@@ -571,8 +605,8 @@ export default {
                     series: result.series,
                     xAxis: result.xAxis
                 }
-                console.log('optionTtansMission', optionTtansMission)
-                console.log('that.echartsObj[6]', that.echartsObj)
+                // console.log('optionTtansMission', optionTtansMission)
+                // console.log('that.echartsObj[6]', that.echartsObj)
                 setBarData(that.echartsObj[10], optionTtansMission, 'bar')
             })
         },
@@ -606,7 +640,7 @@ export default {
             }
             let that = this
             that.monitorApi(setParamsTop).then(result => {
-                console.log(result)
+                // console.log(result)
                 let optionTtansMission = {
                     title: '项目异常情况',
                     color: ['#FFDD65', '#FF906C'],
@@ -620,7 +654,7 @@ export default {
                     that.$router.push('/projectMgt/exceptionPage')
                 })
             })
-            
+
         },
         // 循环读取
         settimer() {
@@ -630,8 +664,8 @@ export default {
         timer() {
             let time = new Date();//获取系统当前时间
             let year = time.getFullYear();
-            let month = time.getMonth()+1;
-            let date= time.getDate();//系统时间月份中的日
+            let month = time.getMonth() + 1;
+            let date = time.getDate();//系统时间月份中的日
             let day = time.getDay();//系统时间中的星期值
             let weeks = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
             let week = weeks[day];//显示为星期几
@@ -639,259 +673,330 @@ export default {
             let minutes = time.getMinutes();
             let seconds = time.getSeconds();
             // debugger
-            if (month<10) {
+            if (month < 10) {
                 month = `0${month}`
             }
-            if (date<10) {
-                date =`0${date}`
+            if (date < 10) {
+                date = `0${date}`
             }
-            if (hour<10) {
+            if (hour < 10) {
                 hour = `0${hour}`
             }
-            if (minutes<10) {
+            if (minutes < 10) {
                 minutes = `0${minutes}`
             }
-            if (seconds<10) {
+            if (seconds < 10) {
                 seconds = `0${seconds}`
             }
-            this.time =  `${year}年${month}月${date}日 ${hour}:${minutes}:${seconds}  ${week}`
+            this.time = `${year}年${month}月${date}日 ${hour}:${minutes}:${seconds}  ${week}`
+        },
+        //滚动检测,跳转到对应高度
+        scrollFun(e) {
+            this.startTime = new Date().getTime();
+            let event = e || window.event;
+            let dir = event.detail || -event.wheelDelta;
+            if (this.startTime - this.endTime > 600) { // 解决多次触发scroll
+                // this.scroll   = false
+                if (dir > 0 && this.currentPage < 2) {
+                    this.endTime = new Date().getTime();
+                    this.currentPage = this.currentPage + 1
+                    this.scrollTo(this.currentPage * this.windowHeight)
+                } else if (dir < 0 && this.currentPage > 0) {
+                    this.currentPage = this.currentPage - 1
+                    this.scrollTo(this.currentPage * this.windowHeight)
+                    this.endTime = new Date().getTime();
+                }
+            } else {
+                // console.log('111', dir)
+                event.preventDefault();
+            }
+        },
+        scrollTo(val) {
+            window.scrollTo({'top': val, 'behavior': 'smooth'})
+        },
+        // 全屏/退出全屏
+        sizeScreen() {
+            // console.log(document.webkitIsFullScreen)
+            if (!this.fullScreen) {
+                document.documentElement.webkitRequestFullscreen() // 针对谷歌游览器
+            } else {
+                document.webkitExitFullscreen()
+            }
+        },
+        // 会到项目列表页面
+        linktoHome() {
+            this.$router.push('/projectMgt/index')
         }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-    .topTitle{
-        border: none;
-        position: fixed;
-        z-index: 33;
-        background: #091549;
-        top: 0;
-        width: 100%;
-        left: 0; 
-    }
-    .munBox{
-        .num{
-            padding:5px 6px;
-            background: #0D6ED3;
-            color: #fff !important;
-            font-size: 18px !important;
-            float: left !important;
-            margin-right:3px;
-            border-radius: 4px;
-        }
-    }
-    .bottomText{
-        display: flex;
-        text-align: center;
-        width: 100%;
-        position: absolute;
-        bottom: 10%;
-        z-index:3;
-    }
-    .bottomText>span{
-        width: 45%;
-        height: 28px;
-        line-height: 28px;
-        margin: 0 auto;
-        border: 1px #15356f solid;
-        position: relative;
-        &::before{
-            display: block;
-            width: 10px;
-            height:10px;
-            line-height: 10px;
-            position: absolute;
-            top:-5px;
-            left: -5px;
-            content:'+';
-            color: #3a75dd;
-        }
-        &::after{
-            display: block;
-            width: 10px;
-            height:10px;
-            line-height: 10px;
-            position: absolute;
-            right:-5px;
-            bottom: -5px;
-            content:'+';
-            color: #3a75dd;
-        }
-        &>span{
-            &::before{
-                display: block;
-                width: 10px;
-                height:10px;
-                line-height: 10px;
-                position: absolute;
-                top:-5px;
-                right: -5px;
-                content:'+';
-                color: #3a75dd;
-            }
-            &::after{
-                display: block;
-                width: 10px;
-                height:10px;
-                line-height: 10px;
-                position: absolute;
-                left:-5px;
-                bottom: -5px;
-                content:'+';
-                color: #3a75dd;
-            }
-        }
-    }
-    .timer{
-        font-size: 15px;
-        color: #fff;
-    }
-    .titleImg{
-        width: 100%;
-    }
-    .dashboardTitle{
-        display: flex;
-        &>div{
-            flex:1;
-            padding:0 15px;
-            color: #D5F0FF;
-            &>p{
-                padding:0;
-                margin: 0;
-                overflow: hidden;
-                font-size: 14px;
-                &>span{
-                    float: left;
-                    &:last-child{
-                        float: right;
-                        color: #FF5656;
-                        font-size: 12px;
-                    }
-                }
-                &:last-child{
-                    font-size: 20px;
-                    padding:5px 0;
-                }
-            }
-        }
-    }
-    .maimImg{
-            &>img{
-               width: 100%; 
-               position: absolute;
-            }
-            width: 100%;
-            position: relative;
-        }
-    .addcolor {
-        color: #85E86A !important;
-    }
-    .title_icon{
-        width: 18px;
-        height: 20px;
-        font-size: 10px;
-    }
-    ._box{
-        .chats {
-            width: 100%;
-            // height: 40%;
-            position: relative;
-            z-index: 2;
-            background: #091549;
-            
-        }
-        .chart_box{
-            background: #091549;
-            &::before{
-                display: block;
-                width:8px;
-                height:8px;
-                background:#17b8bb;
-                position: absolute;
-                border-radius: 3px;
-                z-index: 1; 
-                bottom:-2px;
-                left: -2px;
-                content:' '
-            }
-            &::after{
-                display: block;
-                width:8px;
-                height:8px;
-                background:#17b8bb;
-                position: absolute;
-                border-radius: 3px;
-                z-index: 1; 
-                bottom:-2px;
-                right: -2px;
-                content:' '
-            }
-        }
-        &::before{
-            display: block;
-            width:8px;
-            height:8px;
-            background:#17b8bb;
-            position: absolute;
-            border-radius: 3px;
-            z-index: 1; 
-            top:-2px;
-            left: -2px;
-            content:' '
-        }
-        &::after{
-            display: block;
-            width:8px;
-            height:8px;
-            background:#17b8bb;
-            position: absolute;
-            border-radius: 3px;
-            z-index: 1; 
-            top:-2px;
-            right: -2px;
-            content:' '
-        }
-    }
-</style>
-<style>
-    .el-row {
-    margin-bottom: 30px;
-    margin-top: 30px;
-    &:last-child {
-        margin-bottom: 0;
-    }
-    }
-    .el-col {
+
+.topTitle {
+  border: none;
+  position: fixed;
+  z-index: 33;
+  background: #091549;
+  top: 0;
+  width: 100%;
+  left: 0;
+  padding: 0 20px;
+}
+.munBox {
+  .num {
+    padding: 5px 6px;
+    background: #0d6ed3;
+    color: #fff !important;
+    font-size: 18px !important;
+    float: left !important;
+    margin-right: 3px;
     border-radius: 4px;
+  }
+}
+.bottomText {
+  display: flex;
+  text-align: center;
+  width: 100%;
+  position: absolute;
+  bottom: 10%;
+  z-index: 3;
+}
+.bottomText > span {
+  width: 45%;
+  height: 28px;
+  line-height: 28px;
+  margin: 0 auto;
+  border: 1px #15356f solid;
+  position: relative;
+  &::before {
+    display: block;
+    width: 10px;
+    height: 10px;
+    line-height: 10px;
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    content: "+";
+    color: #3a75dd;
+  }
+  &::after {
+    display: block;
+    width: 10px;
+    height: 10px;
+    line-height: 10px;
+    position: absolute;
+    right: -5px;
+    bottom: -5px;
+    content: "+";
+    color: #3a75dd;
+  }
+  & > span {
+    &::before {
+      display: block;
+      width: 10px;
+      height: 10px;
+      line-height: 10px;
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      content: "+";
+      color: #3a75dd;
     }
-    .bg-purple bg-dashboard-dark {
-    background: #99a9bf;
+    &::after {
+      display: block;
+      width: 10px;
+      height: 10px;
+      line-height: 10px;
+      position: absolute;
+      left: -5px;
+      bottom: -5px;
+      content: "+";
+      color: #3a75dd;
     }
-    .bg-dashboard {
-    background: none;
-    /* background: #d3dce6; */
+  }
+}
+.timer {
+  font-size: 15px;
+  color: #fff;
+  margin-top:15px;
+}
+.titleImg {
+  width: 100%;
+}
+.dashboardTitle {
+  display: flex;
+  & > div {
+    flex: 1;
+    padding: 0 15px;
+    color: #d5f0ff;
+    & > p {
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      font-size: 14px;
+      & > span {
+        float: left;
+        &:last-child {
+          float: right;
+          color: #ff5656;
+          font-size: 12px;
+        }
+      }
+      &:last-child {
+        font-size: 20px;
+        padding: 5px 0;
+      }
+    }
+  }
+}
+.maimImg {
+  & > img {
+    width: 100%;
+    position: absolute;
+  }
+  width: 100%;
+  position: relative;
+}
+.addcolor {
+  color: #85e86a !important;
+}
+.title_icon {
+  width: 18px;
+  height: 20px;
+  font-size: 10px;
+}
+._box {
+  .chats {
+    width: 100%;
+    // height: 40%;
     position: relative;
     z-index: 2;
-    border: 1px #0d2259 solid;
-    color: #D8D8D8;
-    font-weight: normal;
+    background: #091549;
+  }
+  p{
+    width: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    text-align: center;
+    font-size: 18px;
+    color: #fff;
+  }
+  .chart_box {
+    background: #091549;
+    &::before {
+      display: block;
+      width: 8px;
+      height: 8px;
+      background: #17b8bb;
+      position: absolute;
+      border-radius: 3px;
+      z-index: 1;
+      bottom: -2px;
+      left: -2px;
+      content: " ";
     }
-    .bg-purple bg-dashboard-light {
-    background: #e5e9f2;
+    &::after {
+      display: block;
+      width: 8px;
+      height: 8px;
+      background: #17b8bb;
+      position: absolute;
+      border-radius: 3px;
+      z-index: 1;
+      bottom: -2px;
+      right: -2px;
+      content: " ";
     }
-    .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
+  }
+  &::before {
+    display: block;
+    width: 8px;
+    height: 8px;
+    background: #17b8bb;
+    position: absolute;
+    border-radius: 3px;
+    z-index: 1;
+    top: -2px;
+    left: -2px;
+    content: " ";
+  }
+  &::after {
+    display: block;
+    width: 8px;
+    height: 8px;
+    background: #17b8bb;
+    position: absolute;
+    border-radius: 3px;
+    z-index: 1;
+    top: -2px;
+    right: -2px;
+    content: " ";
+  }
+}
+.dots{
+    width: 10px;
+    height: 50px;
+    position: fixed;
+    top:40%;
+    right: 10px;
+    z-index: 22;
+    span{
+        display: block;
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        background: #133166;
+        margin-bottom:10px;
     }
-    .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
+    .active{
+        background: #BBD3FF;
     }
-    .app-main {
-    }
-    .main_content {
-        padding: 20px;
-        background: #091649;
-    }
+}
+</style>
+<style>
+body::-webkit-scrollbar {/*隐藏滚轮*/
+    display: none;
+}
+.el-row {
+  margin-bottom: 65px;
+  /* margin-top: 30px; */
+}
+.main_content:last-child {
+    margin-bottom: 0px;
+  }
+.el-col {
+  border-radius: 4px;
+  padding: 0;
+}
+.bg-purple bg-dashboard-dark {
+  background: #99a9bf;
+}
+.bg-dashboard {
+  background: none;
+  /* background: #d3dce6; */
+  position: relative;
+  z-index: 2;
+  border: 1px #0d2259 solid;
+  color: #d8d8d8;
+  font-weight: normal;
+}
+.bg-purple bg-dashboard-light {
+  background: #e5e9f2;
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
+.row-bg {
+  padding: 10px 0;
+  background-color: #f9fafc;
+}
+.app-main {
+}
+.main_content {
+  padding: 30px;
+  background: #091649;
+}
 </style>

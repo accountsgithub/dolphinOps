@@ -7,9 +7,6 @@ export function setBorder(targit) {
     targit.insertBefore(html)
 }
 export function setTitleNum(num) {
-    // return num.toString().split('')
-    console.log(typeof(num))
-    console.log(num)
     if (num != '0' && num != null) {
         return num.toString().split('')
     } else {

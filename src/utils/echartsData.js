@@ -171,16 +171,17 @@ export function setgaugeData(targit, res) {
                 formatter: '{value}%',
                 offsetCenter: [0, '5%'],
                 color: '#fff',
+                fontSize: '14'
             },
             data: [{
-                name: 'CPU已使用',
+                // name: 'CPU已使用',
                 value: res
             }]
         }]
     }
     setOption(targit, optionData)
 }
-// dashboard页面仪表盘处理option中数据
+// dashboard页面饼图处理option中数据
 export function setPieData(targit, res) {
     let pieData = {
         title: {
@@ -204,7 +205,7 @@ export function setPieData(targit, res) {
             show: true,
             itemGap: 12,
             data: ['已用', '剩余'],
-            top: '5%',
+            top: '15%',
             textStyle: {
                 color: '#C1E5FF',
                 
@@ -303,9 +304,9 @@ export function setOptionData(option, type) {
     return series
 }
 export function setLineData(targit, res, type) {
-    console.log('series res', res)
+    // console.log('series res', res)
     let series = setOptionData(res, type)
-    console.log('series', series)
+    // console.log('series', series)
     let lineData = {
         title: {
             text: res.title,
@@ -456,7 +457,7 @@ export function setBarData(targit, res, type) {
         }],
         series: series
     }
-    console.log(barData)
+    // console.log(barData)
     setOption(targit, barData)
 }
 export function setOption(targit, optionData) {
