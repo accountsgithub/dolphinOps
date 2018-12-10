@@ -13,7 +13,7 @@
         <div class="status-line-div-style">
             <div class="success-tag-style-white">
                 <div class="success-tag-style">
-                    <i class="icon iconfont icon-ic-project"></i>
+                    <i class="icon iconfont icon-zidongceshijieguo"></i>
                 </div>
             </div>
             <div class="line-div-style">
@@ -26,7 +26,7 @@
             </div>
             <div class="fail-tag-style-white">
                 <div class="fail-tag-style">
-                    <i class="icon iconfont icon-ic-project"></i>
+                    <i class="icon iconfont icon-zidongceshijieguo"></i>
                 </div>
             </div>
         </div>
@@ -136,7 +136,7 @@ export default {
 }
 /*成功率icon样式*/
 .success-tag-style i{
-    margin-left: 14px;
+    margin-left: 18px;
     color: #ffffff;
     font-size: 40px;
 }
@@ -161,7 +161,7 @@ export default {
     line-height: 76px;
 }
 .fail-tag-style i{
-    margin-left: 14px;
+    margin-left: 18px;
     color: #ffffff;
     font-size: 40px;
 }

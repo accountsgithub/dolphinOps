@@ -141,7 +141,13 @@ export default {
         startMes: '正在启动请稍后！',
         stopStartTit: '是否确认停止项目？',
         stopStartSubTit: '确认停止？',
-        stopMes: '正在停止请稍后！'
+        stopMes: '正在停止请稍后！',
+        memorySizeCompare: '当前内存/总内存',
+        cpuCompare: '当前CPU/总CPU',
+        unifiedLog: '统一日志',
+        unifiedConfig: '统一配置',
+        customChart: '自定义图表',
+        testReport: '测试报告',
     },
     part: {
         // EmailList
@@ -227,7 +233,9 @@ export default {
         executeTime_label: '执行时间',
         apiCount_label: '接口笔数',
         autoTest_button: '自动化测试',
-        linkReasonPage_button: '跳转查询失败接口原因'
+        linkReasonPage_button: '跳转查询失败接口原因',
+        testActionSuccess_message: '自动化测试成功',
+        testActionFail_message: '自动化测试失败'
     },
     // 异常情况页 变更1
     exceptionPage: {

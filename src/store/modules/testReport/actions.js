@@ -50,5 +50,13 @@ export default {
         ).catch(
             response => response.data
         )
+    },
+    // 执行测试
+    setTestActionApi(data, params) {
+        return axios.get(api.TESTACTION, {params}).then(
+            response => response
+        ).catch(
+            response => response
+        )
     }
 }

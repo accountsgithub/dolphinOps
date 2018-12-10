@@ -89,6 +89,18 @@
                                          prop="podName"
                                          label="podName" />
                         <el-table-column prop="ip"
+                                         :label="$t('projectMgt.memorySizeCompare')" >
+                            <template slot-scope="scope">
+                                {{scope.row.usedMemory ? scope.row.usedMemory : '—'}}/{{scope.row.totalMemory ? scope.row.totalMemory : '—'}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="ip"
+                                         :label="$t('projectMgt.cpuCompare')" >
+                            <template slot-scope="scope">
+                                {{scope.row.usedCpu ? scope.row.usedCpu : '—'}}/{{scope.row.totalCpu ? scope.row.totalCpu : '—'}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="ip"
                                          label="Ip" />
                         <el-table-column prop="port"
                                          :label="$t('projectMgt.port')" />

@@ -52,36 +52,21 @@
                                      :label="$t('projectMgt.name_label')">
                         <template slot-scope="scope">
                             <a href="javascript:;"
-                               class="tableActionStyle"
+                               class="table-link"
                                v-if="scope.row.state !== 5"
-                               @click="dialogInfo(scope.row)">{{scope.row.name}}</a>
+                               @click="dialogInfo(scope.row)">{{scope.row.name}}
+                            </a>
                             <span v-else>{{scope.row.name}}</span>
                         </template></el-table-column>
                     <el-table-column prop="instanceNumber"
-                                     width="120"
                                      :label="$t('projectMgt.instanceNumber_label')" />
-                    <el-table-column prop="memorySize"
-                                     width="120"
-                                     :label="$t('projectMgt.memorySize_label')">
-                    </el-table-column>
                     <el-table-column prop="version"
-                                     width="130"
                                      :label="$t('projectMgt.version_label')">
                         <template slot-scope="scope">
                             <span v-if="scope.row.version">{{scope.row.version}}</span>
                             <span v-else>—</span>
                         </template>
                     </el-table-column>
-                    <!-- <el-table-column prop="path"
-                                     :label="$t('projectMgt.path_label')">
-                        <template slot-scope="scope">
-                            <a class="pathHerf"
-                               v-if="getPath(scope.row.path)"
-                               :href="getPath(scope.row.path)"
-                               target="_blank">{{getPath(scope.row.path)}}</a>
-                            <span v-else>—</span>
-                        </template>
-                    </el-table-column> -->
                     <el-table-column prop="stateTxt"
                                      width="140"
                                      :label="$t('projectMgt.status_label')">
@@ -90,53 +75,60 @@
                         </template>
                     </el-table-column>
                     <el-table-column :label="$t('common.operate_label')"
-                                     :width="165">
+                                     :width="185">
                         <template slot-scope="scope">
-                            <a class="tableActionStyle"
-                               @click="stopDeploy(scope.row)"
-                               v-if="scope.row.state === 1">{{$t('projectMgt.stop_button')}}</a>
-                            <a class="tableActionStyle"
-                               @click="startUp(scope.row)"
-                               v-else-if="(scope.row.state === 0 || scope.row.state === 4) && scope.row.deployStatus !== 5">{{$t('projectMgt.start_button')}}</a>
-                            <a class="tableActionStyle"
-                               @click="beginDeploy(scope.row)"
-                               v-if="scope.row.deployStatus && scope.row.deployStatus === 5">{{$t('projectMgt.deploy_button')}}</a>
-                            <a class="tableActionStyle"
-                               v-if="ifprod"
-                               @click="whiteIpConfig(scope.row)">{{$t('projectMgt.whitelist_set_button')}}</a>
-                            <a class="tableActionStyle"
-                               style="color:red"
-                               v-if="scope.row.state === 0 || scope.row.state === 1 || scope.row.state === 4"
-                               @click="monitorcharts(scope.row)">{{$t('projectMgt.monitorcharts')}}</a>
-                            <a class="tableActionStyle"
-                               v-if="scope.row.state === 0 || scope.row.state === 1 || scope.row.state === 4"
-                               @click="testPageMethod(scope.row)">{{$t('testPage.autoTest_button')}}</a>
-                            <el-dropdown trigger="click"
-                                         v-if="(scope.row.state !== 5) || !isOffLine">
-                                <el-button size="small"
-                                           type="text">
-                                    {{$t('common.more')}}
-                                    <i class="el-icon-arrow-down el-icon--right"></i>
-                                </el-button>
-                                <el-dropdown-menu slot="dropdown"
-                                                  class="more-ops">
-                                    <!--<a class="tableActionStyle" @click="whiteIpConfig(scope.row)">白名单设置</a>-->
-                                    <el-dropdown-item>
-                                        <a class="tableActionStyle"
-                                           @click="dialogChange(scope.row)"
-                                           v-if="scope.row.state !== 5">{{$t('projectMgt.change_button')}}</a>
-                                    </el-dropdown-item>
-                                    <el-dropdown-item>
-                                        <a class="tableActionStyle"
-                                           @click="dialogInfo(scope.row)"
-                                           v-if="scope.row.state !== 5">{{$t('projectMgt.showDetail_button')}}</a>
-                                    </el-dropdown-item>
-                                    <el-dropdown-item v-if="!isOffLine">
-                                        <a class="tableActionStyle"
-                                           @click="addEmail(scope.row)">{{$t('projectMgt.addEmail_button')}}</a>
-                                    </el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
+                            <div class="oper-col">
+                                <template>
+                                    <i class="icon iconfont icon-qidong table-action" :title="$t('projectMgt.start_button')" @click="startUp(scope.row)" v-if="(scope.row.state === 0 || scope.row.state === 4) && scope.row.deployStatus !== 5" style="color:#82c362;"></i>
+                                    <i class="icon iconfont icon-qidong table-action" :title="$t('projectMgt.deploy_button')" @click="beginDeploy(scope.row)" v-else-if="scope.row.deployStatus === 5" style="color:#82c362;"></i>
+                                    <i class="icon iconfont icon-tingzhi table-action" :title="$t('projectMgt.stop_button')" @click="stopDeploy(scope.row)" v-else-if="scope.row.state === 1" style="color:red;"></i>
+                                    <i class="icon iconfont icon-qidong table-action disabled" v-else></i>
+                                </template>
+                                <i class="icon iconfont icon-shezhi table-action" :title="$t('projectMgt.change_button')" @click="dialogChange(scope.row)" v-if="scope.row.state !== 5"></i>
+                                <i class="icon iconfont icon-shezhi table-action disabled" :title="$t('projectMgt.change_button')" v-else></i>
+                                <i class="icon iconfont icon-jichujiankong table-action" :title="$t('projectMgt.monitorcharts')" @click="monitorcharts(scope.row)"></i>
+                                <el-dropdown trigger="click">
+                                    <i class="icon iconfont icon-gengduo table-action"></i>
+                                    <el-dropdown-menu slot="dropdown" class="more-ops">
+                                        <el-dropdown-item>
+                                            <a class="table-link">
+                                                <i class="icon iconfont icon-rizhi table-action-more" :title="$t('projectMgt.unifiedLog')"></i>
+                                                {{$t('projectMgt.unifiedLog')}}
+                                            </a>
+                                        </el-dropdown-item>
+                                        <el-dropdown-item>
+                                            <a class="table-link">
+                                                <i class="icon iconfont icon-peizhi table-action-more" :title="$t('projectMgt.unifiedConfig')"></i>
+                                                {{$t('projectMgt.unifiedConfig')}}
+                                            </a>
+                                        </el-dropdown-item>
+                                        <el-dropdown-item>
+                                            <template v-if="scope.row.rapStatus !== '2'">
+                                                <a class="table-link" href="javascript:;" v-if="scope.row.state === 1" @click="testPageMethod(scope.row)">
+                                                    <i class="icon iconfont icon-shezhi table-action-more" :title="$t('testPage.autoTest_button')"></i>
+                                                    {{$t('testPage.autoTest_button')}}
+                                                </a>
+                                                <a class="table-link disabled" href="javascript:;" v-else>
+                                                    <i class="icon iconfont icon-shezhi table-action-more disabled" :title="$t('testPage.autoTest_button')"></i>
+                                                    {{$t('testPage.autoTest_button')}}
+                                                </a>
+                                            </template>
+                                            <template v-else>
+                                                <a class="table-link" href="javascript:;" @click="goTestReport(scope.row)">
+                                                    <i class="icon iconfont icon-zidongceshijieguo table-action-more" :title="$t('projectMgt.testReport')"></i>
+                                                    {{$t('projectMgt.testReport')}}
+                                                </a>
+                                            </template>
+                                        </el-dropdown-item>
+                                        <!-- <el-dropdown-item>
+                                            <a class="table-link">
+                                                <i class="icon iconfont icon-zidingyijiankong table-action-more" :title="$t('projectMgt.customChart')"></i>
+                                                {{$t('projectMgt.customChart')}}
+                                            </a>
+                                        </el-dropdown-item> -->
+                                    </el-dropdown-menu>
+                                </el-dropdown>
+                            </div>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -270,7 +262,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy', 'setWhiteIp', 'setEmail', 'resetSearchCriteria']),
+        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy', 'setWhiteIp', 'setEmail', 'resetSearchCriteria', 'setTestActionApi']),
 
         getPath(path) {
             if (path && /\[(.*)\]?/g.test(path)) {
@@ -279,6 +271,9 @@ export default {
         },
         // 详情
         dialogInfo(row) {
+            if (row.state === 5) {
+                return
+            }
             this.$router.push({ name: 'detailedList', params: { id: row.id, proName: row.name } })
         },
         submitUpload() {
@@ -431,8 +426,28 @@ export default {
         },
         // 自动化测试
         testPageMethod(row) {
-            console.log(row.mark)
-            this.$router.push({ name: 'testReport', params: { mark: 'dolphin-release' } })
+            let params = Object.assign({mark: row.mark, path: encodeURIComponent(row.path)})
+            this.setTestActionApi(params).then(res => {
+                if (res.data && res.data.code == '0' && res.data.status == 200) {
+                    this.$message({
+                        type: 'success',
+                        message: this.$t('testPage.testActionSuccess_message')
+                    })
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: res.message || this.$t('testPage.testActionFail_message')
+                    })
+                }
+            })
+        },
+        // 测试报告
+        goTestReport(row) {
+            if (localStorage.getItem('path')) {
+                localStorage.removeItem('path')
+            }
+            localStorage.setItem('path', row.path)
+            this.$router.push({ name: 'testReport', params: { mark: row.mark } })
         },
         // 基础监控
         monitorcharts(item) {
@@ -540,35 +555,34 @@ export default {
 <style lang="scss" scoped>
 @import "~@/styles/common.scss";
 
+.oper-col .disabled {
+    color:#979797;
+}
+.el-dropdown-menu /deep/ .disabled {
+    color:#979797;
+}
+
 // 操作标签样式
-.tableActionStyle {
+.table-link {
+  color: #016ad5;
+}
+.table-action {
+  margin-right: 24px;
   font-family: PingFangSC-Medium;
-  font-size: 12px;
+  font-size: 14px;
   color: #016ad5;
   letter-spacing: 0.86px;
   text-align: left;
+  cursor: pointer;
+}
+.table-action-more {
   margin-right: 10px;
-}
-
-.projectDropDown {
-  font-size: 12px !important;
-  border: 1px solid $dropDown-border-color !important;
-  border-radius: 4px;
-  padding: 4px 12px;
-}
-/deep/ .el-upload-dragger {
-  width: 560px;
-}
-.pathHerf {
-  color: #016ad5 !important;
-}
-
-.addRowBtn {
-  padding: 7px 15px !important;
-  margin-top: 18px;
-}
-.noWrap {
-  white-space: nowrap !important;
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  color: #016ad5;
+  letter-spacing: 0.86px;
+  text-align: left;
+  cursor: pointer;
 }
 
 @include e(body) {
@@ -588,11 +602,6 @@ export default {
 .validate-text {
   margin-left: -100px;
   width: 120px;
-}
-.VF-style {
-  /deep/ .el-form-item__error {
-    left: -100px !important;
-  }
 }
 
 .formPanel {

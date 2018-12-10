@@ -1,12 +1,13 @@
 <template>
     <el-row>
-        <div v-loading="isLoading" style="background-color: #ffffff">
+        <div v-loading="isLoading"
+             style="background-color: #ffffff">
             <div class="page-title-style">
                 <span>Requests Summary</span>
                 <div>
                     <el-button class="tableLastButtonStyleW" @click="linkHistoryMethod">{{$t('testPage.showHistoryRecord_button')}}</el-button>
                     <el-button :disabled="!serialNo" class="tableLastButtonStyleW icon iconfont icon-ic-loaddown" @click="downloadAllDetailMethod"></el-button>
-                    <el-button class="tableLastButtonStyleW icon iconfont icon-ic-refresh" @click="getTestReportListMethod('first')"></el-button>
+                    <el-button class="tableLastButtonStyleW icon iconfont icon-ceshi" @click="testActionMethod"></el-button>
                 </div>
             </div>
             <div v-show="summaryData.length > 0" class="status-div-style">
@@ -100,12 +101,12 @@
 </template>
 
 <script>
-import proportionCom from '@/views/projectMgt/testReport/components/proportionCom'
+// import proportionCom from '@/views/projectMgt/testReport/components/proportionCom'
 import {mapActions} from 'vuex'
 export default {
     name: 'testReportList',
     components: {
-        proportionCom
+        // proportionCom
     },
     data() {
         return {
@@ -134,7 +135,8 @@ export default {
         ...mapActions([
             'getTestReportListApi',
             'getSummaryDataApi',
-            'downloadTestReport'
+            'downloadTestReport',
+            'setTestActionApi'
         ]),
         // 获取状态图方法
         getSummaryDataMethod() {
@@ -158,7 +160,25 @@ export default {
         },
         // 跳转历史纪录页面
         linkHistoryMethod() {
-            this.$router.push({name: 'historyList', params: {mark: 'dolphin-release'}})
+            this.$router.push({name: 'historyList', params: {mark: this.$route.params.mark}})
+        },
+        // 执行测试方法
+        testActionMethod() {
+            let params = Object.assign({mark: this.$route.params.mark, path: localStorage.getItem('path')})
+            this.setTestActionApi(params).then(res => {
+                if (res.code == '0' && res.status == 200) {
+                    this.$message({
+                        type: 'success',
+                        message: this.$t('testPage.testActionSuccess_message')
+                    })
+                    this.getTestReportListMethod('first')
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: res.message || this.$t('testPage.testActionFail_message')
+                    })
+                }
+            })
         },
         // 查询测试报告数据列表
         getTestReportListMethod(type) {

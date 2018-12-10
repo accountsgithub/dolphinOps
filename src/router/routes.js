@@ -21,26 +21,35 @@ export const constantRouterMap = [
         path: '/projectMgt',
         component: resolve => require(['@/views/layout/Layout'], resolve),
         name: 'taskList',
-        meta: { title: 'projectMgt', icon: 'project' },
+        meta: { title: 'projectMgt', icon: 'icon-ic-project' },
         hidden: true,
         children: [
             {
                 path: 'testReport/:mark',
                 name: 'testReport',
-                component: resolve => require(['@/views/projectMgt/testReport/testReportList'], resolve),
+                component: resolve =>
+                    require([
+                        '@/views/projectMgt/testReport/testReportList'
+                    ], resolve),
                 meta: { ...meta, title: 'testReport' },
                 hidden: true
             },
             {
                 path: 'reasonList/:mark',
                 name: 'reasonList',
-                component: resolve => require(['@/views/projectMgt/testReport/apiReasonList'], resolve),
+                component: resolve =>
+                    require([
+                        '@/views/projectMgt/testReport/apiReasonList'
+                    ], resolve),
                 meta: { ...meta, title: 'reasonList' }
             },
             {
                 path: 'historyList/:mark',
                 name: 'historyList',
-                component: resolve => require(['@/views/projectMgt/testReport/testReportHistory'], resolve),
+                component: resolve =>
+                    require([
+                        '@/views/projectMgt/testReport/testReportHistory'
+                    ], resolve),
                 meta: { ...meta, title: 'historyList' }
             }
         ]
@@ -50,13 +59,16 @@ export const constantRouterMap = [
         path: '/projectMgt',
         component: resolve => require(['@/views/layout/Layout'], resolve),
         name: 'taskList',
-        meta: { title: 'projectMgt', icon: 'project' },
+        meta: { title: 'projectMgt', icon: 'icon-ic-project' },
         hidden: true,
         children: [
             {
                 path: 'exceptionPage',
                 name: 'exceptionPage',
-                component: resolve => require(['@/views/projectMgt/projectException/exceptionPage'], resolve),
+                component: resolve =>
+                    require([
+                        '@/views/projectMgt/projectException/exceptionPage'
+                    ], resolve),
                 meta: { ...meta, title: 'exceptionPage' }
             }
         ]
@@ -66,7 +78,7 @@ export const constantRouterMap = [
         path: '/projectMgt',
         component: resolve => require(['@/views/layout/Layout'], resolve),
         name: 'taskList',
-        meta: { title: 'projectMgt', icon: 'project' },
+        meta: { title: 'projectMgt', icon: 'icon-ic-project' },
         hidden: true,
         children: [
             {
@@ -87,7 +99,7 @@ export const constantRouterMap = [
                 name: 'projectManagement',
                 component: resolve =>
                     require(['@/views/projectMgt/ProjectList'], resolve),
-                meta: { ...meta, title: 'projectMgt', icon: 'project' }
+                meta: { ...meta, title: 'projectMgt', icon: 'icon-ic-project' }
             }
         ]
     },
@@ -101,7 +113,11 @@ export const constantRouterMap = [
                 name: 'dashboard',
                 component: resolve =>
                     require(['@/views/dashboard/index'], resolve),
-                meta: { ...meta, title: 'dashboard', icon: 'project' }
+                meta: {
+                    ...meta,
+                    title: 'dashboard',
+                    icon: 'icon-tubiaozonglan'
+                }
             }
         ]
     },
@@ -110,7 +126,7 @@ export const constantRouterMap = [
         path: '/projectMgt/index',
         component: resolve => require(['@/views/layout/Layout'], resolve),
         name: 'taskList',
-        meta: { title: 'projectMgt', icon: 'project' },
+        meta: { title: 'projectMgt', icon: 'icon-ic-project' },
         hidden: true,
         children: [
             {
