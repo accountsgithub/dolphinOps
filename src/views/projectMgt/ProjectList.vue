@@ -6,7 +6,7 @@
                      size="small"
                      :model="searchCriteria"
                      class="formPanel"
-                     label-width="80px">
+                     label-width="95px">
                 <div>
                     <el-form-item :label="$t('projectMgt.name_label')">
                         <el-input v-model="searchCriteria.name"
@@ -46,17 +46,17 @@
                           highlight-current-row
                           style="width: 100%"
                           stripe>
-                    <el-table-column prop="name"
-                                     :label="$t('projectMgt.name_label')" />
                     <el-table-column prop="mark"
                                      :label="$t('projectMgt.mark_label')" />
-                    <el-table-column prop="state"
-                                     width="120"
-                                     :label="$t('projectMgt.status_label')">
+                    <el-table-column prop="name"
+                                     :label="$t('projectMgt.name_label')">
                         <template slot-scope="scope">
-                            <tableStatus :statusType="statusArray[+scope.row.state]"></tableStatus>
-                        </template>
-                    </el-table-column>
+                            <a href="javascript:;"
+                               class="tableActionStyle"
+                               v-if="scope.row.state !== 5"
+                               @click="dialogInfo(scope.row)">{{scope.row.name}}</a>
+                            <span v-else>{{scope.row.name}}</span>
+                    </template></el-table-column>
                     <el-table-column prop="instanceNumber"
                                      width="120"
                                      :label="$t('projectMgt.instanceNumber_label')" />
@@ -72,7 +72,7 @@
                             <span v-else>—</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="path"
+                    <!-- <el-table-column prop="path"
                                      :label="$t('projectMgt.path_label')">
                         <template slot-scope="scope">
                             <a class="pathHerf"
@@ -80,6 +80,13 @@
                                :href="getPath(scope.row.path)"
                                target="_blank">{{getPath(scope.row.path)}}</a>
                             <span v-else>—</span>
+                        </template>
+                    </el-table-column> -->
+                    <el-table-column prop="stateTxt"
+                                     width="140"
+                                     :label="$t('projectMgt.status_label')">
+                        <template slot-scope="scope">
+                            <tableStatus :statusType="scope.row.stateTxt"></tableStatus>
                         </template>
                     </el-table-column>
                     <el-table-column :label="$t('common.operate_label')"
@@ -90,23 +97,25 @@
                                v-if="scope.row.state === 1">{{$t('projectMgt.stop_button')}}</a>
                             <a class="tableActionStyle"
                                @click="startUp(scope.row)"
-                               v-else-if="scope.row.state !== 1 && scope.row.state !== 3">{{$t('projectMgt.start_button')}}</a>
+                               v-else-if="(scope.row.state === 0 || scope.row.state === 4) && scope.row.deployStatus !== 5">{{$t('projectMgt.start_button')}}</a>
                             <a class="tableActionStyle"
                                @click="beginDeploy(scope.row)"
                                v-if="scope.row.deployStatus && scope.row.deployStatus === 5">{{$t('projectMgt.deploy_button')}}</a>
                             <a class="tableActionStyle"
                                v-if="ifprod"
                                @click="whiteIpConfig(scope.row)">{{$t('projectMgt.whitelist_set_button')}}</a>
-                            <a class="tableActionStyle" style="color:red"
+                            <a class="tableActionStyle"
+                               style="color:red"
                                v-if="scope.row.state === 0 || scope.row.state === 1 || scope.row.state === 4"
                                @click="monitorcharts(scope.row)">{{$t('projectMgt.monitorcharts')}}</a>
                             <a class="tableActionStyle"
                                v-if="scope.row.state === 0 || scope.row.state === 1 || scope.row.state === 4"
                                @click="testPageMethod(scope.row)">{{$t('testPage.autoTest_button')}}</a>
-                            <el-dropdown trigger="click">
+                            <el-dropdown trigger="click"
+                                         v-if="(scope.row.state !== 5) || !isOffLine">
                                 <el-button size="small"
                                            type="text">
-                                    更多
+                                    {{$t('common.more')}}
                                     <i class="el-icon-arrow-down el-icon--right"></i>
                                 </el-button>
                                 <el-dropdown-menu slot="dropdown"
@@ -115,14 +124,14 @@
                                     <el-dropdown-item>
                                         <a class="tableActionStyle"
                                            @click="dialogChange(scope.row)"
-                                           v-if="scope.row.state !== 4 && scope.row.state !== 5">{{$t('projectMgt.change_button')}}</a>
+                                           v-if="scope.row.state !== 5">{{$t('projectMgt.change_button')}}</a>
                                     </el-dropdown-item>
                                     <el-dropdown-item>
                                         <a class="tableActionStyle"
                                            @click="dialogInfo(scope.row)"
-                                           v-if="scope.row.state !== 4 && scope.row.state !== 5">{{$t('projectMgt.showDetail_button')}}</a>
+                                           v-if="scope.row.state !== 5">{{$t('projectMgt.showDetail_button')}}</a>
                                     </el-dropdown-item>
-                                    <el-dropdown-item>
+                                    <el-dropdown-item v-if="!isOffLine">
                                         <a class="tableActionStyle"
                                            @click="addEmail(scope.row)">{{$t('projectMgt.addEmail_button')}}</a>
                                     </el-dropdown-item>
@@ -156,6 +165,7 @@
                     :envConfigForm.sync="envConfigForm"
                     :dialogType.sync="dialogType"
                     :importId.sync="importId"
+                    :refresh="searchProject"
                     isAdmin="0">
         </env-modify>
         <import-package v-on:update:close="handleImportDialogClose"
@@ -168,16 +178,18 @@
         <email-list v-on:update:close="handleEmailListDialogClose"
                     :EmailDialog.sync="EmailDialog"
                     :EmailForm.sync="EmailForm"></email-list>
-        <charts :chartsDialog.sync="chartsDialog" :layerType="baseImageType"
-                :project.sync ="CurrentProject" v-on:update:close="chartsDialogOnClose"></charts>
+        <charts :chartsDialog.sync="chartsDialog"
+                :layerType="baseImageType"
+                :project.sync="CurrentProject"
+                v-on:update:close="chartsDialogOnClose"></charts>
     </div>
 
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import tableStatus from '@/components/Status'
 import { SearchPanel } from '@/components/layout'
+import tableStatus from '@/components/Status'
 import EnvModify from './part/EnvModify'
 import ImportPackage from './part/ImportPackage'
 import WhiteList from './part/WhiteList'
@@ -298,6 +310,7 @@ export default {
             this.envConfigForm.uploadType = 0
 
             this.envConfigDialog = true
+            this.envConfigForm.uploadType = record.uploadType
             this.envConfigForm.projectId = record.id
             this.envConfigForm.instanceNumber = record.instanceNumber
             this.envConfigForm.memorySize = record.memorySize
@@ -307,7 +320,9 @@ export default {
         // 变更取消
         envDialogOnClose() {
             this.envConfigDialog = false;
-            this.envConfigForm.uploadType = '0';
+            this.envConfigForm.uploadType = 0;
+            this.envConfigForm.ipAlias = []
+            this.envConfigForm.envVariables = []
         },
         addNewItem(prop) {
             this.envConfigForm[prop].push({ isNew: true })
@@ -330,7 +345,8 @@ export default {
                 this.envConfigForm.auditor = file.result.auditorName
                 this.envConfigForm.instanceNumber = file.result.instanceNumber
                 this.envConfigForm.memorySize = file.result.memorySize
-                this.importId = file.result.id
+                this.envConfigForm.tempPath = file.result.tempPath
+                // this.importId = file.result.id
             }
             this.dialogType = 'upload'
             this.envConfigDialog = true
@@ -416,13 +432,13 @@ export default {
         // 自动化测试
         testPageMethod(row) {
             console.log(row.mark)
-            this.$router.push({name: 'testReport', params: {mark: 'dolphin-release'}})
+            this.$router.push({ name: 'testReport', params: { mark: 'dolphin-release' } })
         },
         // 基础监控
         monitorcharts(item) {
             // console.log(item.baseImage)
             // console.log(this.trasBaseImage(item.baseImage))
-            let baseImageType =  this.trasBaseImage(item.baseImage)
+            let baseImageType = this.trasBaseImage(item.baseImage)
             // console.log('baseImageType', baseImageType)
             if (baseImageType === 'tomcat') {
                 // console.log('tomcat弹出')
@@ -483,7 +499,10 @@ export default {
             paging: state => state.project.paging,
             auditor: 'admin',
             searchCriteria: state => state.project.searchCriteria
-        })
+        }),
+        isOffLine() {
+            return this.g_Config.ISOFFLINE === '1'
+        }
     },
 
 
@@ -501,25 +520,25 @@ export default {
         clearInterval(this.interval)
     },
     /*eslint-disable*/
-    beforeRouteEnter (to, from, next) {
-        try {
-            if (JSON.parse(localStorage.getItem('token')) === 'project') {
-                next(vm => {
-                    vm.$router.replace({ name: 'projectItem' })
-                })
-            } else {
-                next()
-            }
-        }
-        catch (err) {
-            console.log(err)
-        }
+  beforeRouteEnter (to, from, next) {
+    try {
+      if (JSON.parse(localStorage.getItem('token')) === 'project') {
+        next(vm => {
+          vm.$router.replace({ name: 'projectItem' })
+        })
+      } else {
+        next()
+      }
     }
+    catch (err) {
+      console.log(err)
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '~@/styles/common.scss';
+@import "~@/styles/common.scss";
 
 // 操作标签样式
 .tableActionStyle {

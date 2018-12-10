@@ -44,6 +44,9 @@
                     </el-button>
                 </el-form-item>
             </el-form>
+            <span class="version">
+                {{g_Config.VERSION}}
+            </span>
         </div>
     </div>
 </template>
@@ -71,7 +74,8 @@ export default {
             },
             logButtonLabel: this.$t('login.loginButton'),
             loadingStatus: false,
-            pwdType: 'password'
+            pwdType: 'password',
+            language: getCookie('language')
         }
     },
 
@@ -111,7 +115,7 @@ export default {
 
                 } else {
                     this.loadingStatus = false
-                    this.logButtonLabel = this.$t('login.button_login')
+                    this.logButtonLabel = this.$t('login.loginButton')
                     return false
                 }
             })
@@ -145,7 +149,7 @@ $light_gray: #eee;
 }
 .title {
   font-family: MFDianHei_Noncommercial-ExLight;
-  font-size: 24px;
+  font-size: 23px;
   color: #333333;
   margin: 0 auto 0 auto;
   text-align: center;
@@ -167,7 +171,7 @@ $dark_gray: #889aa4;
 $light_gray: #eee;
 .login-background {
   position: fixed;
-  background-image: url('~@/assets/images/login-bg-1920.png');
+  background-image: url("~@/assets/images/login-bg-1920.png");
   background-repeat: no-repeat;
   height: 100%;
   width: 100%;
@@ -175,7 +179,7 @@ $light_gray: #eee;
   background-position-y: center;
 }
 .login-form-background {
-  background-image: url('~@/assets/images/login-box-01.png');
+  background-image: url("~@/assets/images/login-box-01.png");
   background-repeat: no-repeat;
   width: 950px;
   height: 560px;
@@ -193,6 +197,11 @@ $light_gray: #eee;
     padding-top: 86px;
     width: 350px;
     height: auto;
+  }
+  .version {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
   }
 }
 .textStyle {

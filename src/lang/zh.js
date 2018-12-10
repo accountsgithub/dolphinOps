@@ -9,6 +9,16 @@ export default {
         reasonList: '失败接口原因',
         exceptionPage: '项目异常情况'
     },
+    modifyPW: {
+        modifyPW_oldPassword: '旧密码',
+        modifyPW_password: '新密码',
+        modifyPW_newPassword: '确认密码',
+        vilidata_oldPassword: '旧密码不能为空',
+        vilidata_password: '新密码不能为空',
+        vilidata_newPassword: '确认密码不能为空',
+        vilidata_differPW: '密码不一致',
+        modifySuccessMes: '修改成功'
+    },
     common: {
         title: '海豚平台',
         index_title: '海豚运维平台',
@@ -29,13 +39,17 @@ export default {
         uploadMode_label1: '手动导入',
         uploadType_label0: 'bug修复',
         uploadType_label1: '版本发布',
-        logout: '登出' // 变更1
+        logout: '登出', // 变更1
+        modifyPassword: '修改密码', // 变更1
+        more: '更多',
+        loginErrorMes1: '用户不存在',
+        loginErrorMes2: '密码错误'
     },
     login: {
         title: '海豚运维平台',
         usernameRules: '项目标识不能为空',
         passwordRules: '项目密钥不能为空',
-        loginButton: '登陆'
+        loginButton: '登录'
     },
     projectMgt: {
         // projectList
@@ -174,7 +188,7 @@ export default {
         uploadMes3: '文件上传中，请勿重复上传',
         uploadMes4: '文件上传失败，请删除后重新上传',
         uploadErrMes1: '文件类型只能是 rar/zip 格式!',
-        uploadErrMes2: '文件大小不能超过 300MB!',
+        uploadErrMes2: '文件大小不能超过 1G!',
         uploadErrMes3: '请上传文件!',
         uploadErrMes4: '只允许上传一个文件！',
         // WhiteList
@@ -186,7 +200,8 @@ export default {
     },
     error404: {
         noPage_message: '该页面不存在。。。。',
-        error404_message: '请检查您输入的网址是否正确，请点击以下按钮返回主页或者发送错误报告',
+        error404_message:
+            '请检查您输入的网址是否正确，请点击以下按钮返回主页或者发送错误报告',
         error404_backButton: '返回首页'
     },
     // 版本1.1.7

@@ -5,17 +5,19 @@
                  class="clearfix">
                 <div class="title-style">
                     {{proName}}
-                    <span v-if="project.stateTxt == '已停止' || project.stateTxt == 'Stopped'"
-                          class="prj-status">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '运行中' || project.stateTxt == 'Operating'"
+                    <span v-if="project.stateTxt == '已停止' || project.stateTxt == 'stop'"
+                          class="prj-status prj-status-stop">{{project.stateTxt}}</span>
+                    <span v-else-if="project.stateTxt == '运行中' || project.stateTxt == 'running'"
                           class="prj-status prj-status-agree">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '故障' || project.stateTxt == 'Faulty/Deployment Failed'"
+                    <span v-else-if="project.stateTxt == '故障' || project.stateTxt == 'fault'"
                           class="prj-status prj-status-back">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '初始' || project.stateTxt == 'Deploying'"
+                    <span v-else-if="project.stateTxt == '初始' || project.stateTxt == 'init'"
                           class="prj-status prj-status-default">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '启动中' || project.stateTxt == 'Starting'"
+                    <span v-else-if="project.stateTxt == '启动中' || project.stateTxt == 'starting'"
                           class="prj-status prj-status-begin">{{project.stateTxt}}</span>
-                    <span v-else-if="project.stateTxt == '系统崩溃' || project.stateTxt == 'System Crash'"
+                    <span v-else-if="project.stateTxt == '待部署' || project.stateTxt == 'pending'"
+                          class="prj-status prj-status-begin">{{project.stateTxt}}</span>
+                    <span v-else-if="project.stateTxt == '系统崩溃' || project.stateTxt == 'crash'"
                           class="prj-status prj-status-error">{{project.stateTxt}}</span>
 
                     <el-button class="prj-btn import-btn "
@@ -25,7 +27,7 @@
                     <el-button class="prj-btn"
                                type="default"
                                @click="startUp"
-                               v-if="project.state !== 1 && project.state !== 3">{{$t('projectMgt.begin')}}</el-button>
+                               v-if="(project.state === 0 || project.state === 4) && project.deployStatus !== 5">{{$t('projectMgt.begin')}}</el-button>
                     <el-button class="prj-btn"
                                type="default"
                                @click="stopDeploy(project)"
@@ -41,7 +43,7 @@
                     <el-button class="prj-btn"
                                type="default"
                                @click="dialogChange"
-                               v-if="project.state !== 4 && project.state !== 3">{{$t('projectMgt.modify')}}</el-button>
+                               v-if="project.state !== 5">{{$t('projectMgt.modify')}}</el-button>
                 </div>
             </div>
             <el-row :gutter="20">
@@ -92,7 +94,7 @@
                                          :label="$t('projectMgt.port')" />
                         <el-table-column prop="node"
                                          label="node" />
-                        <el-table-column width="150"
+                        <el-table-column width="230"
                                          fixed="right"
                                          :label="$t('projectMgt.operation')">
                             <template slot-scope="scope">
@@ -101,10 +103,12 @@
                                 <a class="tableActionStyle"
                                    :href="downloadHref(scope.row.podName)"
                                    target="_blank">{{$t('projectMgt.downloadButton')}}</a>
-                                <a class="tableActionStyle"
-                                   v-if="scope.row.monitorUrl != '<no value>'"
-                                   :href="scope.row.monitorUrl"
-                                   target="_blank">{{$t('projectMgt.monitor')}}</a>
+                                <template v-if="!isOffLine">
+                                    <a class="tableActionStyle"
+                                       v-if="scope.row.monitorUrl != '<no value>'"
+                                       :href="scope.row.monitorUrl"
+                                       target="_blank">{{$t('projectMgt.monitor')}}</a>
+                                </template>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -162,7 +166,7 @@
                                          prop="createTime"
                                          :label="$t('projectMgt.createTime')">
                         </el-table-column>
-                        <el-table-column width="130"
+                        <el-table-column width="160"
                                          :label="$t('projectMgt.operation')">
                             <template slot-scope="scope">
                                 <el-button class="icon iconfont icon-ic-change"
@@ -205,6 +209,7 @@
                     :envConfigForm.sync="envConfigForm"
                     :dialogType.sync="dialogType"
                     :importId.sync="importId"
+                    :refresh="getProject"
                     isAdmin="0">
         </env-modify>
         <import-package v-on:update:close="handleImportDialogClose"
@@ -222,7 +227,6 @@ import { mapActions, mapState } from 'vuex'
 import API from '@/apis/api'
 import { DATE_FORMAT } from '@/constants'
 import { mappingValue, trim } from '@/utils'
-import { UPLOAD_MODE, UPLOAD_TYPE } from '@/constants'
 import EnvModify from './part/EnvModify'
 import ImportPackage from './part/ImportPackage'
 import WhiteList from './part/WhiteList'
@@ -305,7 +309,7 @@ export default {
         }
     },
     async mounted() {
-        // project
+    // project
         if (JSON.parse(localStorage.getItem('token')) === 'project') {
             const project = await this.getCurrentProject({
                 name: '',
@@ -342,416 +346,441 @@ export default {
         term.fit()
     },
     /*eslint-disable*/
-    methods: {
-        getPath (path) {
-            if (path && /\[(.*)\]?/g.test(path)) {
-                return JSON.parse(path)[0]
-            }
-        },
-        openTerminal (podName) {
-            this.dialogVisible = true
-            this.currentPodName = podName
-            this.$nextTick(() => {
-                this.operate(podName)
-            })
-        },
-        closeTerminal () {
-            this.websocket.send(JSON.stringify({ 'termId': this.uuid, 'type': 'exit' }))
-            this.websocket.close()
-            this.commondStr = ''
-            this.currentPodName = ''
-            term.destroy()
-        },
-        operate (podName) {
-            const _this = this
-            let connectCount = 1
-            let wirteData = ''
-            let param = podName
-            this.uuid = this.guid()
+  methods: {
+    getPath (path) {
+      if (path && /\[(.*)\]?/g.test(path)) {
+        return JSON.parse(path)[0]
+      }
+    },
+    openTerminal (podName) {
+      this.dialogVisible = true
+      this.currentPodName = podName
+      this.$nextTick(() => {
+        this.operate(podName)
+      })
+    },
+    closeTerminal () {
+      this.websocket.send(JSON.stringify({ 'termId': this.uuid, 'type': 'exit' }))
+      this.websocket.close()
+      this.commondStr = ''
+      this.currentPodName = ''
+      term.destroy()
+    },
+    operate (podName) {
+      const _this = this
+      let connectCount = 1
+      let wirteData = ''
+      let param = podName
+      this.uuid = this.guid()
 
-            this.websocket = new WebSocket(`${this.g_Config.WEBSOCKET_URL}/webterm`)
-            // this.websocket = new WebSocket(`ws://prod.ctsp.kedacom.com/dolphin-ops/webterm`)
-            this.websocket.onopen = () => {
-                this.websocket.send(JSON.stringify({ 'pod': param, 'termId': this.uuid, 'type': 'init' }))
-            }
-            this.websocket.onmessage = (res) => {
-                wirteData = res.data
-                let escapeData = escape(wirteData)
-                let atemp = ''
-                //判断处理
-                if (connectCount === 1) {
-                    this.initTerm()
-                    connectCount = 2
-                    term.write(wirteData)
-                }
-                else if (cmdStr === '\t') {
-                    if (escapeData.indexOf('%') !== -1) {
-                        if (escapeData.indexOf('%0D') !== -1) {
-                            escapeData = escapeData.replace(/%0D/, '')
-                        }
-                        if (escapeData.indexOf('%08') !== -1 && escapeData != '%20') {
-                            escapeData = escapeData.replace(/%20/, '')
-                        }
-                        if (escapeData.indexOf('%07') !== -1) {
-                            escapeData = escapeData.replace(/%07/, '')
-                        }
-                        wirteData = unescape(escapeData)
-                    }
-                    term.write(wirteData)
-                    // 只累加 tab 键 返回的不带路径（包含 @、：）的数据
-                    if (this.commondStr.indexOf('sz') !== -1 && wirteData.indexOf('@') === -1 && wirteData.indexOf(':') === -1) {
-                        this.commondStr = trim(this.commondStr) + trim(unescape(escapeData))
-                    }
-                }
-                else if (cmdStr.indexOf('\r') > -1) {
-                    if (escapeData.indexOf('%0D') > -1) {
-                        atemp = escapeData.split('%0D')
-                        if ((atemp[atemp.length - 1].substring(0, 1)) != '%') {
-                            escapeData = escapeData.replace(/%0D/g, '')
-                            wirteData = unescape(escapeData)
-                        }
-                    }
-                    term.write(wirteData)
-                }
-                else if (cmdStr == '\u0003') {
-                    term.write(wirteData)
-                }
-                else {
-                    term.write(wirteData)
-                }
-                // 获取路径为后面 sz 下载使用
-                if (wirteData.indexOf(_this.currentPodName) !== -1 && wirteData.indexOf('@') !== -1 && wirteData.indexOf(':') !== -1) {
-                    if (trim(wirteData).split('')[wirteData.length - 1] === '#') {
-                        _this.absPath = wirteData
-                    }
-                }
-            }
-            this.websocket.onclose = function (e) {
-                console.log(`连接已断开...>>>${e.code}`)
-            }
-        },
-        initTerm () {
-            //new 一个terminal实例，就是数据展示的屏幕和一些见简单设置，包括屏幕的宽度，高度，光标是否闪烁等等
-            term = new Terminal({
-                rows: 28,
-                screenKeys: true,
-                useStyle: true,
-                cursorBlink: true
-            })
-
-            //term实时监控输入的数据，并且websocket把实时数据发送给后台
-            term.on('data', (data) => {
-                if (escape(data) !== '%7F' && escape(data) !== '%1B%5BD' && escape(data) !== escape('\u001b[A') && escape(data) !== escape('\u001b[B')) {
-                    this.commondStr += data
-                }
-                this.sendInput(data)
-            })
-            term.attachCustomKeyEventHandler((e) => {
-                let commondStr = ''
-                if (e.keyCode == 13) {
-                    commondStr = trim(this.commondStr)
-                    // sz 开头执行下载操作
-                    if (commondStr.startsWith('sz')) {
-                        let path = this.absPath.indexOf(':') === -1 ? '' : this.absPath.split(':')[1]
-                        let fileName = commondStr.length > 2 ? commondStr.substring(2, commondStr.length) : ''
-                        path = path.replace(/[#|\s]/g, '')
-                        fileName = trim(fileName)
-                        this.downloadFile(`${this.g_Config.BASE_URL}${API.WEBTERMLOG}?podName=${this.currentPodName}&filePath=${path}/${fileName}`)
-                        this.commondStr = ''
-                        return true
-                    } else {
-                        this.commondStr = ''
-                        return true
-                    }
-                } else if (e.keyCode == 8) {
-                    let str = this.commondStr
-                    if (str.length > 0) {
-                        this.commondStr = str.substr(0, str.length - 1)
-                    }
-                    this.sendInput(unescape('%7F'))
-                    return false
-                }
-            });
-            term.on('title', () => {
-                document.title = 'dolphin-web-term'
-            })
-            //屏幕将要在哪里展示，就是屏幕展示的地方
-            term.open(document.getElementById('container-terminal'))
-        },
-        sendInput (input) {
-            cmdStr = input
-            if (escape(cmdStr) != escape('\u001b[A') && escape(cmdStr) != escape('\u001b[B')) {
-                this.websocket.send(JSON.stringify({ 'cmd': input, 'termId': this.uuid, 'type': 'cmd' }))
-            }
-        },
-        guid () {
-            function s4 () {
-                return Math.floor((1 + Math.random()) * 0x10000)
-                    .toString(16)
-                    .substring(1);
-            }
-            return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()} ${s4()}${s4()}`
-        },
-        ...mapActions(['getHistoryList', 'getExampleList', 'changeVersion', 'getCurrentProject', 'getProjectStart', 'getProjectStop', 'getProjectDeploy']),
-        // 历史查询
-        searchListMethod () {
-            if (this.tabType == '0') {
-                const params = this.searchExample
-                params['pageNo'] = 0
-                this.getExampleList(params)
-            } else if (this.tabType == '1') {
-                const params = this.searchCriteria
-                params['pageNo'] = 0
-                this.getHistoryList(params)
-            }
-        },
-        // 历史重置
-        reset () {
-            this.searchCriteria = {
-                projectId: this.project ? this.project.id : this.$route.params.id,
-                creatorName: '',
-                pageNo: 0,
-                pageSize: 10
-            }
-            this.$nextTick(() => {
-                this.searchListMethod()
-            })
-        },
-        // 切换tab
-        tabChange (val) {
-            this.tabType = val.index
-            this.reset()
-        },
-
-        // 切换每页数据个数
-        handleSizeChange (pageSize) {
-            if (this.tabType == '0') {
-                const params = Object.assign({}, this.searchExample, { pageSize })
-                this.$set(this.searchExample, 'pageSize', pageSize)
-                this.getExampleList(params)
-            } else if (this.tabType == '1') {
-                const params = Object.assign({}, this.searchCriteria, { pageSize })
-                this.$set(this.searchCriteria, 'pageSize', pageSize)
-                this.getHistoryList(params)
-            }
-        },
-
-        // 翻页
-        handlePageChange (pageNo) {
-            if (this.tabType == '0') {
-                const params = Object.assign({}, this.searchExample, { pageNo: pageNo - 1 })
-                this.getExampleList(params)
-            } else if (this.tabType == '1') {
-                const params = Object.assign({}, this.searchCriteria, { pageNo: pageNo - 1 })
-                this.getHistoryList(params)
-            }
-        },
-        // 切换版本
-        changeType (id) {
-            this.$confirm(this.$t('projectMgt.changeTypeTit'), this.$t('projectMgt.changeTypeSubTit'), {
-                confirmButtonText: this.$t('projectMgt.confirmButtonText'),
-                cancelButtonText: this.$t('projectMgt.cancelButtonText'),
-                type: 'warning',
-                center: true
-            }).then(() => {
-                let params = Object.assign({ deployId: id })
-                this.changeVersion(params).then(res => {
-                    if (res.data.result.status == '200') {
-                        this.$message({
-                            type: 'success',
-                            message: this.$t('projectMgt.changeTypeSussess')
-                        })
-                    } else {
-                        this.$message({
-                            type: 'error',
-                            message: this.$t('projectMgt.changeTypeError')
-                        })
-                    }
-                })
-            }).catch(() => {
-                this.$message({
-                    message: this.$t('projectMgt.operationCancel')
-                })
-            })
-        },
-        // 下载日志
-        downloadHref (podName) {
-            return `${this.g_Config.BASE_URL}/project/downloadLog/${podName}.text`
-        },
-
-        formatterUpdatedTime (row) {
-            return moment(row.createTime).format(DATE_FORMAT)
-        },
-
-        mappingUploadMode (value) {
-            return mappingValue(value)(UPLOAD_MODE)
-        },
-
-        mappingUploadType (value) {
-            return mappingValue(value)(UPLOAD_TYPE)
-        },
-        async getProject () {
-            const project = await this.getCurrentProject({
-                projectId: this.project.id || this.$route.params.id,
-                name: '',
-                mark: '',
-                pageNo: 0,
-                pageSize: 10
-            })
-            this.project = project ? project : {}
-        },
-        //开始部署
-        beginDeploy (val) {
-            this.$confirm(this.$t('projectMgt.beginDeployTit'), this.$t('projectMgt.beginDeploySubTit'), {
-                confirmButtonText: this.$t('projectMgt.confirmButtonText'),
-                cancelButtonText: this.$t('projectMgt.cancelButtonText'),
-                type: 'warning',
-                center: true
-            }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: this.$t('projectMgt.deployingMes'),
-                })
-                let params = Object.assign({ id: val.desireDeployId })
-                this.getProjectDeploy(params).then(res => {
-                    if (res.status === 200) {
-                        this.getProject()
-                    }
-                })
-            }).catch((
-            ) => {
-                this.$message({
-                    message: this.$t('projectMgt.operationCancel'),
-                })
-            })
-        },
-        // 启动
-        startUp (val) {
-            const _this = this
-            const params = {
-                projectId: this.project.id,
-                instance: this.project.instanceNumber,
-                memory: this.project.memorySize
-            }
-            this.$confirm(this.$t('projectMgt.beginStartTit'), this.$t('projectMgt.beginStartSubTit'), {
-                confirmButtonText: this.$t('projectMgt.confirmButtonText'),
-                cancelButtonText: this.$t('projectMgt.cancelButtonText'),
-                type: 'warning',
-                center: true
-            }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: this.$t('projectMgt.startMes'),
-                })
-                this.getProjectStart(params).then(res => {
-                    if (res.status === 200) {
-                        this.getProject()
-                    }
-                })
-            }).catch(() => {
-                this.$message({
-                    message: this.$t('projectMgt.operationCancel'),
-                })
-            })
-        },
-        // 停止
-        stopDeploy (val) {
-            const _this = this
-            this.$confirm(this.$t('projectMgt.stopStartTit'), this.$t('projectMgt.stopStartSubTit'), {
-                confirmButtonText: this.$t('projectMgt.confirmButtonText'),
-                cancelButtonText: this.$t('projectMgt.cancelButtonText'),
-                type: 'warning',
-                center: true
-            }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: this.$t('projectMgt.stopMes')
-                })
-                let params = Object.assign({ name: val.mark })
-                this.getProjectStop(params).then(res => {
-                    if (res.status === 200) {
-                        this.getProject()
-                    }
-                })
-            }).catch(() => {
-                this.$message({
-                    message: this.$t('projectMgt.operationCancel'),
-                })
-            })
-        },
-        //白名单设置
-        whiteIpConfig (row) {
-            this.whiteIpDialog = true
-            this.whiteIpFrom.projectId = row.id
-            this.whiteIpFrom.whiteList = row.whiteList
-        },
-        handleWhiteIpDialogClose () {
-            this.whiteIpDialog = false
-        },
-        // 变更
-        dialogChange (record) {
-            this.dialogType = ''
-            this.envConfigForm.version = ''
-            this.envConfigForm.desc = ''
-            this.envConfigForm.uploadType = 0
-
-            this.envConfigDialog = true
-            this.envConfigForm.projectId = this.project.id
-            this.envConfigForm.instanceNumber = this.project.instanceNumber
-            this.envConfigForm.memorySize = this.project.memorySize
-            this.envConfigForm.envVariables = this.project.env ? JSON.parse(this.project.env) : []
-            this.envConfigForm.ipAlias = this.project.ipAlias ? JSON.parse(this.project.ipAlias) : []
-        },
-        // 变更取消
-        envDialogOnClose () {
-            this.envConfigDialog = false;
-            this.envConfigForm.uploadType = '0';
-        },
-        addNewItem (prop) {
-            this.envConfigForm[prop].push({ isNew: true });
-        },
-        deleteItem (row, prop) {
-            this.envConfigForm[prop] = this.envConfigForm[prop].filter(
-                item => item != row
-            );
-        },
-        handelUploadType (type) {
-            this.envConfigForm.uploadType = type;
-        },
-        importDialog () {
-            this.dialogExpoVisible = true;
-        },
-        handleImportDialogClose () {
-            this.dialogExpoVisible = false;
-        },
-        handleEnvDialogOpen (file) {
-            if (file.result) {
-                this.envConfigForm.auditor = file.result.auditorName
-                this.envConfigForm.instanceNumber = file.result.instanceNumber
-                this.envConfigForm.memorySize = file.result.memorySize
-                this.importId = file.result.id
-            }
-            this.dialogType = 'upload'
-            this.envConfigDialog = true
-        },
-        downloadFile (url = '') {
-            var a = document.createElement("a");
-            a.target = '_blank';
-            a.href = url;
-            a.click();
+      this.websocket = new WebSocket(`${this.g_Config.WEBSOCKET_URL}/webterm`)
+      // this.websocket = new WebSocket(`ws://prod.ctsp.kedacom.com/dolphin-ops/webterm`)
+      this.websocket.onopen = () => {
+        this.websocket.send(JSON.stringify({ 'pod': param, 'termId': this.uuid, 'type': 'init' }))
+      }
+      this.websocket.onmessage = (res) => {
+        wirteData = res.data
+        let escapeData = escape(wirteData)
+        let atemp = ''
+        //判断处理
+        if (connectCount === 1) {
+          this.initTerm()
+          connectCount = 2
+          term.write(wirteData)
         }
+        else if (cmdStr && cmdStr === '\t') {
+          if (escapeData.indexOf('%') !== -1) {
+            if (escapeData.indexOf('%0D') !== -1) {
+              escapeData = escapeData.replace(/%0D/, '')
+            }
+            if (escapeData.indexOf('%08') !== -1 && escapeData != '%20') {
+              escapeData = escapeData.replace(/%20/, '')
+            }
+            if (escapeData.indexOf('%07') !== -1) {
+              escapeData = escapeData.replace(/%07/, '')
+            }
+            wirteData = unescape(escapeData)
+          }
+          term.write(wirteData)
+          // 只累加 tab 键 返回的不带路径（包含 @、：）的数据
+          if (this.commondStr.indexOf('sz') !== -1 && wirteData.indexOf('@') === -1 && wirteData.indexOf(':') === -1) {
+            this.commondStr = trim(this.commondStr) + trim(unescape(escapeData))
+          }
+        }
+        else if (cmdStr && cmdStr.indexOf('\r') > -1) {
+          if (escapeData.indexOf('%0D') > -1) {
+            atemp = escapeData.split('%0D')
+            if ((atemp[atemp.length - 1].substring(0, 1)) != '%') {
+              escapeData = escapeData.replace(/%0D/g, '')
+              wirteData = unescape(escapeData)
+            }
+          }
+          term.write(wirteData)
+        }
+        else if (cmdStr && cmdStr == '\u0003') {
+          term.write(wirteData)
+        }
+        else {
+          term.write(wirteData)
+        }
+        // 获取路径为后面 sz 下载使用
+        if (wirteData.indexOf(_this.currentPodName) !== -1 && wirteData.indexOf('@') !== -1 && wirteData.indexOf(':') !== -1) {
+          if (trim(wirteData).split('')[wirteData.length - 1] === '#') {
+            _this.absPath = wirteData
+          }
+        }
+      }
+      this.websocket.onclose = function (e) {
+        console.log(`连接已断开...>>>${e.code}`)
+      }
     },
-    computed: {
-        ...mapState({
-            historyListPaging: state => state.project.historyListPaging,
-            historyList: state => state.project.historyList,
-            searchList: state => state.project.searchList,
-            listPaging: state => state.project.listPaging
+    initTerm () {
+      //new 一个terminal实例，就是数据展示的屏幕和一些见简单设置，包括屏幕的宽度，高度，光标是否闪烁等等
+      term = new Terminal({
+        rows: 28,
+        screenKeys: true,
+        useStyle: true,
+        cursorBlink: true
+      })
+
+      //term实时监控输入的数据，并且websocket把实时数据发送给后台
+      term.on('data', (data) => {
+        if (escape(data) !== '%7F' && escape(data) !== '%1B%5BD' && escape(data) !== escape('\u001b[A') && escape(data) !== escape('\u001b[B')) {
+          this.commondStr += data
+        }
+        this.sendInput(data)
+      })
+      term.attachCustomKeyEventHandler((e) => {
+        let commondStr = ''
+        if (e.keyCode == 13) {
+          commondStr = trim(this.commondStr)
+          // sz 开头执行下载操作
+          if (commondStr.startsWith('sz')) {
+            let path = this.absPath.indexOf(':') === -1 ? '' : this.absPath.split(':')[1]
+            let fileName = commondStr.length > 2 ? commondStr.substring(2, commondStr.length) : ''
+            path = path.replace(/[#|\s]/g, '')
+            fileName = trim(fileName)
+            this.downloadFile(`${this.g_Config.BASE_URL}${API.WEBTERMLOG}?podName=${this.currentPodName}&filePath=${path}/${fileName}`)
+            this.commondStr = ''
+            return true
+          } else {
+            this.commondStr = ''
+            return true
+          }
+        } else if (e.keyCode == 8) {
+          let str = this.commondStr
+          if (str.length > 0) {
+            this.commondStr = str.substr(0, str.length - 1)
+          }
+          this.sendInput(unescape('%7F'))
+          return false
+        }
+      });
+      term.on('title', () => {
+        document.title = 'dolphin-web-term'
+      })
+      //屏幕将要在哪里展示，就是屏幕展示的地方
+      term.open(document.getElementById('container-terminal'))
+    },
+    sendInput (input) {
+      cmdStr = input
+      if (escape(cmdStr) != escape('\u001b[A') && escape(cmdStr) != escape('\u001b[B')) {
+        this.websocket.send(JSON.stringify({ 'cmd': input, 'termId': this.uuid, 'type': 'cmd' }))
+      }
+    },
+    guid () {
+      function s4 () {
+        return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
+      }
+      return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()} ${s4()}${s4()}`
+    },
+    ...mapActions(['getHistoryList', 'getExampleList', 'changeVersion', 'getCurrentProject', 'getProjectStart', 'getProjectStop', 'getProjectDeploy']),
+    // 历史查询
+    searchListMethod () {
+      if (this.tabType == '0') {
+        const params = this.searchExample
+        params['pageNo'] = 0
+        this.getExampleList(params)
+      } else if (this.tabType == '1') {
+        const params = this.searchCriteria
+        params['pageNo'] = 0
+        this.getHistoryList(params)
+      }
+    },
+    // 历史重置
+    reset () {
+      this.searchCriteria = {
+        projectId: this.project ? this.project.id : this.$route.params.id,
+        creatorName: '',
+        pageNo: 0,
+        pageSize: 10
+      }
+      this.$nextTick(() => {
+        this.searchListMethod()
+      })
+    },
+    // 切换tab
+    tabChange (val) {
+      this.tabType = val.index
+      this.reset()
+    },
+
+    // 切换每页数据个数
+    handleSizeChange (pageSize) {
+      if (this.tabType == '0') {
+        const params = Object.assign({}, this.searchExample, { pageSize })
+        this.$set(this.searchExample, 'pageSize', pageSize)
+        this.getExampleList(params)
+      } else if (this.tabType == '1') {
+        const params = Object.assign({}, this.searchCriteria, { pageSize })
+        this.$set(this.searchCriteria, 'pageSize', pageSize)
+        this.getHistoryList(params)
+      }
+    },
+
+    // 翻页
+    handlePageChange (pageNo) {
+      if (this.tabType == '0') {
+        const params = Object.assign({}, this.searchExample, { pageNo: pageNo - 1 })
+        this.getExampleList(params)
+      } else if (this.tabType == '1') {
+        const params = Object.assign({}, this.searchCriteria, { pageNo: pageNo - 1 })
+        this.getHistoryList(params)
+      }
+    },
+    // 切换版本
+    changeType (id) {
+      this.$confirm(this.$t('projectMgt.changeTypeTit'), this.$t('projectMgt.changeTypeSubTit'), {
+        confirmButtonText: this.$t('projectMgt.confirmButtonText'),
+        cancelButtonText: this.$t('projectMgt.cancelButtonText'),
+        type: 'warning',
+        center: true
+      }).then(() => {
+        let params = Object.assign({ deployId: id })
+        this.changeVersion(params).then(res => {
+          if (res.status === 200) {
+            this.$message({
+              type: 'success',
+              message: this.$t('projectMgt.changeTypeSussess')
+            })
+            this.searchListMethod()
+          } else {
+            this.$message({
+              type: 'error',
+              message: this.$t('projectMgt.changeTypeError')
+            })
+          }
         })
+      }).catch(() => {
+        this.$message({
+          message: this.$t('projectMgt.operationCancel')
+        })
+      })
     },
-    destroyed () {
-        clearInterval(this.interval)
+    // 下载日志
+    downloadHref (podName) {
+      return `${this.g_Config.BASE_URL}/project/downloadLog/${podName}.text`
+    },
+
+    formatterUpdatedTime (row) {
+      return moment(row.createTime).format(DATE_FORMAT)
+    },
+
+    mappingUploadMode (value) {
+      const UPLOAD_MODE = [
+        {
+          label: this.$t('common.uploadMode_label0'),
+          value: 0
+        },
+        {
+          label: this.$t('common.uploadMode_label1'),
+          value: 1
+        }
+      ]
+      return mappingValue(value)(UPLOAD_MODE)
+    },
+
+    mappingUploadType (value) {
+      const UPLOAD_TYPE = [
+        {
+          label: this.$t('common.uploadType_label0'),
+          value: 0
+        },
+        {
+          label: this.$t('common.uploadType_label1'),
+          value: 1
+        }
+      ]
+      return mappingValue(value)(UPLOAD_TYPE)
+    },
+    async getProject () {
+      const project = await this.getCurrentProject({
+        projectId: this.project.id || this.$route.params.id,
+        name: '',
+        mark: '',
+        pageNo: 0,
+        pageSize: 10
+      })
+      this.project = project ? project : {}
+    },
+    //开始部署
+    beginDeploy (val) {
+      this.$confirm(this.$t('projectMgt.beginDeployTit'), this.$t('projectMgt.beginDeploySubTit'), {
+        confirmButtonText: this.$t('projectMgt.confirmButtonText'),
+        cancelButtonText: this.$t('projectMgt.cancelButtonText'),
+        type: 'warning',
+        center: true
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: this.$t('projectMgt.deployingMes'),
+        })
+        let params = Object.assign({ id: val.desireDeployId })
+        this.getProjectDeploy(params).then(res => {
+          if (res.status === 200) {
+            this.getProject()
+          }
+        })
+      }).catch((
+      ) => {
+        this.$message({
+          message: this.$t('projectMgt.operationCancel'),
+        })
+      })
+    },
+    // 启动
+    startUp (val) {
+      const _this = this
+      const params = {
+        projectId: this.project.id,
+        instance: this.project.instanceNumber,
+        memory: this.project.memorySize
+      }
+      this.$confirm(this.$t('projectMgt.beginStartTit'), this.$t('projectMgt.beginStartSubTit'), {
+        confirmButtonText: this.$t('projectMgt.confirmButtonText'),
+        cancelButtonText: this.$t('projectMgt.cancelButtonText'),
+        type: 'warning',
+        center: true
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: this.$t('projectMgt.startMes'),
+        })
+        this.getProjectStart(params).then(res => {
+          if (res.status === 200) {
+            this.getProject()
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          message: this.$t('projectMgt.operationCancel'),
+        })
+      })
+    },
+    // 停止
+    stopDeploy (val) {
+      const _this = this
+      this.$confirm(this.$t('projectMgt.stopStartTit'), this.$t('projectMgt.stopStartSubTit'), {
+        confirmButtonText: this.$t('projectMgt.confirmButtonText'),
+        cancelButtonText: this.$t('projectMgt.cancelButtonText'),
+        type: 'warning',
+        center: true
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: this.$t('projectMgt.stopMes')
+        })
+        let params = Object.assign({ name: val.mark })
+        this.getProjectStop(params).then(res => {
+          if (res.status === 200) {
+            this.getProject()
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          message: this.$t('projectMgt.operationCancel'),
+        })
+      })
+    },
+    //白名单设置
+    whiteIpConfig (row) {
+      this.whiteIpDialog = true
+      this.whiteIpFrom.projectId = row.id
+      this.whiteIpFrom.whiteList = row.whiteList
+    },
+    handleWhiteIpDialogClose () {
+      this.whiteIpDialog = false
+    },
+    // 变更
+    dialogChange (record) {
+      this.dialogType = ''
+      this.envConfigForm.version = ''
+      this.envConfigForm.desc = ''
+      this.envConfigForm.uploadType = 0
+
+      this.envConfigDialog = true
+      this.envConfigForm.projectId = this.project.id
+      this.envConfigForm.instanceNumber = this.project.instanceNumber
+      this.envConfigForm.memorySize = this.project.memorySize
+      this.envConfigForm.envVariables = this.project.env ? JSON.parse(this.project.env) : []
+      this.envConfigForm.ipAlias = this.project.ipAlias ? JSON.parse(this.project.ipAlias) : []
+    },
+    // 变更取消
+    envDialogOnClose () {
+      this.envConfigDialog = false;
+      this.envConfigForm.uploadType = '0';
+    },
+    addNewItem (prop) {
+      this.envConfigForm[prop].push({ isNew: true });
+    },
+    deleteItem (row, prop) {
+      this.envConfigForm[prop] = this.envConfigForm[prop].filter(
+        item => item != row
+      );
+    },
+    handelUploadType (type) {
+      this.envConfigForm.uploadType = type;
+    },
+    importDialog () {
+      this.dialogExpoVisible = true;
+    },
+    handleImportDialogClose () {
+      this.dialogExpoVisible = false;
+    },
+    handleEnvDialogOpen (file) {
+      if (file.result) {
+        this.envConfigForm.auditor = file.result.auditorName
+        this.envConfigForm.instanceNumber = file.result.instanceNumber
+        this.envConfigForm.memorySize = file.result.memorySize
+        this.envConfigForm.tempPath = file.result.tempPath
+        this.importId = file.result.id
+      }
+      this.dialogType = 'upload'
+      this.envConfigDialog = true
+    },
+    downloadFile (url = '') {
+      var a = document.createElement("a");
+      a.target = '_blank';
+      a.href = url;
+      a.click();
     }
+  },
+  computed: {
+    ...mapState({
+      historyListPaging: state => state.project.historyListPaging,
+      historyList: state => state.project.historyList,
+      searchList: state => state.project.searchList,
+      listPaging: state => state.project.listPaging
+    }),
+    isOffLine () {
+      return this.g_Config.ISOFFLINE === '1'
+    }
+  },
+  destroyed () {
+    clearInterval(this.interval)
+  }
 }
 </script>
 
@@ -794,6 +823,9 @@ export default {
 }
 .prj-status-agree {
   background: #0dcf5f;
+}
+.prj-status-stop {
+  background: #fcae19;
 }
 .prj-status-back {
   background: #fc5555;

@@ -5,7 +5,7 @@
                :close-on-click-modal="false"
                :visible.sync="dialogVisible">
         <el-form size="small"
-                 label-width="100px"
+                 label-width="130px"
                  style="margin-top: -25px;"
                  :rules="rules"
                  ref="envForm"
@@ -114,7 +114,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column property="value"
-                                         width="50"
+                                         width="100"
                                          :label="$t('common.operate_label')">
                             <template slot-scope="scope">
                                 <a href="javascript:;"
@@ -178,7 +178,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column property="value"
-                                         width="50"
+                                         width="100"
                                          :label="$t('common.operate_label')">
                             <template slot-scope="scope">
                                 <a href="javascript:;"
@@ -198,6 +198,7 @@
               class="dialog-footer">
             <el-button @click="closeEnvDialog">{{$t('part.cancelLabel')}}</el-button>
             <el-button type="primary"
+                       :disabled="isDisabled"
                        @click="saveEnvConfig">{{$t('part.saveLabel')}}</el-button>
         </span>
     </el-dialog>
@@ -208,7 +209,7 @@ import { MEMORY_SIZE } from '@/constants'
 export default {
     name: 'EnvModify',
     props: {
-        // 是否是管理员
+    // 是否是管理员
         isAdmin: {
             type: String
         },
@@ -226,6 +227,10 @@ export default {
         // 表单
         envConfigForm: {
             type: Object
+        },
+        // 表单
+        refresh: {
+            type: Function
         }
     },
     data() {
@@ -252,7 +257,8 @@ export default {
                 uploadType: [
                     { required: true, message: this.$t('part.uploadFieldMes'), trigger: 'blur' }
                 ]
-            }
+            },
+            isDisabled: false
         };
     },
     computed: {
@@ -270,11 +276,12 @@ export default {
         // 变量名校验
         hasEnvValidErr(envVariables) {
             let has = false
+            let reSpaceCheck = /^[A-Za-z_][A-Za-z0-9_]*$/
             has = envVariables.some(item => {
-                if (!item.key || (item.key !== '' && /^[A-Za-z_][A-Za-z0-9_]$/.test(item.key))) {
+                if (!item.key || (item.key !== '' && !reSpaceCheck.test(item.key))) {
                     this.$message({
                         type: 'error',
-                        message: this.$t('part.valueMes')
+                        message: this.$t('part.variableMes')
                     })
                     return true
                 } else if (!item.value) {
@@ -292,13 +299,38 @@ export default {
         // ip校验
         hasIpValidErr(ipAlias) {
             let has = false
+            let reSpaceCheck = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/
             has = ipAlias.some(item => {
-                if (!item.value || (item.value != '' && /^((25[0-5]|2[0-4]\\d|[1]{1}\\d{1}\\d{1}|[1-9]{1}\\d{1}|\\d{1})($|(?!\\.$)\\.)){4}$/.test(item.value))) {
+                if (!item.value) {
                     this.$message({
                         type: 'error',
                         message: this.$t('part.ipMes')
                     })
                     return true
+                } else if (item.value != '') {
+                    let result = false
+                    if (reSpaceCheck.test(item.value)) {
+                        item.value.match(reSpaceCheck);
+                        if (RegExp.$1 <= 255 && RegExp.$1 >= 0
+              && RegExp.$2 <= 255 && RegExp.$2 >= 0
+              && RegExp.$3 <= 255 && RegExp.$3 >= 0
+              && RegExp.$4 <= 255 && RegExp.$4 >= 0) {
+                            result = false
+                        } else {
+                            this.$message({
+                                type: 'error',
+                                message: this.$t('part.ipMes')
+                            })
+                            result = true
+                        }
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: this.$t('part.ipMes')
+                        })
+                        result = true
+                    }
+                    return result
                 } else if (!item.key) {
                     this.$message({
                         type: 'error',
@@ -343,7 +375,8 @@ export default {
                         projectId,
                         auditor,
                         desc,
-                        uploadType
+                        uploadType,
+                        tempPath
                     } = this.envConfigForm;
                     if (envVariables.length > 0 && this.hasEnvValidErr(envVariables)) {
                         return;
@@ -351,6 +384,7 @@ export default {
                     if (ipAlias.length > 0 && this.hasIpValidErr(ipAlias)) {
                         return;
                     }
+                    this.isDisabled = true
                     if (this.dialogType == 'upload') {
                         const params = {
                             importId: this.importId,
@@ -360,14 +394,19 @@ export default {
                             instanceNumber: instanceNumber,
                             memorySize: memorySize,
                             env: JSON.stringify(envVariables),
-                            ipAlias: JSON.stringify(ipAlias)
+                            ipAlias: JSON.stringify(ipAlias),
+                            tempPath
                         };
                         this.saveUplaod(params).then(() => {
+                            this.isDisabled = false
                             this.$message({
                                 message: this.$t('part.saveSuccessMes'),
                                 type: 'success'
                             });
-                            this.closeEnvDialog();
+                            this.refresh()
+                            this.closeEnvDialog()
+                        }).catch(() => {
+                            this.isDisabled = false
                         });
                     } else {
                         const params = {
@@ -377,14 +416,19 @@ export default {
                             memory: memorySize,
                             env: JSON.stringify(envVariables),
                             ipAlias: JSON.stringify(ipAlias),
-                            searchParams: this.searchCriteria
+                            searchParams: this.searchCriteria,
+                            tempPath
                         };
                         this.saveEnv(params).then(() => {
+                            this.isDisabled = false
                             this.$message({
                                 message: this.$t('part.saveSuccessMes'),
                                 type: 'success'
                             });
+                            this.refresh()
                             this.closeEnvDialog();
+                        }).catch(() => {
+                            this.isDisabled = false
                         });
                     }
                 }
@@ -394,7 +438,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import '~@/styles/common.scss';
+@import "~@/styles/common.scss";
 
 .addRowBtn {
   padding: 7px 15px !important;
@@ -430,6 +474,9 @@ export default {
   /deep/ .el-form-item__error {
     left: -100px !important;
   }
+  /deep/ .el-form-item__content {
+    margin-left: 100px !important;
+  }
 }
 
 // 上传类型button
@@ -446,11 +493,12 @@ export default {
     letter-spacing: 0;
     border: 1px solid #dcdfe6;
     border-radius: 4px;
-    width: 78px;
+    // width: 78px;
     height: 30px;
     line-height: 28px;
     cursor: pointer;
     margin-right: 20px;
+    padding: 0 20px;
     &:hover,
     &.active {
       border-color: #016ad5;

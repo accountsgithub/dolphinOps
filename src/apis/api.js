@@ -1,40 +1,65 @@
 import axios from 'axios'
-import {Message} from 'element-ui'
+import { Message } from 'element-ui'
 import NProgress from 'nprogress'
 import router from '../router'
+import Cookies from 'js-cookie'
+import zh from '@/lang/zh'
+import en from '@/lang/en'
+
+let language = Cookies.get('language')
 
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 axios.defaults.withCredentials = true
-axios.interceptors.request.use(config => {
-    NProgress.start()
-    return config
-}, err => {
-    Message.error(this.$t('common.networkError_message'))
-    return Promise.reject(err)
-})
-axios.interceptors.response.use(response => {
-    NProgress.done()
-    const {data} = response
-
-    if (data.status == '401') {
-        router.push('/login')
-        return
+axios.interceptors.request.use(
+    config => {
+        NProgress.start()
+        return config
+    },
+    err => {
+        Message.error('Server error. Please try again.')
+        return Promise.reject(err)
     }
+)
+axios.interceptors.response.use(
+    response => {
+        NProgress.done()
+        const { data, config } = response
 
-    if (data.status != '200') {
-        Message.error(data.message || '')
-        return Promise.reject(data)
+        if (data.status == '401') {
+            router.push('/login')
+            return
+        }
+
+        if (data.status != '200') {
+            // /oauth/password 接口  无法进行身份识别需在前端进行中英文处理（略坑。。。）
+            if (
+                config.url.indexOf('/oauth/password') === -1 ||
+                language === 'zh'
+            ) {
+                Message.error(data.message || '')
+            } else {
+                if (data.message === zh.common.loginErrorMes1) {
+                    Message.error(en.common.loginErrorMes1)
+                } else if (data.message === zh.common.loginErrorMes2) {
+                    Message.error(en.common.loginErrorMes2)
+                }
+            }
+            return Promise.reject(data)
+        }
+        return response
+    },
+    err => {
+        NProgress.done()
+        Message.error('Server error. Please try again.')
+        return Promise.reject(err)
     }
-    return response
-}, err => {
-    NProgress.done()
-    Message.error(this.$t('common.networkError_message'))
-    return Promise.reject(err)
-})
+)
 
 let API = {
     LOGIN: '/oauth/password',
     LOGIN_OUT: '/user/logout',
+    UPDATE_PASSWORD: '/user/password',
+    I18N: '/i18n',
 
     //项目主列表
     PROJECT_LIST: '/project/list.do',
@@ -90,4 +115,3 @@ let API = {
 // }
 
 export default API
-
