@@ -57,7 +57,7 @@
                                @click="dialogInfo(scope.row)">{{scope.row.name}}
                             </a>
                             <span v-else>{{scope.row.name}}</span>
-                    </template></el-table-column>
+                        </template></el-table-column>
                     <el-table-column prop="instanceNumber"
                                      :label="$t('projectMgt.instanceNumber_label')" />
                     <el-table-column prop="version"
@@ -262,7 +262,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy', 'setWhiteIp', 'setEmail', 'resetSearchCriteria']),
+        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy', 'setWhiteIp', 'setEmail', 'resetSearchCriteria', 'setTestActionApi']),
 
         getPath(path) {
             if (path && /\[(.*)\]?/g.test(path)) {
@@ -426,7 +426,20 @@ export default {
         },
         // 自动化测试
         testPageMethod(row) {
-            this.$router.push({ name: 'testReport', params: { mark: row.mark } })
+            let params = Object.assign({mark: row.mark, path: encodeURIComponent(row.path)})
+            this.setTestActionApi(params).then(res => {
+                if (res.data && res.data.code == '0' && res.data.status == 200) {
+                    this.$message({
+                        type: 'success',
+                        message: this.$t('testPage.testActionSuccess_message')
+                    })
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: res.message || this.$t('testPage.testActionFail_message')
+                    })
+                }
+            })
         },
         // 测试报告
         goTestReport(row) {

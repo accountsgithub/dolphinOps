@@ -160,7 +160,7 @@ export default {
         },
         // 跳转历史纪录页面
         linkHistoryMethod() {
-            this.$router.push({name: 'historyList', params: {mark: 'dolphin-release'}})
+            this.$router.push({name: 'historyList', params: {mark: this.$route.params.mark}})
         },
         // 执行测试方法
         testActionMethod() {
@@ -175,7 +175,7 @@ export default {
                 } else {
                     this.$message({
                         type: 'error',
-                        message: this.$t('testPage.testActionFail_message')
+                        message: res.message || this.$t('testPage.testActionFail_message')
                     })
                 }
             })
