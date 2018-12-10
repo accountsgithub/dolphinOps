@@ -203,7 +203,22 @@
         margin-left: 5px;
     }
 }
-
+// dashaboard页面按钮
+.dashaboardBtn {
+    font-family: PingFangSC-Semibold;
+    font-size: 12px;
+    color: #59b9ff;
+    background: none;
+    border: 1px solid #133166;
+    border-radius: 4px;
+    padding: 2px 14px;
+    height: 32px;
+    margin-left: 10px;
+    height: 22px;
+    & > span {
+        margin-left: 5px;
+    }
+}
 // 弹出框按键样式
 .dialogButtonW {
     background: #ffffff;

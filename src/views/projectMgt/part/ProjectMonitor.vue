@@ -91,7 +91,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import { updateChart, setChartData } from '@/utils/initCharts.js'
+import { updateChart, setChartData } from '@/utils/echartsData.js'
 import echarts from 'echarts'
 export default {
     data() {
@@ -601,25 +601,25 @@ export default {
                     return
                 }
                 console.log('22222222222refrash', new Date(), that.refrash)
-                // let space = (that.selectTime[1] - that.selectTime[0]) / 1000
-                // that.selectTime = [new Date() - space * 1000, new Date()]
-                // var start = new Date(that.selectTime[0]);
-                // var end = new Date(that.selectTime[1]);
-                // that.startTime = Math.ceil(start.getTime() / 1000)
-                // that.endTime = Math.ceil(end.getTime() / 1000)
-                // let params = {
-                //     start: that.startTime,
-                //     end: that.endTime,
-                // }
-                // let env = that.projectdetail.deployEnv
-                // let project = that.projectdetail.mark
-                // if (that.layerType === 'tomcat') {
-                //     that.getChartData(params, env, project)
-                // } else if (that.layerType === 'others') {
-                //     that.getNoTomcatData(params, env, project)
-                // } else {
-                //     // console.log('no')
-                // }
+                let space = (that.selectTime[1] - that.selectTime[0]) / 1000
+                that.selectTime = [new Date() - space * 1000, new Date()]
+                var start = new Date(that.selectTime[0]);
+                var end = new Date(that.selectTime[1]);
+                that.startTime = Math.ceil(start.getTime() / 1000)
+                that.endTime = Math.ceil(end.getTime() / 1000)
+                let params = {
+                    start: that.startTime,
+                    end: that.endTime,
+                }
+                let env = that.projectdetail.deployEnv
+                let project = that.projectdetail.mark
+                if (that.layerType === 'tomcat') {
+                    that.getChartData(params, env, project)
+                } else if (that.layerType === 'others') {
+                    that.getNoTomcatData(params, env, project)
+                } else {
+                    // console.log('no')
+                }
             }, that.refrash == 0 ? '5000' : that.refrash * 1000)
             
         },

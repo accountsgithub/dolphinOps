@@ -1,4 +1,5 @@
-// 基础监控--处理option中的数据
+import echarts from 'echarts'
+// 基础监控--line处理option中的数据
 export function updateChart(myChartLine, option) {
     // cpuChart初始化数据
     // console.log('option', option)
@@ -141,12 +142,12 @@ export function setgaugeData(targit, res) {
         series: [{
             type: 'gauge',
             center: ['50%', '50%'], // 默认全局居中
-            radius: '60%',
+            radius: '50%',
             axisLine: {
                 show: false,
                 lineStyle: { // 属性lineStyle控制线条样式
                     color: [
-                        [res / 100, '#2a8eff'],
+                        [res / 100, new echarts.graphic.LinearGradient(0, 0, 1, 0, [{offset: 0, color: '#2a8eff'},{offset: 1, color: '#fb65ff'}])],
                         [1, 'rgba(1, 147, 207, 0.3)']
                     ],
                     width: 24
@@ -217,7 +218,7 @@ export function setPieData(targit, res) {
             name: '内存使用情况',
             type: 'pie',
             clockWise: true,
-            radius: ['50%', '66%'],
+            radius: ['35%', '50%'],
             color: res.color,
             itemStyle: {
                 normal: {

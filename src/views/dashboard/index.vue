@@ -1,55 +1,73 @@
 <template>
     <div class="main_content">
         <!-- 标题 -->
-        <el-row :gutter="20">
+        <el-row :gutter="30">
             <el-col :span="24">
-                <div class="grid-content bg-purple bg-dashboard" style="border:none">
-                    <el-col :span="6">
+                <div class="grid-content bg-purple bg-dashboard topTitle" style="border:none">
+                    <el-col :span="4">
                         <div class="grid-content bg-purple bg-dashboard timer" style="border:none">{{time}}</div>
                     </el-col>
-                    <el-col :span="12">
+                    <el-col :span="16">
                         <div class="grid-content bg-purple bg-dashboard" style="border:none">
                             <img :src="dashboardTitle" class="titleImg" alt="dashboardTitle">
                         </div>
                     </el-col>
-                    <el-col :span="6">
-                        <div class="grid-content bg-purple bg-dashboard" style="border:none"></div>
+                    <el-col :span="4">
+                        <div class="grid-content bg-purple bg-dashboard" style="border:none;text-align: right;">
+                            <el-button class="dashaboardBtn icon iconfont icon-ic-home" ></el-button>
+                            <el-button class="dashaboardBtn icon iconfont icon-quanping" ></el-button>
+                        </div>
                     </el-col>
                 </div>
             </el-col>
         </el-row>
         <!-- 第一屏 第一行 -->
-        <el-row :gutter="20">
-            <el-col :span="6">
-                <div class="grid-content bg-purple bg-dashboard">
-                    <div class="chats" id="cpuChart">
+        <el-row :gutter="30">
+            <el-col :span="6" >
+                <div class="grid-content bg-purple bg-dashboard _box">
+                    <div class="chart_box">
+                        <div class="chats" id="cpuChart"></div>
                     </div>
                     <div class="bottomText">
-                        <span>高频占用：{{highCpuProject}}个</span>
+                        <span><span>高频占用：{{highCpuProject}}个</span></span>
                     </div>
-                    <!-- 边框 -->
-                    <div class="angle angleA"></div>
-                    <div class="angle angleB"></div>
-                    <div class="angle angleC"></div>
-                    <div class="angle angleD"></div>
                 </div>
             </el-col>
             <el-col :span="12">
                 <div class="grid-content bg-purple bg-dashboard" style="border:none">
                     <div class="dashboardTitle">
                         <div>
-                            <p><span>容器数</span><span :class=" container?'':'addcolor'">{{containerPercent}}</span></p>
-                            <p>{{containerCount}}个</p>
+                            <p><span>容器数</span><span :class=" container?'':'addcolor'"><i :class="['title_icon', 'icon', 'iconfont', container?'icon-shangsheng': 'icon-xiajiang']"></i>{{containerPercent}}</span></p>
+                            <p class="munBox">
+                                <span v-for="(item, index) in containerCount" v-bind:key="index" class="num">
+                                    {{item}}
+                                </span>
+                            </p>
                         </div>
                         <div>
-                            <p><span>发布次数</span><span :class="release?'':'addcolor'">{{releasePercent}}</span></p>
-                            <p>{{releaseCount}}次</p>
+                            <p><span>发布次数</span><span :class="release?'':'addcolor'"><i :class="['title_icon', 'icon', 'iconfont', release?'icon-shangsheng': 'icon-xiajiang']"></i>{{releasePercent}}</span></p>
+                            <!-- <p>{{releaseCount}}次</p> -->
+                            <p class="munBox">
+                                <span v-for="(item, index) in releaseCount" v-bind:key="index" class="num">
+                                    {{item}}
+                                </span>
+                            </p>
                         </div><div>
-                            <p><span>总访问数</span><span :class="access?'':'addcolor'">{{accessPercent}}</span></p>
-                            <p>{{accessCount}}</p>
+                            <p><span>总访问数</span><span :class="access?'':'addcolor'"><i :class="['title_icon', 'icon', 'iconfont', access?'icon-shangsheng': 'icon-xiajiang']"></i>{{accessPercent}}</span></p>
+                            <!-- <p>{{accessCount}}</p> -->
+                            <p class="munBox">
+                                <span v-for="(item, index) in accessCount" v-bind:key="index" class="num">
+                                    {{item}}
+                                </span>
+                            </p>
                         </div><div>
-                            <p><span>节点数量</span><span :class="node?'':'addcolor'">{{nodePercent}}</span></p>
-                            <p>{{nodeCount}}个</p>
+                            <p><span>节点数量</span><span :class="node?'':'addcolor'"><i :class="['title_icon', 'icon', 'iconfont', node?'icon-shangsheng': 'icon-xiajiang']"></i>{{nodePercent}}</span></p>
+                            <!-- <p>{{nodeCount}}个</p> -->
+                            <p class="munBox">
+                                <span v-for="(item, index) in nodeCount" v-bind:key="index" class="num">
+                                    {{item}}
+                                </span>
+                            </p>
                         </div>
                     </div>
                     <div class="maimImg">
@@ -58,76 +76,76 @@
                 </div>
             </el-col>
             <el-col :span="6">
-                <div class="grid-content bg-purple bg-dashboard">
-                    <div class="chats" id="PanChart"></div>
+                <div class="grid-content bg-purple bg-dashboard _box">
+                    <div class="chart_box"><div class="chats" id="PanChart"></div></div>
                     <div class="bottomText">
-                        <span>磁盘已用：{{uselDisk}}G</span>
-                        <span>磁盘总量：{{totalDisk}}G</span>
+                        <span><span>磁盘已用：{{uselDisk}}G</span></span>
+                        <span><span>磁盘总量：{{totalDisk}}G</span></span>
                     </div>
                 </div>
             </el-col>
         </el-row>
         <!-- 第一屏 第二行 -->
-        <el-row :gutter="20" style="position:relative;">
+        <el-row :gutter="30" style="position:relative;">
             <el-col :span="6">
-                <div class="grid-content bg-purple bg-dashboard">
-                    <div class="chats" id="memoryChart"></div>
+                <div class="grid-content bg-purple bg-dashboard _box" >
+                    <div class="chart_box"><div class="chats" id="memoryChart"></div></div>
                     <div class="bottomText">
-                        <span>内存已用：{{useMemory}}G</span>
-                        <span>内存总量：{{totalMemory}}G</span>
+                        <span><span>内存已用：{{useMemory}}G</span></span>
+                        <span><span>内存总量：{{totalMemory}}G</span></span>
                     </div>
                 </div>
             </el-col>
             <el-col :span="12">
-                <div class="grid-content bg-purple bg-dashboard">
-                    <div class="chats" id="netWorkChart"></div>
+                <div class="grid-content bg-purple bg-dashboard _box">
+                    <div class="chart_box"><div class="chats" id="netWorkChart"></div></div>
                 </div>
             </el-col>
             <el-col :span="6">
-                <div class="grid-content bg-purple bg-dashboard">
-                    <div class="chats" id="IOChart"></div>
+                <div class="grid-content bg-purple bg-dashboard _box">
+                    <div class="chart_box"><div class="chats" id="IOChart"></div></div>
                 </div>
             </el-col>
             
         </el-row>
         <!-- 第二屏 -->
-        <el-row :gutter="20">
+        <el-row :gutter="30">
             <el-col :span="12">
-                <div class="grid-content bg-purple bg-dashboard">
-                    <div class="chats" id="CpuInAscChart"></div>
+                <div class="grid-content bg-purple bg-dashboard _box">
+                    <div class="chart_box"><div class="chats" id="CpuInAscChart"></div></div>
                 </div>
             </el-col>
             <el-col :span="12">
-                <div class="grid-content bg-purple bg-dashboard">
-                    <div class="chats" id="memoryInDescChart"></div>
+                <div class="grid-content bg-purple bg-dashboard _box">
+                    <div class="chart_box"><div class="chats" id="memoryInDescChart"></div></div>
                 </div>
             </el-col>
         </el-row>
-        <el-row :gutter="20">
+        <el-row :gutter="30">
             <el-col :span="12">
-                <div class="grid-content bg-purple bg-dashboard">
-                    <div class="chats" id="CpuInDescChart"></div>
+                <div class="grid-content bg-purple bg-dashboard _box">
+                    <div class="chart_box"><div class="chats" id="CpuInDescChart"></div></div>
                 </div>
             </el-col>
             <el-col :span="12">
-                <div class="grid-content bg-purple bg-dashboard">
-                    <div class="chats" id="memoryInAscChart"></div>
+                <div class="grid-content bg-purple bg-dashboard _box">
+                    <div class="chart_box"><div class="chats" id="memoryInAscChart"></div></div>
                 </div>
             </el-col>
             
         </el-row>
         <!-- 第三屏 -->
-        <el-row :gutter="20">
+        <el-row :gutter="30">
             <el-col :span="24">
-                <div class="grid-content bg-purple bg-dashboard">
-                    <div class="chats" id="aveTimeChart"></div>
+                <div class="grid-content bg-purple bg-dashboard _box">
+                    <div class="chart_box"><div class="chats" id="aveTimeChart"></div></div>
                 </div>
             </el-col>
         </el-row>
-        <el-row :gutter="20">
+        <el-row :gutter="30">
             <el-col :span="24">
-                <div class="grid-content bg-purple bg-dashboard">
-                    <div class="chats" id="warnChart"></div>
+                <div class="grid-content bg-purple bg-dashboard _box">
+                    <div class="chart_box"><div class="chats" id="warnChart"></div></div>
                 </div>
             </el-col>
         </el-row>
@@ -135,13 +153,16 @@
 </template>
 <script>
 import echarts from 'echarts'
-import { setgaugeData, setPieData, setLineData, setBarData } from '@/utils/initCharts.js'
+import { setgaugeData, setPieData, setLineData, setBarData, setOption } from '@/utils/echartsData.js'
+import { setTitleNum } from '@/utils/dashboardStyle.js'
+// import { setBorder} from '@/utils/dashboardStyle.js'
 import { mapActions } from 'vuex'
 import center from '@/assets/dashboard/center.png'
 import dashboardTitle from '@/assets/dashboard/dashboardTitle.png'
 export default {
     data() {
         return {
+            env: null, // 环境变量
             time: null,
             center,
             dashboardTitle,
@@ -188,178 +209,13 @@ export default {
             echartsData: [
                 {
                     title: {
-                        text: 'cpu使用情况',
-                        top: '10%',
-                        left: 'center',
-                        textStyle: {
-                            fontWeight: 'normal',
-                            color: '#fff',
-                            width: '100%'
-                        }
-                    },
-
-                    tooltip: {
-                        formatter: '{a} <br/>{b} : {c}%'
-                    },
-                    series: [{
-                        type: 'gauge',
-                        center: ['50%', '50%'], // 默认全局居中
-                        radius: '60%',
-                        axisLine: {
-                            show: false,
-                            lineStyle: { // 属性lineStyle控制线条样式
-                                color: [
-                                    [0.8, '#2a8eff'],
-                                    [1, 'rgba(1, 147, 207, 0.3)']
-                                ],
-                                width: 24
-                            }
-                        },
-                        splitLine: {
-                            show: false
-                        },
-                        axisTick: {
-                            show: false
-                        },
-                        axisLabel: {
-                            show: false
-                        },
-                        pointer: {
-                            show: false,
-                            length: '0',
-                            width: '0'
-                        },
-                        detail: {
-                            formatter: '{value}%',
-                            offsetCenter: [0, '5%']
-                        },
-                        data: [{
-                            name: 'CPU已使用',
-                            value: 80,
-                            label: {
-                                textStyle: {
-                                    fontSize: 12
-                                }
-                            }
-                        }]
-                    }]
-                },
-                {
-                    title: {
-                        text: '80%',
-                        subtext: '内存使用情况',
-                        x: 'center',
-                        y: 'center',
-                        textStyle: {
-                            fontWeight: 'normal',
-                            color: '#fff',
-                            fontSize: '20',
-                            top: '10%'
-                        }
-                    },
-                    color: ['rgba(176, 212, 251, 1)'],
-                    legend: {
-                        show: true,
-                        itemGap: 12,
-                        data: ['已用', '剩余'],
-                        top: '10%',
-                        textStyle: {
-                            color: '#fff',
-                        },
-                    },
-
-                    series: [{
-                        name: '内存使用情况',
-                        type: 'pie',
-                        clockWise: true,
-                        radius: ['50%', '66%'],
-                        color: ['#2a8eff', '#ffe858'],
-                        itemStyle: {
-                            normal: {
-                                label: {
-                                    show: false
-                                },
-                                labelLine: {
-                                    show: false
-                                }
-                            }
-                        },
-                        hoverAnimation: false,
-                        data: [{
-                            value: 80,
-                            name: '已用',
-                        }, {
-                            name: '剩余',
-                            value: 20,
-                            color: '#ffe858',
-                        }]
-                    }]
-                },
-                {
-                    title: {
-                        text: '80%',
-                        subtext: '磁盘使用情况',
-                        x: 'center',
-                        y: 'center',
-                        color: '#fff',
-                        textStyle: {
-                            fontWeight: 'normal',
-                            // color: '#fff',
-                            fontSize: '20'
-                        },
-                        subtextStyle: {
-                            fontWeight: 'normal',
-                            color: '#fff',
-                            // fontSize: '20'
-                        }
-                    },
-                    color: ['rgba(176, 212, 251, 1)'],
-                    legend: {
-                        show: true,
-                        itemGap: 12,
-                        data: ['已用', '剩余'],
-                        top: '10%',
-                        textStyle: {
-                            color: '#fff',
-                        },
-                    },
-
-                    series: [{
-                        name: '内存使用情况',
-                        type: 'pie',
-                        clockWise: true,
-                        radius: ['50%', '66%'],
-                        color: ['#86d258', '#ffc768'],
-                        itemStyle: {
-                            normal: {
-                                label: {
-                                    show: false
-                                },
-                                labelLine: {
-                                    show: false
-                                }
-                            }
-                        },
-                        hoverAnimation: false,
-                        data: [{
-                            value: 65,
-                            name: '已用',
-                        }, {
-                            name: '剩余',
-                            value: 35,
-                            color: '#ffe858',
-                        }]
-                    }]
-                },
-                {
-                    title: {
                         text: '云存储实时IO流量情况',
                         left: 'center',
                         top: '3%',
                         textStyle: {
                             color: '#fff',
                             fontWeight: 'normal',
-                            fontSize: '18'
+                            fontSize: '20'
                         }
                     },
                     tooltip: {
@@ -372,8 +228,11 @@ export default {
                         data: ['已用', '剩余'],
                         top: '10%',
                         textStyle: {
-                            color: '#fff',
+                            color: '#C1E5FF',
                         },
+                        icon: 'circle',
+                        itemWidth: 10,
+                        itemHeight: 10,
                     },
                     grid: {
                         left: '3%',
@@ -386,12 +245,36 @@ export default {
                     xAxis: [
                         {
                             type: 'category',
+                            splitLine: {
+                                lineStyle: {
+                                    color: '#5170DA',
+                                    opacity: 0.1
+                                }
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#5170DA',
+                                    opacity: 0.1
+                                }
+                            },
                             data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
                         }
                     ],
                     yAxis: [
                         {
-                            type: 'value'
+                            type: 'value',
+                            splitLine: {
+                                lineStyle: {
+                                    color: '#5170DA',
+                                    opacity: 0.1
+                                }
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#5170DA',
+                                    opacity: 0.1
+                                }
+                            },
                         }
                     ],
                     series: [
@@ -411,451 +294,6 @@ export default {
                             barGap: '10%',
                             barWidth: '20%',
                             data: [120, 132, 101, 134, 90, 230, 210],
-                            // itemStyle: {
-                            //     normal: {color: '#86d258'},
-                            // },
-                        },
-
-                    ]
-                },
-                {
-                    title: {
-                        text: '网络流量情况',
-                        top: '3%',
-                        left: '5%',
-                        textStyle: {
-                            color: '#fff',
-                            fontWeight: 'normal',
-                        }
-                    },
-                    // tooltip: {
-                    //     trigger: 'axis'
-                    // },
-                    color: ['#C0A54D', '#6553D2'],
-                    legend: {
-                        data: ['流出', '流入'],
-                        top: '10%',
-                        textStyle: {
-                            color: '#fff',
-                        },
-                    },
-                    grid: {
-                        left: '5%',
-                        right: '5%',
-                        bottom: '5%',
-                        top: '20%',
-                        containLabel: true
-                    },
-                    xAxis: {
-                        type: 'category',
-                        boundaryGap: false,
-                        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
-                    },
-                    yAxis: {
-
-                    },
-                    series: [
-                        {
-                            name: '流出',
-                            type: 'line',
-                            smooth: true,
-                            areaStyle: {
-                                opacity: '0.1'
-                            },
-                            data: [4.6, 3.7, 2.4, 4.4, 1.2, 3.2, 6, 3.2, 3.6, 2.4, 0.3, 2.1]
-
-                        },
-                        {
-                            name: '流入',
-                            type: 'line',
-                            smooth: true,
-                            areaStyle: {
-                                opacity: '0.1'
-                            },
-                            data: [6, 20, 8, 4, 9.5, 26, 10.3, 9.6, 5.8, 6.2, 16.6, 16]
-
-                        }
-                    ]
-                },
-                {
-                    title: {
-                        text: '平均响应时间',
-                        // left: 'center',
-                        subtext: '(单位：ms;当前时间段所有响应时间/总次数)',
-                        top: '3%',
-                        left: '3%',
-                        textStyle: {
-                            color: '#fff',
-                            fontWeight: 'normal',
-                            fontSize: '18'
-                        },
-                        subtextStyle: {
-                            color: '#4E9ED8'
-                        }
-                    },
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                        }
-                    },
-                    legend: {
-                        data: ['平均响应时间'],
-                        top: '10%',
-                        textStyle: {
-                            color: '#fff',
-                        },
-                    },
-                    grid: {
-                        left: '3%',
-                        right: '3%',
-                        bottom: '5%',
-                        top: '20%',
-                        containLabel: true
-                    },
-                    color: ['#09b7c6'],
-                    xAxis: [
-                        {
-                            type: 'category',
-                            data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14']
-                        }
-                    ],
-                    yAxis: [
-                        {
-                            type: 'value'
-                        }
-                    ],
-                    series: [
-                        {
-                            name: '平均响应时间',
-                            type: 'bar',
-                            // stack: '广告',
-                            barGap: '2%',
-                            barWidth: '20%',
-                            data: [500, 486, 472, 451, 420, 401, 356, 310, 230, 210, 180, 168, 156, 144],
-                            // itemStyle: {
-                            //     normal: {color: '#86d258'},
-                            // },
-                        },
-
-                    ]
-                },
-                {
-                    title: {
-                        text: '项目异常情况',
-                        subtext: '(单位：次)',
-                        // left: 'center',
-                        top: '3%',
-                        textStyle: {
-                            color: '#fff',
-                            fontWeight: 'normal',
-                            fontSize: '18'
-                        },
-                        subtextStyle: {
-                            color: '#4E9ED8'
-                        }
-                    },
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                        }
-                    },
-                    legend: {
-                        data: ['4xx', '5xx'],
-                        top: '10%',
-                        textStyle: {
-                            color: '#fff',
-                        },
-                    },
-                    grid: {
-                        left: '3%',
-                        right: '3%',
-                        bottom: '5%',
-                        top: '20%',
-                        containLabel: true
-                    },
-                    color: ['#DFBF4A', '#FF906C'],
-                    xAxis: [
-                        {
-                            type: 'category',
-                            data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14']
-                        }
-                    ],
-                    yAxis: [
-                        {
-                            type: 'value'
-                        }
-                    ],
-                    series: [
-                        {
-                            name: '4xx',
-                            type: 'bar',
-                            barWidth: '20%',
-                            data: [500, 486, 472, 451, 420, 401, 356, 310, 230, 210, 180, 168, 156, 144],
-                            // itemStyle: {
-                            //     normal: {color: '#2a8eff'},
-                            // },
-                        },
-                        {
-                            name: '5xx',
-                            type: 'bar',
-                            // stack: '广告',
-                            barGap: '-100%',
-                            barWidth: '20%',
-                            data: [480, 466, 452, 430, 400, 381, 336, 290, 210, 190, 160, 148, 136, 124],
-                            // itemStyle: {
-                            //     normal: {color: '#86d258'},
-                            // },
-                        },
-
-                    ]
-                },
-                {
-                    title: {
-                        text: 'CPU使用情况',
-                        // left: 'center',
-                        subtext: '(单位：ms;当前时间段所有响应时间/总次数)',
-                        top: '3%',
-                        left: '3%',
-                        textStyle: {
-                            color: '#fff',
-                            fontWeight: 'normal',
-                            fontSize: '18'
-                        },
-                        subtextStyle: {
-                            color: '#4E9ED8'
-                        }
-                    },
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                        }
-                    },
-                    legend: {
-                        data: ['CPU使用情况'],
-                        top: '10%',
-                        textStyle: {
-                            color: '#fff',
-                        },
-                    },
-                    grid: {
-                        left: '3%',
-                        right: '3%',
-                        bottom: '5%',
-                        top: '20%',
-                        containLabel: true
-                    },
-                    color: ['#1EA0F2'],
-                    xAxis: [
-                        {
-                            type: 'category',
-                            data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14']
-                        }
-                    ],
-                    yAxis: [
-                        {
-                            type: 'value'
-                        }
-                    ],
-                    series: [
-                        {
-                            name: '平均响应时间',
-                            type: 'bar',
-                            // stack: '广告',
-                            // barGap: '2%',
-                            barWidth: '40%',
-                            data: [500, 486, 472, 451, 420, 401, 356, 310, 230, 210, 180, 168, 156, 144],
-                            // itemStyle: {
-                            //     normal: {color: '#86d258'},
-                            // },
-                        },
-
-                    ]
-                },
-                {
-                    title: {
-                        text: 'CPU使用情况',
-                        // left: 'center',
-                        subtext: '(单位：ms;当前时间段所有响应时间/总次数)',
-                        top: '3%',
-                        left: '3%',
-                        textStyle: {
-                            color: '#fff',
-                            fontWeight: 'normal',
-                            fontSize: '18'
-                        },
-                        subtextStyle: {
-                            color: '#4E9ED8'
-                        }
-                    },
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                        }
-                    },
-                    legend: {
-                        data: ['CPU使用情况'],
-                        top: '10%',
-                        textStyle: {
-                            color: '#fff',
-                        },
-                    },
-                    grid: {
-                        left: '3%',
-                        right: '3%',
-                        bottom: '5%',
-                        top: '20%',
-                        containLabel: true
-                    },
-                    color: ['#B67EDF'],
-                    xAxis: [
-                        {
-                            type: 'category',
-                            data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14']
-                        }
-                    ],
-                    yAxis: [
-                        {
-                            type: 'value'
-                        }
-                    ],
-                    series: [
-                        {
-                            name: 'CPU使用情况',
-                            type: 'bar',
-                            // stack: '广告',
-                            barGap: '2%',
-                            barWidth: '40%',
-                            data: [144, 156, 168, 180, 210, 230, 310, 356, 401, 420, 451, 472, 486, 500],
-                            // itemStyle: {
-                            //     normal: {color: '#86d258'},
-                            // },
-                        },
-
-                    ]
-                },
-                {
-                    title: {
-                        text: 'CPU使用情况',
-                        // left: 'center',
-                        subtext: '(单位：ms;当前时间段所有响应时间/总次数)',
-                        top: '3%',
-                        left: '3%',
-                        textStyle: {
-                            color: '#fff',
-                            fontWeight: 'normal',
-                            fontSize: '18'
-                        },
-                        subtextStyle: {
-                            color: '#4E9ED8'
-                        }
-                    },
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                        }
-                    },
-                    legend: {
-                        data: ['CPU使用情况'],
-                        top: '10%',
-                        textStyle: {
-                            color: '#fff',
-                        },
-                    },
-                    grid: {
-                        left: '3%',
-                        right: '3%',
-                        bottom: '5%',
-                        top: '20%',
-                        containLabel: true
-                    },
-                    color: ['#1EA0F2'],
-                    xAxis: [
-                        {
-                            type: 'category',
-                            data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14']
-                        }
-                    ],
-                    yAxis: [
-                        {
-                            type: 'value'
-                        }
-                    ],
-                    series: [
-                        {
-                            name: '平均响应时间',
-                            type: 'bar',
-                            // stack: '广告',
-                            // barGap: '2%',
-                            barWidth: '40%',
-                            data: [500, 486, 472, 451, 420, 401, 356, 310, 230, 210, 180, 168, 156, 144],
-                            // itemStyle: {
-                            //     normal: {color: '#86d258'},
-                            // },
-                        },
-
-                    ]
-                },
-                {
-                    title: {
-                        text: 'CPU使用情况',
-                        // left: 'center',
-                        subtext: '(单位：ms;当前时间段所有响应时间/总次数)',
-                        top: '3%',
-                        left: '3%',
-                        textStyle: {
-                            color: '#fff',
-                            fontWeight: 'normal',
-                            fontSize: '18'
-                        },
-                        subtextStyle: {
-                            color: '#4E9ED8'
-                        }
-                    },
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                        }
-                    },
-                    legend: {
-                        data: ['CPU使用情况'],
-                        top: '10%',
-                        textStyle: {
-                            color: '#fff',
-                        },
-                    },
-                    grid: {
-                        left: '3%',
-                        right: '3%',
-                        bottom: '5%',
-                        top: '20%',
-                        containLabel: true
-                    },
-                    color: ['#B67EDF'],
-                    xAxis: [
-                        {
-                            type: 'category',
-                            data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14']
-                        }
-                    ],
-                    yAxis: [
-                        {
-                            type: 'value'
-                        }
-                    ],
-                    series: [
-                        {
-                            name: '平均响应时间',
-                            type: 'bar',
-                            // stack: '广告',
-                            barGap: '2%',
-                            barWidth: '40%',
-                            data: [144, 156, 168, 180, 210, 230, 310, 356, 401, 420, 451, 472, 486, 500],
                             // itemStyle: {
                             //     normal: {color: '#86d258'},
                             // },
@@ -888,6 +326,7 @@ export default {
     },
     created() {
         // console.log('created 111', document.getElementById('cpuChart'))
+        this.getEnvMethod()
     },
     before() {
         // console.log('before 111', document.getElementById('cpuChart'))
@@ -897,24 +336,15 @@ export default {
     },
     mounted() {
         let that = this
-        that.setHeight()
         // 初始化
-        // this.initEcharts()
+        this.setHeight()
+        this.settimer()
         // 适配屏幕
         window.addEventListener('resize', () => {
             that.resizeCharts()
             that.setHeight()
         })
-        this.getchartData('test')
-        this.getOverview('test')
-        this.getTransMission('test')
-        this.getCpuInDESC('test')
-        this.getCpuInAsc('test')
-        this.getMemoryInDESC('test')
-        this.getMemoryInASC('test')
-        this.getAvgInASC('test')
-        this.getErrInASC('test')
-        this.settimer()
+        
     },
     beforeUpdate() {
     },
@@ -923,8 +353,22 @@ export default {
     computed: {},
     methods: {
         ...mapActions([
-            'monitorApi'
+            'monitorApi',
+            'getEnvApi'
         ]),
+        // 获取环境变量
+        getEnvMethod() {
+            this.getEnvApi().then(res => {
+                console.log(res.result)
+                if (res.code == '0' && res.status == 200) {
+                    console.log(res.result)
+                    this.env = res.result
+                    console.log(this.env)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
         // 初始化表,渲染数据
         initEcharts() {
             // let that = this
@@ -933,7 +377,7 @@ export default {
                 this.echartsObj[index] = echarts.init(document.getElementById(item))
                 // console.log(this.echartsData[index])
                 // 渲染数据
-                this.echartsObj[index].setOption(this.echartsData[index], true)
+                // this.echartsObj[index].setOption(this.echartsData[index], true)
             })
         },
         // 图表重新渲染
@@ -942,6 +386,20 @@ export default {
                 item.resize()
             })
         },
+        // 初始化、更新表格数据
+        updateIndexData(env) {
+            this.initEcharts()
+            this.getchartData(env)
+            this.getOverview(env)
+            this.getTransMission(env)
+            this.getCpuInDESC(env)
+            this.getCpuInAsc(env)
+            this.getMemoryInDESC(env)
+            this.getMemoryInASC(env)
+            this.getAvgInASC(env)
+            this.getErrInASC(env)
+            this.getIOData()
+        },
         // 设置容器高度与margin
         setHeight() {
             let height = (window.innerHeight - 25 * 2 - 100) / 2
@@ -949,7 +407,9 @@ export default {
             this.echartsDom.forEach((item) => {
                 document.getElementById(item).style.height = `${height}px`
             })
-            this.initEcharts()
+            // 设置容器边框
+            // setBorder(document.getElementById('cpuChart'))
+            this.updateIndexData('test')
         },
         //center中心数据
         getOverview(env) {
@@ -959,13 +419,14 @@ export default {
             }
             let that = this
             that.monitorApi(setParams).then(result => {
-                this.accessCount = result.accessCount,
+                // 数字数组化处理
+                this.containerCount = setTitleNum(result.containerCount)
+                this.accessCount = setTitleNum(result.accessCount)
+                this.releaseCount = setTitleNum(result.releaseCount)
+                this.nodeCount = setTitleNum(result.nodeCount)
+                this.nodePercent = result.nodePercent
+                this.accessPercent = result.accessPercent
                 this.releasePercent = result.releasePercent
-                this.releaseCount = result.releaseCount,
-                this.accessPercent = result.accessPercent,
-                this.nodeCount = result.nodeCount,
-                this.containerCount = result.containerCount,
-                this.nodePercent = result.nodePercent,
                 this.containerPercent = result.containerPercent
                 // 百分比文字样式
                 this.release = this.releasePercent.replace(this.reg, '') >= 0
@@ -997,7 +458,7 @@ export default {
                     name: '磁盘' // subtext
                 }
                 setPieData(that.echartsObj[2], diskUsedPercent)
-                //磁盘使用情况
+                //内存使用情况
                 let memoryUsedPercent = {
                     value: res.memoryUsedPercent,
                     color: ['#86D258', '#0d2259'], // dataColor
@@ -1024,6 +485,13 @@ export default {
                 }
                 setLineData(that.echartsObj[4], optionTtansMission, 'line')
             })
+        },
+        // 云IO
+        getIOData() {
+            console.log('this', this.echartsObj)
+            console.log('this', this.echartsData)
+            // setBarData(this.echartsObj[3], this.echartsData[4])
+            setOption(this.echartsObj[3], this.echartsData[0])
         },
         //CPU使用升序
         getCpuInAsc(env) {
@@ -1193,48 +661,90 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .chats {
-        width: 100%;
-        // height: 40%;
-        position: relative;
-        z-index: 2;
+    .topTitle{
+        border: none;
+        position: fixed;
+        z-index: 33;
         background: #091549;
+        top: 0;
+        width: 100%;
+        left: 0; 
+    }
+    .munBox{
+        .num{
+            padding:5px 6px;
+            background: #0D6ED3;
+            color: #fff !important;
+            font-size: 18px !important;
+            float: left !important;
+            margin-right:3px;
+            border-radius: 4px;
+        }
     }
     .bottomText{
         display: flex;
         text-align: center;
         width: 100%;
         position: absolute;
-        bottom: 0;
+        bottom: 10%;
         z-index:3;
     }
-    .bottomText span{flex: 1}
-    .angle{
-        width:8px;
-        height:8px;
-        background:#17b8bb;
-        position: absolute;
-        border-radius: 2px;
-        z-index: 1;
-    }
-    .angleA{
-        top:-2px;
-        left: -2px;
-    }
-    .angleB{
-        top:-2px;
-        right: -2px;
-    }
-    .angleC{
-        bottom:-2px;
-        left: -2px;
-    }
-    .angleD{
-        bottom:-2px;
-        right: -2px;
+    .bottomText>span{
+        width: 45%;
+        height: 28px;
+        line-height: 28px;
+        margin: 0 auto;
+        border: 1px #15356f solid;
+        position: relative;
+        &::before{
+            display: block;
+            width: 10px;
+            height:10px;
+            line-height: 10px;
+            position: absolute;
+            top:-5px;
+            left: -5px;
+            content:'+';
+            color: #3a75dd;
+        }
+        &::after{
+            display: block;
+            width: 10px;
+            height:10px;
+            line-height: 10px;
+            position: absolute;
+            right:-5px;
+            bottom: -5px;
+            content:'+';
+            color: #3a75dd;
+        }
+        &>span{
+            &::before{
+                display: block;
+                width: 10px;
+                height:10px;
+                line-height: 10px;
+                position: absolute;
+                top:-5px;
+                right: -5px;
+                content:'+';
+                color: #3a75dd;
+            }
+            &::after{
+                display: block;
+                width: 10px;
+                height:10px;
+                line-height: 10px;
+                position: absolute;
+                left:-5px;
+                bottom: -5px;
+                content:'+';
+                color: #3a75dd;
+            }
+        }
     }
     .timer{
-        font-size: 18px;
+        font-size: 15px;
         color: #fff;
     }
     .titleImg{
@@ -1277,10 +787,77 @@ export default {
     .addcolor {
         color: #85E86A !important;
     }
+    .title_icon{
+        width: 18px;
+        height: 20px;
+        font-size: 10px;
+    }
+    ._box{
+        .chats {
+            width: 100%;
+            // height: 40%;
+            position: relative;
+            z-index: 2;
+            background: #091549;
+            
+        }
+        .chart_box{
+            background: #091549;
+            &::before{
+                display: block;
+                width:8px;
+                height:8px;
+                background:#17b8bb;
+                position: absolute;
+                border-radius: 3px;
+                z-index: 1; 
+                bottom:-2px;
+                left: -2px;
+                content:' '
+            }
+            &::after{
+                display: block;
+                width:8px;
+                height:8px;
+                background:#17b8bb;
+                position: absolute;
+                border-radius: 3px;
+                z-index: 1; 
+                bottom:-2px;
+                right: -2px;
+                content:' '
+            }
+        }
+        &::before{
+            display: block;
+            width:8px;
+            height:8px;
+            background:#17b8bb;
+            position: absolute;
+            border-radius: 3px;
+            z-index: 1; 
+            top:-2px;
+            left: -2px;
+            content:' '
+        }
+        &::after{
+            display: block;
+            width:8px;
+            height:8px;
+            background:#17b8bb;
+            position: absolute;
+            border-radius: 3px;
+            z-index: 1; 
+            top:-2px;
+            right: -2px;
+            content:' '
+        }
+    }
 </style>
 <style>
     .el-row {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    margin-top: 30px;
     &:last-child {
         margin-bottom: 0;
     }
