@@ -104,7 +104,9 @@ let API = {
     // 获取环境变量
     ENVDATA: '/api/getEnv',
     // 获取下拉项目列表
-    PROJECTLIST: '/common/'
+    PROJECTLIST: '/common/',
+    // 执行措施接口
+    TESTACTION: '/rap_log/test'
 }
 
 // if (process.env.NODE_ENV === 'development') {

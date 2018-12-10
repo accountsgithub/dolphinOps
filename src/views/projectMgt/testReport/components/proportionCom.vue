@@ -136,7 +136,7 @@ export default {
 }
 /*成功率icon样式*/
 .success-tag-style i{
-    margin-left: 14px;
+    margin-left: 18px;
     color: #ffffff;
     font-size: 40px;
 }
@@ -161,7 +161,7 @@ export default {
     line-height: 76px;
 }
 .fail-tag-style i{
-    margin-left: 14px;
+    margin-left: 18px;
     color: #ffffff;
     font-size: 40px;
 }
