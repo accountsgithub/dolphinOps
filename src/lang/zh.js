@@ -141,7 +141,13 @@ export default {
         startMes: '正在启动请稍后！',
         stopStartTit: '是否确认停止项目？',
         stopStartSubTit: '确认停止？',
-        stopMes: '正在停止请稍后！'
+        stopMes: '正在停止请稍后！',
+        memorySizeCompare: '当前内存/总内存',
+        cpuCompare: '当前CPU/总CPU',
+        unifiedLog: '统一日志',
+        unifiedConfig: '统一配置',
+        customChart: '自定义图表',
+        testReport: '测试报告',
     },
     part: {
         // EmailList

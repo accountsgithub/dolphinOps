@@ -1,6 +1,7 @@
 export default {
     route: {
         detailed: 'Details',
+        dashboard: 'dashboard',
         projectMgt: 'Project'
     },
     modifyPW: {
@@ -130,7 +131,13 @@ export default {
         startMes: 'Please wait while the project is being started.',
         stopStartTit: 'Are you sure you want to stop this project?',
         stopStartSubTit: 'Stop Project',
-        stopMes: 'Please wait while the project is being stopped.'
+        stopMes: 'Please wait while the project is being stopped.',
+        memorySizeCompare: 'Current memory/Total memory',
+        cpuCompare: 'Current CPU/Total CPU',
+        unifiedLog: 'Unified log',
+        unifiedConfig: 'Unified configuration',
+        customChart: 'Custom chart',
+        testReport: 'Test report'
     },
     part: {
         // EmailList
