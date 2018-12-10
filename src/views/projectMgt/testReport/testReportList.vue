@@ -6,7 +6,7 @@
                 <div>
                     <el-button class="tableLastButtonStyleW" @click="linkHistoryMethod">{{$t('testPage.showHistoryRecord_button')}}</el-button>
                     <el-button :disabled="!serialNo" class="tableLastButtonStyleW icon iconfont icon-ic-loaddown" @click="downloadAllDetailMethod"></el-button>
-                    <el-button class="tableLastButtonStyleW icon iconfont icon-ic-refresh" @click="getTestReportListMethod('first')"></el-button>
+                    <el-button class="tableLastButtonStyleW icon iconfont icon-ceshi" @click="getTestReportListMethod('first')"></el-button>
                 </div>
             </div>
             <div v-show="summaryData.length > 0" class="status-div-style">
@@ -159,6 +159,10 @@ export default {
         // 跳转历史纪录页面
         linkHistoryMethod() {
             this.$router.push({name: 'historyList', params: {mark: 'dolphin-release'}})
+        },
+        // 执行测试方法
+        testActionMethod() {
+
         },
         // 查询测试报告数据列表
         getTestReportListMethod(type) {

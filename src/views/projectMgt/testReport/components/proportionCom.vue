@@ -13,7 +13,7 @@
         <div class="status-line-div-style">
             <div class="success-tag-style-white">
                 <div class="success-tag-style">
-                    <i class="icon iconfont icon-ic-project"></i>
+                    <i class="icon iconfont icon-zidongceshijieguo"></i>
                 </div>
             </div>
             <div class="line-div-style">
@@ -26,7 +26,7 @@
             </div>
             <div class="fail-tag-style-white">
                 <div class="fail-tag-style">
-                    <i class="icon iconfont icon-ic-project"></i>
+                    <i class="icon iconfont icon-zidongceshijieguo"></i>
                 </div>
             </div>
         </div>

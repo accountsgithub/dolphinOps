@@ -55,7 +55,7 @@
                                v-if="scope.row.state !== 5"
                                @click="dialogInfo(scope.row)">{{scope.row.name}}</a>
                             <span v-else>{{scope.row.name}}</span>
-                    </template></el-table-column>
+                        </template></el-table-column>
                     <el-table-column prop="instanceNumber"
                                      :label="$t('projectMgt.instanceNumber_label')" />
                     <el-table-column prop="version"
