@@ -56,8 +56,9 @@
                                v-if="scope.row.state !== 5"
                                @click="dialogInfo(scope.row)">{{scope.row.name}}
                             </a>
-                            <span v-else>{{scope.row.name}}</span>
-                        </template></el-table-column>
+                            <span style="color: #5A90C7;" v-else>{{scope.row.name}}</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="instanceNumber"
                                      :label="$t('projectMgt.instanceNumber_label')" />
                     <el-table-column prop="version"
@@ -91,13 +92,13 @@
                                     <i class="icon iconfont icon-gengduo table-action"></i>
                                     <el-dropdown-menu slot="dropdown" class="more-ops">
                                         <el-dropdown-item>
-                                            <a class="table-link">
+                                            <a class="table-link" :href="`${unifiedLogUrl}?projectMark=${scope.row.mark}&authCode=${scope.row.authCode}`" target="_blank">
                                                 <i class="icon iconfont icon-rizhi table-action-more" :title="$t('projectMgt.unifiedLog')"></i>
                                                 {{$t('projectMgt.unifiedLog')}}
                                             </a>
                                         </el-dropdown-item>
                                         <el-dropdown-item>
-                                            <a class="table-link">
+                                            <a class="table-link" :href="`${unifiedLogUrl}?projectMark=${scope.row.mark}&authCode=${scope.row.authCode}`" target="_blank">
                                                 <i class="icon iconfont icon-peizhi table-action-more" :title="$t('projectMgt.unifiedConfig')"></i>
                                                 {{$t('projectMgt.unifiedConfig')}}
                                             </a>
@@ -105,11 +106,11 @@
                                         <el-dropdown-item>
                                             <template v-if="scope.row.rapStatus !== '2'">
                                                 <a class="table-link" href="javascript:;" v-if="scope.row.state === 1" @click="testPageMethod(scope.row)">
-                                                    <i class="icon iconfont icon-shezhi table-action-more" :title="$t('testPage.autoTest_button')"></i>
+                                                    <i class="icon iconfont icon-ceshi table-action-more" :title="$t('testPage.autoTest_button')"></i>
                                                     {{$t('testPage.autoTest_button')}}
                                                 </a>
                                                 <a class="table-link disabled" href="javascript:;" v-else>
-                                                    <i class="icon iconfont icon-shezhi table-action-more disabled" :title="$t('testPage.autoTest_button')"></i>
+                                                    <i class="icon iconfont icon-ceshi table-action-more disabled" :title="$t('testPage.autoTest_button')"></i>
                                                     {{$t('testPage.autoTest_button')}}
                                                 </a>
                                             </template>
@@ -251,7 +252,9 @@ export default {
             // 基础监控
             chartsDialog: false,
             CurrentProject: Object,
-            baseImageType: null
+            baseImageType: null,
+            unifiedLogUrl: this.g_Config.UNIFIED_LOG_URL,
+            unifiedConfigUrl: this.g_Config.UNIFIED_CONFIG_URL
         }
     },
     created: function() {
@@ -274,20 +277,12 @@ export default {
                 }
             })
         },
-        getPath(path) {
-            if (path && /\[(.*)\]?/g.test(path)) {
-                return JSON.parse(path)[0]
-            }
-        },
         // 详情
         dialogInfo(row) {
             if (row.state === 5) {
                 return
             }
             this.$router.push({ name: 'detailedList', params: { id: row.id, proName: row.name } })
-        },
-        submitUpload() {
-            this.$refs.upload.submit()
         },
         searchProject() {
             const params = this.searchCriteria
@@ -383,7 +378,6 @@ export default {
                 })
             })
         },
-
         // 启动
         startUp(val) {
             this.$confirm(this.$t('projectMgt.isStart_message'), this.$t('projectMgt.sureStart_message'), {
@@ -411,7 +405,6 @@ export default {
                 })
             })
         },
-
         // 停止
         stopDeploy(val) {
             this.$confirm(this.$t('projectMgt.isStop_message'), this.$t('projectMgt.sureStop_message'), {
@@ -500,7 +493,6 @@ export default {
             this.whiteIpFrom.projectId = row.id
             this.whiteIpFrom.whiteList = row.whiteList
         },
-
         addEmail(row) {
             this.EmailDialog = true
             this.EmailForm.projectId = row.id
@@ -570,7 +562,7 @@ export default {
 @import "~@/styles/common.scss";
 
 .oper-col .disabled {
-    color:#979797;
+    color:#B8C0C9;
 }
 .el-dropdown-menu /deep/ .disabled {
     color:#979797;
@@ -581,9 +573,9 @@ export default {
   color: #016ad5;
 }
 .table-action {
-  margin-right: 24px;
+  margin-right: 22px;
   font-family: PingFangSC-Medium;
-  font-size: 14px;
+  font-size: 18px;
   color: #016ad5;
   letter-spacing: 0.86px;
   text-align: left;
@@ -592,7 +584,7 @@ export default {
 .table-action-more {
   margin-right: 10px;
   font-family: PingFangSC-Medium;
-  font-size: 14px;
+  font-size: 18px;
   color: #016ad5;
   letter-spacing: 0.86px;
   text-align: left;

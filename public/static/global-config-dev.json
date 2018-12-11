@@ -2,6 +2,8 @@
     "status": "200",
     "BASE_URL": "http://10.255.228.101:9091/dolphin-ops",
     "WEBSOCKET_URL": "ws://10.255.228.101:9091/dolphin-ops",
+    "UNIFIED_LOG_URL": "http://localhost:8081/cloud-log/",
+    "UNIFIED_CONFIG_URL": "http://stage.ctsp.kedacom.com/cconfig/",
     "ISOFFLINE": "1",
     "VERSION": " v1.1.7.5",
     "AJAX_TIMEOUT": "300000"
