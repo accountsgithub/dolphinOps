@@ -394,11 +394,12 @@ export default {
     },
     watch: {
         'selectTime': function() {
+            clearInterval(this.setTimeout)
             if (this.selectTime[1] < new Date() - 5000) {
                 this.refrash = '0' // 不刷新
                 this.refrashflag = false
             } else {
-                // this.refrashflag = false
+                // this.refrash = '0'
             }
             
         },
@@ -585,7 +586,15 @@ export default {
             let params = {
                 start: that.startTime,
                 end: that.endTime,
+                step: 60
             }
+            let days = (that.endTime - that.startTime) / ( 60 * 60 * 24)
+            // if (that.endTime - that.startTime) {
+            //     that.refrash = 0
+            //     return
+            // }
+            console.log('space', days)
+            // params.step = this.getStep()
             // console.log('refrash', that.refrash)
             let env = that.projectdetail.deployEnv
             let project = that.projectdetail.mark
@@ -626,6 +635,17 @@ export default {
             }, that.refrash == 0 ? '5000' : that.refrash * 1000)
             
         },
+        getStep(days) {
+            if (days < 1) {
+                return 60
+            } else if (days > 1 && days < 7) {
+                return 60 * 15
+            } else if (days > 7 && days < 30) {
+                return 60 * 30
+            } else {
+                return 60 * 60 * 4
+            }
+        }
     }
 }
 </script>

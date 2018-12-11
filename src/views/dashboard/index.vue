@@ -38,7 +38,7 @@
                     <div class="dashboardTitle">
                         <div>
                             <p><span>容器数</span><span :class=" container?'':'addcolor'"><i :class="['title_icon', 'icon', 'iconfont', container?'icon-shangsheng': 'icon-xiajiang']"></i>{{containerPercent}}</span></p>
-                            <p class="munBox">
+                            <p class="numBox">
                                 <span v-for="(item, index) in containerCount" v-bind:key="index" class="num">
                                     {{item}}
                                 </span>
@@ -47,7 +47,7 @@
                         <div>
                             <p><span>发布次数</span><span :class="release?'':'addcolor'"><i :class="['title_icon', 'icon', 'iconfont', release?'icon-shangsheng': 'icon-xiajiang']"></i>{{releasePercent}}</span></p>
                             <!-- <p>{{releaseCount}}次</p> -->
-                            <p class="munBox">
+                            <p class="numBox">
                                 <span v-for="(item, index) in releaseCount" v-bind:key="index" class="num">
                                     {{item}}
                                 </span>
@@ -55,7 +55,7 @@
                         </div><div>
                             <p><span>总访问数</span><span :class="access?'':'addcolor'"><i :class="['title_icon', 'icon', 'iconfont', access?'icon-shangsheng': 'icon-xiajiang']"></i>{{accessPercent}}</span></p>
                             <!-- <p>{{accessCount}}</p> -->
-                            <p class="munBox">
+                            <p class="numBox">
                                 <span v-for="(item, index) in accessCount" v-bind:key="index" class="num">
                                     {{item}}
                                 </span>
@@ -63,7 +63,7 @@
                         </div><div>
                             <p><span>节点数量</span><span :class="node?'':'addcolor'"><i :class="['title_icon', 'icon', 'iconfont', node?'icon-shangsheng': 'icon-xiajiang']"></i>{{nodePercent}}</span></p>
                             <!-- <p>{{nodeCount}}个</p> -->
-                            <p class="munBox">
+                            <p class="numBox">
                                 <span v-for="(item, index) in nodeCount" v-bind:key="index" class="num">
                                     {{item}}
                                 </span>
@@ -223,7 +223,7 @@ export default {
                         textStyle: {
                             color: '#fff',
                             fontWeight: 'normal',
-                            fontSize: '20'
+                            fontSize: '18'
                         }
                     },
                     tooltip: {
@@ -347,31 +347,29 @@ export default {
         // console.log('beforeMount 111', document.getElementById('cpuChart'))
     },
     mounted() {
-        // console.log('currentPage', this.currentPage)
-        // console.log('scrollTop', document.documentElement.scrollTop)
         let that = this
         that.windowHeight = window.innerHeight
         that.env = JSON.parse(sessionStorage.getItem('env'))
         console.log(that.env)
-        // 初始化
+        // =========初始化========
         that.setHeight()
         that.settimer()
-        // 适配屏幕
+        //  =========适配屏幕==========
         window.addEventListener('resize', () => {
             that.windowHeight = window.innerHeight
-            that.resizeCharts()
             that.setHeight()
+            that.resizeCharts()
             that.fullScreen = document.webkitIsFullScreen
         })
+        // =======鼠标滚动时间监听==========
         if (document.addEventListener) {
             document.addEventListener('DOMMouseScroll', that.scrollFun, false);
-        }//W3C   
-        window.onmousewheel = document.onmousewheel = that.scrollFun;//IE/Opera/Chrome 
-        // 刷新轮询，5S一次
+        }  
+        window.onmousewheel = document.onmousewheel = that.scrollFun
+        // ==========刷新轮询，5S一次=========
         this.interval = setInterval(() => {
             that.updateIndexData(this.env)
         }, 5000);
-
     },
     beforeUpdate() {
     },
@@ -385,31 +383,12 @@ export default {
     computed: {},
     methods: {
         ...mapActions([
-            'monitorApi',
-            // 'getEnvApi'
+            'monitorApi'
         ]),
-        // 获取环境变量
-        // getEnvMethod() {
-        //     this.getEnvApi().then(res => {
-        //         // console.log(res.result)
-        //         if (res.code == '0' && res.status == 200) {
-        //             // console.log(res.result)
-        //             this.env = res.result
-        //             // console.log(this.env)
-        //         }
-        //     }).catch(err => {
-        //         console.log(err)
-        //     })
-        // },
         // 初始化表,渲染数据
         initEcharts() {
-            // let that = this
             this.echartsDom.forEach((item, index) => {
-                // 初始化表
                 this.echartsObj[index] = echarts.init(document.getElementById(item))
-                // console.log(this.echartsData[index])
-                // 渲染数据
-                // this.echartsObj[index].setOption(this.echartsData[index], true)
             })
         },
         // 图表重新渲染
@@ -523,9 +502,7 @@ export default {
         },
         // 云IO
         getIOData() {
-            // console.log('this', this.echartsObj)
-            // console.log('this', this.echartsData)
-            // setBarData(this.echartsObj[3], this.echartsData[4])
+            // 暂无接口
             setOption(this.echartsObj[3], this.echartsData[0])
         },
         //CPU使用升序
@@ -657,7 +634,7 @@ export default {
             })
 
         },
-        // 循环读取
+        // 循环更新时间
         settimer() {
             setInterval(this.timer, 1000)
         },
@@ -697,7 +674,6 @@ export default {
             let event = e || window.event;
             let dir = event.detail || -event.wheelDelta;
             if (this.startTime - this.endTime > 600) { // 解决多次触发scroll
-                // this.scroll   = false
                 if (dir > 0 && this.currentPage < 2) {
                     this.endTime = new Date().getTime();
                     this.currentPage = this.currentPage + 1
@@ -708,10 +684,10 @@ export default {
                     this.endTime = new Date().getTime();
                 }
             } else {
-                // console.log('111', dir)
                 event.preventDefault();
             }
         },
+        // 平滑跳转到top高度
         scrollTo(val) {
             window.scrollTo({'top': val, 'behavior': 'smooth'})
         },
@@ -744,15 +720,15 @@ export default {
   left: 0;
   padding: 0 20px;
 }
-.munBox {
+.numBox {
   .num {
-    padding: 5px 6px;
+    padding: 4px 6px;
     background: #0d6ed3;
     color: #fff !important;
     font-size: 18px !important;
     float: left !important;
     margin-right: 3px;
-    border-radius: 4px;
+    border-radius: 2px;
   }
 }
 .bottomText {
@@ -842,6 +818,7 @@ export default {
           float: right;
           color: #ff5656;
           font-size: 12px;
+        //   transform: scale(0.85)
         }
       }
       &:last-child {
@@ -1009,7 +986,15 @@ body::-webkit-scrollbar {/*隐藏滚轮*/
 .app-main {
 }
 .main_content {
-  padding: 30px;
+  padding: 30px 40px;
   background: #091649;
+}
+@media screen and (max-width: 1360px) {
+    .numBox {
+    }
+    .numBox .num{
+        margin-right:-5px !important;
+        transform: scale(0.7);
+    }
 }
 </style>

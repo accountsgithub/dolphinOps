@@ -126,7 +126,7 @@ export function setChartData(seriesData) {
 export function setgaugeData(targit, res) {
     let optionData = {
         title: {
-            text: '内存使用情况',
+            text: 'CPU使用情况',
             top: '7%',
             left: 'center',
             color: '#fff',
