@@ -15,8 +15,8 @@
                     </el-col>
                     <el-col :span="4" style="padding-left: 0">
                         <div class="grid-content bg-purple bg-dashboard" style="border:none;text-align: right;">
-                            <el-button v-if="true" class="dashaboardBtn icon iconfont icon-ic-home" @click="linktoHome"></el-button>
-                            <el-button v-if="true" class="dashaboardBtn icon iconfont icon-quanping" @click="sizeScreen"></el-button>
+                            <el-button v-if="!fullScreen" class="dashaboardBtn icon iconfont icon-ic-home" @click="linktoHome"></el-button>
+                            <el-button v-if="!fullScreen" class="dashaboardBtn icon iconfont icon-quanping" @click="sizeScreen"></el-button>
                         </div>
                     </el-col>
                 </div>
@@ -357,6 +357,7 @@ export default {
         that.settimer()
         //  =========适配屏幕==========
         window.addEventListener('resize', this.resizeWindow, false)
+        
         // =======鼠标滚动时间监听==========
         if (document.addEventListener) {
             document.addEventListener('DOMMouseScroll', that.scrollFun, false);
@@ -389,8 +390,8 @@ export default {
             this.setHeight()
             this.resizeCharts()
             this.fullScreen = document.webkitIsFullScreen
-            console.log(0)
-        },
+            console.log(0)        
+            },
         // 初始化表,渲染数据
         initEcharts() {
             this.echartsDom.forEach((item, index) => {
@@ -803,6 +804,7 @@ export default {
   font-size: 15px;
   color: #fff;
   top:15px;
+  left:40px;
   position: absolute;
 }
 .titleImg {
