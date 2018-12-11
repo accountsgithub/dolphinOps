@@ -12,7 +12,10 @@ export function updateChart(myChartLine, option) {
             yAxisItem = {
                 name: item.name,
                 splitLine: { // 网格线 y轴对应的是否显示
-                    show: false
+                    show: true,
+                    lineStyle: {
+                        color: ['#F3F5FA']  
+                    }
                 },
                 axisLabel: {
                     formatter: item.formatter
@@ -30,10 +33,10 @@ export function updateChart(myChartLine, option) {
     if (option.series && option.series.length) {
         for (let i = 0; i < option.series.length; i++) {
             const item = option.series[i]
-            // console.log('item.color', item.color)
+            console.log('item', item)
             let seriesItem = new Object
             seriesItem = {
-                name: option.legend[i],
+                name: item.name,
                 type: 'line',
                 yAxisIndex: item.yAxisIndex == 'left' ? 0 : 1,
                 itemStyle: {
@@ -71,20 +74,27 @@ export function updateChart(myChartLine, option) {
         grid: {
             left: '5%',
             right: '5%',
-            bottom: '5%',
-            top: '30%',
+            bottom: '15%',
+            top: '20%',
             containLabel: true
         },
         legend: {
             show: true,
-            top: '10%',
+            bottom: '5%',
+            icon: 'circle',
+            itemGap: 40,
+            itemWidth: 10,
+            itemHeight: 10,
             data: option.legend
         },
         xAxis: {
             type: 'category',
-            boundaryGap: true, // 坐标轴两边留白
+            boundaryGap: false, // 坐标轴两边留白
             splitLine: { // 网格线 x轴对应的是否显示
-                show: false
+                show: true,
+                lineStyle: {
+                    color: ['#F3F5FA']  
+                }
             },
             axisLabel: {
                 // formatter: (value, index) => {
@@ -114,6 +124,7 @@ export function setChartData(seriesData) {
     seriesData.map((item, index) => {
         let seriesItem = new Object
         seriesItem.color = colors[index]
+        seriesItem.name = item.name
         seriesItem.yAxisIndex = item.position
         seriesItem.data = item.data
         // console.log('item.color', index, colors[index], seriesItem)
@@ -121,6 +132,20 @@ export function setChartData(seriesData) {
     })
     // console.log('series series', series.length)
     return series
+}
+// 基础监控处理Y轴
+export function setYData(seriesData) {
+    console.log(seriesData)
+    let yAxis = []
+    seriesData.map(item => {
+        let yAxisItem = {
+            name: item.name,
+            formatter: item.formatter
+        }
+        yAxis.push(yAxisItem)
+    })
+    console.log(yAxis)
+    return yAxis
 }
 // dashboard页面仪表盘处理option中数据
 export function setgaugeData(targit, res) {

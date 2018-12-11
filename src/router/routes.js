@@ -105,7 +105,7 @@ export const constantRouterMap = [
     },
     // dashboard
     {
-        path: '/Dashboard',
+        path: '/dashboard',
         component: resolve => require(['@/views/layout/dashboard'], resolve),
         children: [
             {

@@ -1,7 +1,7 @@
 export default {
     route: {
         detailed: 'Details',
-        dashboard: 'dashboard',
+        dashboard: 'Dashboard',
         projectMgt: 'Project'
     },
     modifyPW: {

@@ -5,7 +5,8 @@
             <el-col :span="24">
                 <div class="grid-content bg-purple bg-dashboard topTitle" style="border:none">
                     <el-col :span="4" style="padding-right: 0">
-                        <div class="grid-content bg-purple bg-dashboard timer" style="border:none">{{time}}</div>
+                        <div class="grid-content bg-purple bg-dashboard " style="border:none"> </div>
+                        <div class="timer">{{time}}</div>
                     </el-col>
                     <el-col :span="16" style="padding: 0">
                         <div class="grid-content bg-purple bg-dashboard" style="border:none">
@@ -801,7 +802,8 @@ export default {
 .timer {
   font-size: 15px;
   color: #fff;
-  margin-top:15px;
+  top:15px;
+  position: absolute;
 }
 .titleImg {
   width: 100%;
