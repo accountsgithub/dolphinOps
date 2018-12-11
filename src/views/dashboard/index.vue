@@ -1,7 +1,7 @@
 <template>
     <div class="main_content">
         <!-- 标题 -->
-        <el-row :gutter="30">
+        <el-row :gutter="20">
             <el-col :span="24">
                 <div class="grid-content bg-purple bg-dashboard topTitle" style="border:none">
                     <el-col :span="4" style="padding-right: 0">
@@ -22,7 +22,7 @@
             </el-col>
         </el-row>
         <!-- 第一屏 第一行 -->
-        <el-row :gutter="30">
+        <el-row :gutter="20">
             <el-col :span="6" >
                 <div class="grid-content bg-purple bg-dashboard _box">
                     <div class="chart_box">
@@ -87,7 +87,7 @@
             </el-col>
         </el-row>
         <!-- 第一屏 第二行 -->
-        <el-row :gutter="30" style="position:relative;">
+        <el-row :gutter="20" style="position:relative;">
             <el-col :span="6">
                 <div class="grid-content bg-purple bg-dashboard _box" >
                     <div class="chart_box"><div class="chats" id="memoryChart"></div></div>
@@ -111,7 +111,7 @@
             
         </el-row>
         <!-- 第二屏 -->
-        <el-row :gutter="30" style="margin-top:60px;">
+        <el-row :gutter="20" style="margin-top:60px;">
             <el-col :span="12">
                 <div class="grid-content bg-purple bg-dashboard _box">
                     <div class="chart_box"><div class="chats" id="CpuInAscChart"></div></div>
@@ -123,7 +123,7 @@
                 </div>
             </el-col>
         </el-row>
-        <el-row :gutter="30">
+        <el-row :gutter="20">
             <el-col :span="12">
                 <div class="grid-content bg-purple bg-dashboard _box">
                     <div class="chart_box"><div class="chats" id="CpuInDescChart"></div></div>
@@ -137,14 +137,14 @@
             
         </el-row>
         <!-- 第三屏 -->
-        <el-row :gutter="30">
+        <el-row :gutter="20">
             <el-col :span="24">
                 <div class="grid-content bg-purple bg-dashboard _box">
                     <div class="chart_box"><div class="chats" id="aveTimeChart"></div></div>
                 </div>
             </el-col>
         </el-row>
-        <el-row :gutter="30">
+        <el-row :gutter="20">
             <el-col :span="24">
                 <div class="grid-content bg-purple bg-dashboard _box">
                     <div class="chart_box"><div class="chats" id="warnChart"></div></div>
@@ -339,7 +339,6 @@ export default {
     },
     created() {
         // console.log('created 111', document.getElementById('cpuChart'))
-        this.getEnvMethod()
     },
     before() {
         // console.log('before 111', document.getElementById('cpuChart'))
@@ -352,6 +351,8 @@ export default {
         // console.log('scrollTop', document.documentElement.scrollTop)
         let that = this
         that.windowHeight = window.innerHeight
+        that.env = JSON.parse(sessionStorage.getItem('env'))
+        console.log(that.env)
         // 初始化
         that.setHeight()
         that.settimer()
@@ -385,21 +386,21 @@ export default {
     methods: {
         ...mapActions([
             'monitorApi',
-            'getEnvApi'
+            // 'getEnvApi'
         ]),
         // 获取环境变量
-        getEnvMethod() {
-            this.getEnvApi().then(res => {
-                // console.log(res.result)
-                if (res.code == '0' && res.status == 200) {
-                    // console.log(res.result)
-                    this.env = res.result
-                    // console.log(this.env)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
-        },
+        // getEnvMethod() {
+        //     this.getEnvApi().then(res => {
+        //         // console.log(res.result)
+        //         if (res.code == '0' && res.status == 200) {
+        //             // console.log(res.result)
+        //             this.env = res.result
+        //             // console.log(this.env)
+        //         }
+        //     }).catch(err => {
+        //         console.log(err)
+        //     })
+        // },
         // 初始化表,渲染数据
         initEcharts() {
             // let that = this
@@ -436,7 +437,7 @@ export default {
         },
         // 设置容器高度与margin
         setHeight() {
-            let height = (window.innerHeight - 25 * 2 - 100) / 2
+            let height = (window.innerHeight - 160) / 2
             // console.log('height', screen.availHeight, screen.height, window.innerHeight, height)
             this.echartsDom.forEach((item) => {
                 document.getElementById(item).style.height = `${height}px`
@@ -887,8 +888,8 @@ export default {
     background: #091549;
     &::before {
       display: block;
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       background: #17b8bb;
       position: absolute;
       border-radius: 3px;
@@ -899,8 +900,8 @@ export default {
     }
     &::after {
       display: block;
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       background: #17b8bb;
       position: absolute;
       border-radius: 3px;
@@ -912,8 +913,8 @@ export default {
   }
   &::before {
     display: block;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     background: #17b8bb;
     position: absolute;
     border-radius: 3px;
@@ -924,8 +925,8 @@ export default {
   }
   &::after {
     display: block;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     background: #17b8bb;
     position: absolute;
     border-radius: 3px;
@@ -939,7 +940,7 @@ export default {
     width: 10px;
     height: 50px;
     position: fixed;
-    top:40%;
+    top:48%;
     right: 10px;
     z-index: 22;
     span{
@@ -960,8 +961,20 @@ body::-webkit-scrollbar {/*隐藏滚轮*/
     display: none;
 }
 .el-row {
-  margin-bottom: 65px;
-  /* margin-top: 30px; */
+  /* margin-bottom: 30px; */
+  margin-top: 30px;
+}
+.main_content .el-row:nth-child(2n){
+    margin-top: 40px;
+}
+.main_content .el-row:nth-child(2n+1){
+    margin-bottom: 40px;
+}
+.main_content .el-row:nth-child(3){
+    margin-bottom: 120px;
+}
+.main_content .el-row:nth-child(5){
+    margin-bottom: 120px;
 }
 .main_content:last-child {
     margin-bottom: 0px;
