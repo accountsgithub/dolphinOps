@@ -14,8 +14,8 @@
                     </el-col>
                     <el-col :span="4" style="padding-left: 0">
                         <div class="grid-content bg-purple bg-dashboard" style="border:none;text-align: right;">
-                            <el-button class="dashaboardBtn icon iconfont icon-ic-home" @click="linktoHome"></el-button>
-                            <el-button class="dashaboardBtn icon iconfont icon-quanping" @click="sizeScreen"></el-button>
+                            <el-button v-if="true" class="dashaboardBtn icon iconfont icon-ic-home" @click="linktoHome"></el-button>
+                            <el-button v-if="true" class="dashaboardBtn icon iconfont icon-quanping" @click="sizeScreen"></el-button>
                         </div>
                     </el-col>
                 </div>
@@ -355,12 +355,7 @@ export default {
         that.setHeight()
         that.settimer()
         //  =========适配屏幕==========
-        window.addEventListener('resize', () => {
-            that.windowHeight = window.innerHeight
-            that.setHeight()
-            that.resizeCharts()
-            that.fullScreen = document.webkitIsFullScreen
-        })
+        window.addEventListener('resize', this.resizeWindow, false)
         // =======鼠标滚动时间监听==========
         if (document.addEventListener) {
             document.addEventListener('DOMMouseScroll', that.scrollFun, false);
@@ -375,8 +370,11 @@ export default {
     },
     updated() {
     },
+    beforeDestroy() {
+    },
     destroyed() {
         this.currentPage = 0
+        window.removeEventListener('resize', this.resizeWindow, false);
         clearInterval(this.interval)
         // this.scrollTo(0)
     },
@@ -385,6 +383,13 @@ export default {
         ...mapActions([
             'monitorApi'
         ]),
+        resizeWindow() {
+            this.windowHeight = window.innerHeight
+            this.setHeight()
+            this.resizeCharts()
+            this.fullScreen = document.webkitIsFullScreen
+            console.log(0)
+        },
         // 初始化表,渲染数据
         initEcharts() {
             this.echartsDom.forEach((item, index) => {
