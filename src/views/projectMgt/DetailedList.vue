@@ -286,6 +286,7 @@ export default {
                 memorySize: '',
                 envVariables: [],
                 ipAlias: [],
+                email: '',
 
                 // 上传
                 auditor: 'admin',
@@ -727,17 +728,18 @@ export default {
     },
     // 变更
     dialogChange (record) {
-      this.dialogType = ''
-      this.envConfigForm.version = ''
-      this.envConfigForm.desc = ''
-      this.envConfigForm.uploadType = 0
+        this.dialogType = ''
+        this.envConfigForm.version = ''
+        this.envConfigForm.desc = ''
+        this.envConfigForm.uploadType = 0
 
-      this.envConfigDialog = true
-      this.envConfigForm.projectId = this.project.id
-      this.envConfigForm.instanceNumber = this.project.instanceNumber
-      this.envConfigForm.memorySize = this.project.memorySize
-      this.envConfigForm.envVariables = this.project.env ? JSON.parse(this.project.env) : []
-      this.envConfigForm.ipAlias = this.project.ipAlias ? JSON.parse(this.project.ipAlias) : []
+        this.envConfigDialog = true
+        this.envConfigForm.projectId = this.project.id
+        this.envConfigForm.instanceNumber = this.project.instanceNumber
+        this.envConfigForm.memorySize = this.project.memorySize
+        this.envConfigForm.envVariables = this.project.env ? JSON.parse(this.project.env) : []
+        this.envConfigForm.ipAlias = this.project.ipAlias ? JSON.parse(this.project.ipAlias) : []
+        this.envConfigForm.email = this.project.emails
     },
     // 变更取消
     envDialogOnClose () {

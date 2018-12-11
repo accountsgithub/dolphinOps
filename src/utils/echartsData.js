@@ -283,14 +283,14 @@ export function setOptionData(option, type) {
                 }
                 series.push(seriesItem)
             })
-        } else if (option.series && option.series.length > 1) {
+        } else if (option.series && option.series.length > 1) { // 多数据柱状图数据处理
             // console.log('option.legend', option.legend, option.series)
             option.series.map((item, index) => {
                 let seriesItem = new Object
                 seriesItem = {
                     name: option.legend[index],
                     type: type,
-                    barWidth: '20%',
+                    barWidth: '40%',
                     barGap: '-100%',
                     // formatter: item.formatter,
                     data: item.data

@@ -224,6 +224,7 @@ export default {
                 memorySize: '',
                 envVariables: [],
                 ipAlias: [],
+                email: '',
                 // 上传
                 auditor: 'admin',
                 desc: '',
@@ -263,9 +264,19 @@ export default {
         if (path.indexOf('prod') !== -1) {
             this.ifprod = true;
         }
+        this.getEnvMethod()
     },
     methods: {
-        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy', 'setWhiteIp', 'setEmail', 'resetSearchCriteria', 'setTestActionApi']),
+        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy', 'setWhiteIp', 'setEmail', 'resetSearchCriteria', 'setTestActionApi', 'getEnvApi']),
+
+        // 获取环境变量
+        getEnvMethod() {
+            this.getEnvApi().then(res => {
+                if (res.code == '0' && res.status == 200) {
+                    sessionStorage.setItem('env', JSON.stringify(res.result))
+                }
+            })
+        },
         // 详情
         dialogInfo(row) {
             if (row.state === 5) {
@@ -305,6 +316,7 @@ export default {
             this.envConfigForm.memorySize = record.memorySize
             this.envConfigForm.envVariables = record.env ? JSON.parse(record.env) : []
             this.envConfigForm.ipAlias = record.ipAlias ? JSON.parse(record.ipAlias) : []
+            this.envConfigForm.email = record.emails
         },
         // 变更取消
         envDialogOnClose() {
@@ -312,6 +324,7 @@ export default {
             this.envConfigForm.uploadType = 0;
             this.envConfigForm.ipAlias = []
             this.envConfigForm.envVariables = []
+            this.envConfigForm.email = ''
         },
         addNewItem(prop) {
             this.envConfigForm[prop].push({ isNew: true })
@@ -443,10 +456,7 @@ export default {
         },
         // 基础监控
         monitorcharts(item) {
-            // console.log(item.baseImage)
-            // console.log(this.trasBaseImage(item.baseImage))
             let baseImageType = this.trasBaseImage(item.baseImage)
-            // console.log('baseImageType', baseImageType)
             if (baseImageType === 'tomcat') {
                 // console.log('tomcat弹出')
                 this.chartsDialog = true
@@ -458,8 +468,13 @@ export default {
                 this.CurrentProject = item
                 this.baseImageType = 'others'
             } else {
-                console.log('没有图表数据')
+                console.log('镜像字段为空，获取不到图表数据')
                 this.baseImageType = ''
+                this.$confirm('镜像字段为空，获取不到图表数据', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                })
             }
         },
         // baseImage处理

@@ -407,6 +407,8 @@ export default {
                 this.refrash = '5'
                 this.selectTime = [new Date() - 60 * 15 * 1000, new Date()]
                 this.getTime()
+            } else {
+                clearInterval(this.setTimeout)
             }
         },
         'layerType': function() {
@@ -473,6 +475,7 @@ export default {
     destroyed() {
         this.refrash = '0'
         this.refrashflag = false
+        clearInterval(this.setTimeout)
     },
     methods: {
         ...mapActions([
