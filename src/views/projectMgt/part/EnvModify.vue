@@ -192,6 +192,14 @@
                                size="mini"
                                @click="addNewItem('ipAlias')">{{$t('part.addEnv')}}</el-button>
                 </el-tab-pane>
+                <el-tab-pane :label="$t('part.addEmail')"
+                             style="text-align: center">
+                    <div style="width:450px; margin: 15px auto 0 auto;">
+                        <el-form-item :label="$t('part.email')">
+                            <el-input v-model="envConfigForm.email" size="small" :placeholder="$t('part.emailPlaceholder')"></el-input>
+                        </el-form-item>
+                    </div>
+                </el-tab-pane>
             </el-tabs>
         </el-form>
         <span slot="footer"
@@ -375,6 +383,7 @@ export default {
                         projectId,
                         auditor,
                         desc,
+                        email,
                         uploadType,
                         tempPath
                     } = this.envConfigForm;
@@ -395,6 +404,7 @@ export default {
                             memorySize: memorySize,
                             env: JSON.stringify(envVariables),
                             ipAlias: JSON.stringify(ipAlias),
+                            email: email,
                             tempPath
                         };
                         this.saveUplaod(params).then(() => {
@@ -417,6 +427,7 @@ export default {
                             env: JSON.stringify(envVariables),
                             ipAlias: JSON.stringify(ipAlias),
                             searchParams: this.searchCriteria,
+                            email: email,
                             tempPath
                         };
                         this.saveEnv(params).then(() => {
