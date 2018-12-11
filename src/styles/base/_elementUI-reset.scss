@@ -219,6 +219,16 @@
     & > span {
         margin-left: 5px;
     }
+    &:active, &:focus{
+        color: #59b9ff;
+        background: none;
+        border-color: #133166
+    }
+    &:hover{
+        color: #59b9ff;
+        background: none;
+        border-color: #2f579e
+    }
 }
 // 弹出框按键样式
 .dialogButtonW {
