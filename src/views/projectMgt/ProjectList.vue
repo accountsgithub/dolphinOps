@@ -223,6 +223,7 @@ export default {
                 memorySize: '',
                 envVariables: [],
                 ipAlias: [],
+                email: '',
                 // 上传
                 auditor: 'admin',
                 desc: '',
@@ -311,6 +312,7 @@ export default {
             this.envConfigForm.memorySize = record.memorySize
             this.envConfigForm.envVariables = record.env ? JSON.parse(record.env) : []
             this.envConfigForm.ipAlias = record.ipAlias ? JSON.parse(record.ipAlias) : []
+            this.envConfigForm.email = record.emails
         },
         // 变更取消
         envDialogOnClose() {
@@ -318,6 +320,7 @@ export default {
             this.envConfigForm.uploadType = 0;
             this.envConfigForm.ipAlias = []
             this.envConfigForm.envVariables = []
+            this.envConfigForm.email = ''
         },
         addNewItem(prop) {
             this.envConfigForm[prop].push({ isNew: true })
