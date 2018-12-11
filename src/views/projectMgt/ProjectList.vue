@@ -261,10 +261,19 @@ export default {
         if (path.indexOf('prod') !== -1) {
             this.ifprod = true;
         }
+        this.getEnvMethod()
     },
     methods: {
-        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy', 'setWhiteIp', 'setEmail', 'resetSearchCriteria', 'setTestActionApi']),
+        ...mapActions(['getProjectList', 'getProjectStart', 'saveEnv', 'saveUplaod', 'getProjectStop', 'getProjectDeploy', 'setWhiteIp', 'setEmail', 'resetSearchCriteria', 'setTestActionApi', 'getEnvApi']),
 
+        // 获取环境变量
+        getEnvMethod() {
+            this.getEnvApi().then(res => {
+                if (res.code == '0' && res.status == 200) {
+                    sessionStorage.setItem('env', JSON.stringify(res.result))
+                }
+            })
+        },
         getPath(path) {
             if (path && /\[(.*)\]?/g.test(path)) {
                 return JSON.parse(path)[0]
@@ -454,10 +463,7 @@ export default {
         },
         // 基础监控
         monitorcharts(item) {
-            // console.log(item.baseImage)
-            // console.log(this.trasBaseImage(item.baseImage))
             let baseImageType = this.trasBaseImage(item.baseImage)
-            // console.log('baseImageType', baseImageType)
             if (baseImageType === 'tomcat') {
                 // console.log('tomcat弹出')
                 this.chartsDialog = true
@@ -469,8 +475,13 @@ export default {
                 this.CurrentProject = item
                 this.baseImageType = 'others'
             } else {
-                console.log('没有图表数据')
+                console.log('镜像字段为空，获取不到图表数据')
                 this.baseImageType = ''
+                this.$confirm('镜像字段为空，获取不到图表数据', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                })
             }
         },
         // baseImage处理

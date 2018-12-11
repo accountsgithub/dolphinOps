@@ -1,4 +1,5 @@
-// 基础监控--处理option中的数据
+import echarts from 'echarts'
+// 基础监控--line处理option中的数据
 export function updateChart(myChartLine, option) {
     // cpuChart初始化数据
     // console.log('option', option)
@@ -141,12 +142,12 @@ export function setgaugeData(targit, res) {
         series: [{
             type: 'gauge',
             center: ['50%', '50%'], // 默认全局居中
-            radius: '60%',
+            radius: '50%',
             axisLine: {
                 show: false,
                 lineStyle: { // 属性lineStyle控制线条样式
                     color: [
-                        [res / 100, '#2a8eff'],
+                        [res / 100, new echarts.graphic.LinearGradient(0, 0, 1, 0, [{offset: 0, color: '#2a8eff'},{offset: 1, color: '#fb65ff'}])],
                         [1, 'rgba(1, 147, 207, 0.3)']
                     ],
                     width: 24
@@ -170,16 +171,17 @@ export function setgaugeData(targit, res) {
                 formatter: '{value}%',
                 offsetCenter: [0, '5%'],
                 color: '#fff',
+                fontSize: '14'
             },
             data: [{
-                name: 'CPU已使用',
+                // name: 'CPU已使用',
                 value: res
             }]
         }]
     }
     setOption(targit, optionData)
 }
-// dashboard页面仪表盘处理option中数据
+// dashboard页面饼图处理option中数据
 export function setPieData(targit, res) {
     let pieData = {
         title: {
@@ -203,7 +205,7 @@ export function setPieData(targit, res) {
             show: true,
             itemGap: 12,
             data: ['已用', '剩余'],
-            top: '5%',
+            top: '15%',
             textStyle: {
                 color: '#C1E5FF',
                 
@@ -217,7 +219,7 @@ export function setPieData(targit, res) {
             name: '内存使用情况',
             type: 'pie',
             clockWise: true,
-            radius: ['50%', '66%'],
+            radius: ['35%', '50%'],
             color: res.color,
             itemStyle: {
                 normal: {
@@ -281,14 +283,14 @@ export function setOptionData(option, type) {
                 }
                 series.push(seriesItem)
             })
-        } else if (option.series && option.series.length > 1) {
+        } else if (option.series && option.series.length > 1) { // 多数据柱状图数据处理
             // console.log('option.legend', option.legend, option.series)
             option.series.map((item, index) => {
                 let seriesItem = new Object
                 seriesItem = {
                     name: option.legend[index],
                     type: type,
-                    barWidth: '20%',
+                    barWidth: '40%',
                     barGap: '-100%',
                     // formatter: item.formatter,
                     data: item.data
@@ -302,9 +304,9 @@ export function setOptionData(option, type) {
     return series
 }
 export function setLineData(targit, res, type) {
-    console.log('series res', res)
+    // console.log('series res', res)
     let series = setOptionData(res, type)
-    console.log('series', series)
+    // console.log('series', series)
     let lineData = {
         title: {
             text: res.title,
@@ -455,7 +457,7 @@ export function setBarData(targit, res, type) {
         }],
         series: series
     }
-    console.log(barData)
+    // console.log(barData)
     setOption(targit, barData)
 }
 export function setOption(targit, optionData) {
