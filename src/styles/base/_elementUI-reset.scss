@@ -84,22 +84,22 @@
             position: absolute;
             left: 0;
             top: 10px;
-            background: #fcae19;
+            background: #ADB0B2;
         }
     }
     .el_state_dot.status-agree {
         &:before {
-            background: #0dcf5f;
+            background: #82C362;
         }
     }
     .el_state_dot.status-back {
         &:before {
-            background: #fc5555;
+            background: #E87575;
         }
     }
     .el_state_dot.status-default {
         &:before {
-            background: #b5b5b5;
+            background: #F5A623;
         }
     }
     .el_state_dot.status-begin {

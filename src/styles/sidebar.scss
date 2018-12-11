@@ -13,7 +13,7 @@
     .sidebar-container {
         transition: width 0.28s;
         width: 200px !important;
-        height: 100%;
+        height: calc(100vh - 60px);
         position: fixed;
         font-size: 0px;
         top: 60px;

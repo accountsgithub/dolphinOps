@@ -16,9 +16,9 @@
                     <span v-else-if="project.stateTxt == '启动中' || project.stateTxt == 'starting'"
                           class="prj-status prj-status-begin">{{project.stateTxt}}</span>
                     <span v-else-if="project.stateTxt == '待部署' || project.stateTxt == 'pending'"
-                          class="prj-status prj-status-begin">{{project.stateTxt}}</span>
+                          class="prj-status prj-status-default">{{project.stateTxt}}</span>
                     <span v-else-if="project.stateTxt == '系统崩溃' || project.stateTxt == 'crash'"
-                          class="prj-status prj-status-error">{{project.stateTxt}}</span>
+                          class="prj-status prj-status-back">{{project.stateTxt}}</span>
 
                     <el-button class="prj-btn import-btn "
                                type="primary"
@@ -826,7 +826,7 @@ export default {
   padding: 0 7px;
   border-radius: 2px;
   font-size: 12px;
-  color: #ffffff;
+  color: #ADB0B2;
   letter-spacing: 0;
   text-align: center;
   height: 20px;
@@ -834,16 +834,16 @@ export default {
   min-width: 50px;
 }
 .prj-status-agree {
-  background: #0dcf5f;
+  background: #82C362;
 }
 .prj-status-stop {
   background: #fcae19;
 }
 .prj-status-back {
-  background: #fc5555;
+  background: #E87575;
 }
 .prj-status-default {
-  background: #b5b5b5;
+  background: #F5A623;
 }
 .prj-status-begin {
   background: #0000ff;
