@@ -404,7 +404,7 @@ export default {
                             memorySize: memorySize,
                             env: JSON.stringify(envVariables),
                             ipAlias: JSON.stringify(ipAlias),
-                            email: email,
+                            emails: email,
                             tempPath
                         };
                         this.saveUplaod(params).then(() => {
@@ -427,7 +427,7 @@ export default {
                             env: JSON.stringify(envVariables),
                             ipAlias: JSON.stringify(ipAlias),
                             searchParams: this.searchCriteria,
-                            email: email,
+                            emails: email,
                             tempPath
                         };
                         this.saveEnv(params).then(() => {

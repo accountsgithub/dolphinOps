@@ -6,8 +6,8 @@
                 <span>Requests Summary</span>
                 <div>
                     <el-button class="tableLastButtonStyleW" @click="linkHistoryMethod">{{$t('testPage.showHistoryRecord_button')}}</el-button>
-                    <el-button :disabled="!serialNo" class="tableLastButtonStyleW icon iconfont icon-ic-loaddown" @click="downloadAllDetailMethod"></el-button>
-                    <el-button class="tableLastButtonStyleW icon iconfont icon-ceshi" @click="testActionMethod"></el-button>
+                    <el-button :disabled="!serialNo" class="tableLastButtonStyleW" @click="downloadAllDetailMethod"><i class="icon iconfont icon-ic-loaddown" style="font-size: 14px;"></i></el-button>
+                    <el-button class="tableLastButtonStyleW" @click="testActionMethod"><i class="icon iconfont icon-ceshi" style="font-size: 16px;"></i></el-button>
                 </div>
             </div>
             <div v-show="summaryData.length > 0" class="status-div-style">
@@ -95,18 +95,18 @@
                 </el-table>
                 <el-pagination v-if="paginationData.total != 0" :current-page="paginationData.pageNo + 1" class="pagination" @size-change="sizeChange" @current-change="currentChange" :page-size="paginationData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.total"></el-pagination>
             </div>
-            <div v-show="summaryData.length < 1 || testReportList.length < 1" class="no-data-background"></div>
+            <div v-show="summaryData.length < 1 && testReportList.length < 1" class="no-data-background"></div>
         </div>
     </el-row>
 </template>
 
 <script>
-// import proportionCom from '@/views/projectMgt/testReport/components/proportionCom'
+import proportionCom from '@/views/projectMgt/testReport/components/proportionCom'
 import {mapActions} from 'vuex'
 export default {
     name: 'testReportList',
     components: {
-        // proportionCom
+        proportionCom
     },
     data() {
         return {
@@ -129,7 +129,7 @@ export default {
         }
     },
     mounted() {
-        this.getTestReportListMethod('first')
+        this.getSummaryDataMethod()
     },
     methods: {
         ...mapActions([
@@ -145,8 +145,10 @@ export default {
                 if (result && result.data.length > 0) {
                     this.serialNo = result.serialNo
                     this.summaryData = result.data
+                    this.getTestReportListMethod('first')
                 } else {
                     this.summaryData = []
+                    this.testReportList = []
                 }
             })
         },
@@ -160,7 +162,7 @@ export default {
         },
         // 跳转历史纪录页面
         linkHistoryMethod() {
-            this.$router.push({name: 'historyList', params: {mark: this.$route.params.mark}})
+            this.$router.push({name: 'historyList', params: {mark: this.$route.params.mark, serialNo: this.serialNo}})
         },
         // 执行测试方法
         testActionMethod() {
@@ -171,7 +173,7 @@ export default {
                         type: 'success',
                         message: this.$t('testPage.testActionSuccess_message')
                     })
-                    this.getTestReportListMethod('first')
+                    this.getSummaryDataMethod
                 } else {
                     this.$message({
                         type: 'error',
@@ -183,9 +185,6 @@ export default {
         // 查询测试报告数据列表
         getTestReportListMethod(type) {
             this.isLoading = true
-            if (type == 'first') {
-                this.getSummaryDataMethod()
-            }
             let jsonTemp = {
                 pageNo: type == 'first' ? 0 : this.paginationData.pageNo,
                 pageSize: this.paginationData.pageSize,

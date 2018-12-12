@@ -35,7 +35,7 @@ export const constantRouterMap = [
                 hidden: true
             },
             {
-                path: 'reasonList/:mark',
+                path: 'reasonList/:mark/:serialNo',
                 name: 'reasonList',
                 component: resolve =>
                     require([
@@ -44,7 +44,7 @@ export const constantRouterMap = [
                 meta: { ...meta, title: 'reasonList' }
             },
             {
-                path: 'historyList/:mark',
+                path: 'historyList/:mark/:serialNo',
                 name: 'historyList',
                 component: resolve =>
                     require([
