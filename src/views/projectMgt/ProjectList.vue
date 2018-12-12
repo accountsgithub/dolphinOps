@@ -69,7 +69,6 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="stateTxt"
-                                     width="140"
                                      :label="$t('projectMgt.status_label')">
                         <template slot-scope="scope">
                             <tableStatus :statusType="scope.row.stateTxt"></tableStatus>
@@ -117,7 +116,7 @@
                                             <template v-else>
                                                 <a class="table-link" href="javascript:;" @click="goTestReport(scope.row)">
                                                     <i class="icon iconfont icon-chakan table-action-more" :title="$t('projectMgt.testReport')"></i>
-                                                    <div class="table-action-more-txt">{{$t('projectMgt.testReport')}}</div>
+                                                    <span class="table-action-more-txt">{{$t('projectMgt.testReport')}}</span>
                                                 </a>
                                             </template>
                                         </el-dropdown-item>
