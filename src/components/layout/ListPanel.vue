@@ -23,6 +23,7 @@ export default {
 @import '~@/styles/common';
 .mainContainer {
   background: #fff;
+  margin-top: 0;
   @include e(header) {
     display: flex;
     flex-flow: row nowrap;
