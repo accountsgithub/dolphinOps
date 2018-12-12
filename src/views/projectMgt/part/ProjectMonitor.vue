@@ -1,6 +1,6 @@
 
 <template>
-    <el-dialog :title="this.layerType" width="85%" :visible.sync="dialogVisible" id="layer">
+    <el-dialog :title="this.layerType === 'others' ? '其他' : this.layerType " width="85%" height="60%" :visible.sync="dialogVisible" id="layer">
         <!-- 刷新条件 -->
         <div class="title">
             <div>
@@ -91,7 +91,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import { updateChart, setChartData } from '@/utils/echartsData.js'
+import { updateChart, setChartData, setYData } from '@/utils/echartsData.js'
 import echarts from 'echarts'
 export default {
     data() {
@@ -197,7 +197,7 @@ export default {
                 }]
             },
             optionIO: {
-                title: '容器流入流量每秒访问次数',
+                title: '容器进出流量/每秒访问次数',
                 legend: ['容器流入流量', '容器流出流量', '每秒访问次数'],
                 xAxis: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
                 yAxis: [
@@ -453,6 +453,7 @@ export default {
         if (this.layerType === 'tomcat') {
             // console.log('layerType', this.layerType)
             // 初始化表1
+            // document.getElementById('line1').style.height = height / 2
             this.line1 = echarts.init(document.getElementById('line1'))
             // 初始化表2
             this.line2 = echarts.init(document.getElementById('line2'))
@@ -496,15 +497,18 @@ export default {
             // tomcat项目--CPU使用率
             this.monitorApi(setParams).then(cpuChartData => {
                 this.optionCpu.xAxis = cpuChartData.xAxis
-                // this.optionCpu.legend = cpuChartData.legend
+                this.optionCpu.legend = setYData(cpuChartData.series).map(item => item.name)
+                // console.log(setYData(cpuChartData.series).map(item => item.name))
                 this.optionCpu.series = setChartData(cpuChartData.series)
+                this.optionCpu.yAxis = setYData(cpuChartData.series)
                 updateChart(this.line1, this.optionCpu)
             })
             //tomcat项目--进出流量
             setParams.url = url2
             this.monitorApi(setParams).then(transmission => {
                 this.optionIO.xAxis = transmission.xAxis
-                // this.optionIO.legend = transmission.legend
+                this.optionIO.legend = setYData(transmission.series).map(item => item.name)
+                this.optionIO.yAxis = setYData(transmission.series)
                 this.optionIO.series = setChartData(transmission.series)
                 updateChart(this.line2, this.optionIO)
             })
@@ -512,7 +516,8 @@ export default {
             setParams.url = url3
             this.monitorApi(setParams).then(fs_status => {
                 this.optionPan.xAxis = fs_status.xAxis
-                // this.optionPan.legend = fs_status.legend
+                this.optionPan.legend = setYData(fs_status.series).map(item => item.name)
+                this.optionPan.yAxis = setYData(fs_status.series)
                 this.optionPan.series = setChartData(fs_status.series)
                 updateChart(this.line3, this.optionPan)
             })
@@ -520,7 +525,8 @@ export default {
             setParams.url = url4
             this.monitorApi(setParams).then(jvm_memory => {
                 this.optionJVM.xAxis = jvm_memory.xAxis
-                // this.optionJVM.legend = jvm_memory.legend
+                this.optionJVM.legend = setYData(jvm_memory.series).map(item => item.name)
+                this.optionJVM.yAxis = setYData(jvm_memory.series)
                 this.optionJVM.series = setChartData(jvm_memory.series)
                 updateChart(this.line4, this.optionJVM)
             })
@@ -540,7 +546,7 @@ export default {
             this.monitorApi(setParams).then(noTomcatCpu => {
                 // console.log(noTomcatCpu)
                 this.noTomcatCpu.xAxis = noTomcatCpu.xAxis
-                // this.noTomcatCpu.legend = noTomcatCpu.legend
+                this.noTomcatCpu.legend = setYData(noTomcatCpu.series).map(item => item.name)
                 this.noTomcatCpu.series = setChartData(noTomcatCpu.series)
                 updateChart(this.line5, this.noTomcatCpu)
             })
@@ -549,7 +555,7 @@ export default {
             this.monitorApi(setParams).then(noTomcatTrans => {
                 // console.log(noTomcatTrans)
                 this.noTomcatTrans.xAxis = noTomcatTrans.xAxis
-                // this.noTomcatTrans.legend = noTomcatTrans.legend
+                this.noTomcatTrans.legend = setYData(noTomcatTrans.series).map(item => item.name)
                 this.noTomcatTrans.series = setChartData(noTomcatTrans.series)
                 updateChart(this.line6, this.noTomcatTrans)
             })
@@ -558,7 +564,7 @@ export default {
             this.monitorApi(setParams).then(nofs_status => {
                 // console.log(nofs_status)
                 this.nofs_status.xAxis = nofs_status.xAxis
-                // this.nofs_status.legend = nofs_status.legend
+                this.nofs_status.legend = setYData(nofs_status.series).map(item => item.name)
                 this.nofs_status.series = setChartData(nofs_status.series)
                 updateChart(this.line7, this.nofs_status)
             })
@@ -567,7 +573,7 @@ export default {
             this.monitorApi(setParams).then(noTomcatJvm => {
                 // console.log(noTomcatJvm)
                 this.noTomcatJvm.xAxis = noTomcatJvm.xAxis
-                // this.noTomcatJvm.legend = noTomcatJvm.legend
+                this.noTomcatJvm.legend = setYData(noTomcatJvm.series).map(item => item.name)
                 this.noTomcatJvm.series = setChartData(noTomcatJvm.series)
                 updateChart(this.line8, this.noTomcatJvm)
             })
@@ -689,6 +695,7 @@ export default {
 .echarts_content {
   background: #f0f4f8;
   padding:15px;
+  height: 70vh;
 }
 #layer /deep/.el-dialog__body {
         padding: 0px;
@@ -718,7 +725,7 @@ export default {
 }
 .chart {
   width: 100%;
-  height: 250px;
+  height: 32vh;
   background: #fff;
 }
 

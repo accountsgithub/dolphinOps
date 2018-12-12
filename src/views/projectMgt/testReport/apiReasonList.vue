@@ -121,7 +121,7 @@ export default {
                 pageNo: type == 'first' ? 0 : this.paginationData.pageNo,
                 pageSize: this.paginationData.pageSize,
                 f_eq_mark: this.$route.params.mark,
-                f_eq_serialNo: this.serialNo
+                f_eq_serialNo: this.$route.params.serialNo
             }
             let params = Object.assign(jsonTemp)
             this.getTestReportListApi(params).then(result => {

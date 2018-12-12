@@ -2,7 +2,7 @@ export default {
     route: {
         detailed: '详细信息',
         projectMgt: '项目管理',
-        dashboard: 'dashboard',
+        dashboard: 'Dashboard',
         projectMor: '项目监控',
         testReport: '查看测试报告 ',
         historyList: '历史纪录',

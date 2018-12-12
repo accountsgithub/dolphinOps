@@ -86,7 +86,7 @@ export default {
         },
         // 跳转查询失败接口原因
         linkReasonPageMethod(val) {
-            this.$router.push({name: 'reasonList', params: {mark: val.mark}})
+            this.$router.push({name: 'reasonList', params: {mark: val.mark, serialNo: this.$route.params.serialNo}})
         },
         // 切换每页数据个数
         sizeChange(val) {
