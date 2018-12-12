@@ -4,8 +4,10 @@
                  @command="handleSetLanguage">
         <div style="margin-top: 5px;">
             <img v-if="lang=='zh'"
+                 style="margin-right:20px;"
                  src="@/assets/images/pic-CN.png" />
             <img v-else-if="lang=='en'"
+                 style="margin-right:20px;"
                  src="@/assets/images/pic-EN.png" />
                  <!--<svg-icon class-name='international-icon' icon-class="language" />-->
         </div>
