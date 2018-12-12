@@ -109,7 +109,7 @@
                     <div class="chart_box"><div class="chats" id="IOChart"></div></div>
                 </div>
             </el-col>
-            
+
         </el-row>
         <!-- 第二屏 -->
         <el-row :gutter="20" style="margin-top:60px;">
@@ -135,7 +135,7 @@
                     <div class="chart_box"><div class="chats" id="memoryInAscChart"></div></div>
                 </div>
             </el-col>
-            
+
         </el-row>
         <!-- 第三屏 -->
         <el-row :gutter="20">
@@ -357,11 +357,11 @@ export default {
         that.settimer()
         //  =========适配屏幕==========
         window.addEventListener('resize', this.resizeWindow, false)
-        
+
         // =======鼠标滚动时间监听==========
         if (document.addEventListener) {
             document.addEventListener('DOMMouseScroll', that.scrollFun, false);
-        }  
+        }
         window.onmousewheel = document.onmousewheel = that.scrollFun
         // ==========刷新轮询，5S一次=========
         this.interval = setInterval(() => {
@@ -390,8 +390,8 @@ export default {
             this.setHeight()
             this.resizeCharts()
             this.fullScreen = document.webkitIsFullScreen
-            console.log(0)        
-            },
+            console.log(0)
+        },
         // 初始化表,渲染数据
         initEcharts() {
             this.echartsDom.forEach((item, index) => {
