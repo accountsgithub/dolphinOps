@@ -828,7 +828,7 @@ export default {
   padding: 0 7px;
   border-radius: 2px;
   font-size: 12px;
-  color: #ADB0B2;
+  color: #fff;
   letter-spacing: 0;
   text-align: center;
   height: 20px;

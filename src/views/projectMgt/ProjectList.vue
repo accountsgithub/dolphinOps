@@ -56,7 +56,7 @@
                                v-if="scope.row.state !== 5"
                                @click="dialogInfo(scope.row)">{{scope.row.name}}
                             </a>
-                            <span style="color: #5A90C7;" v-else>{{scope.row.name}}</span>
+                            <span class="table-link-disabled" v-else>{{scope.row.name}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="instanceNumber"
@@ -81,7 +81,7 @@
                             <div class="oper-col">
                                 <template>
                                     <i class="icon iconfont icon-qidong table-action" :title="$t('projectMgt.start_button')" @click="startUp(scope.row)" v-if="(scope.row.state === 0 || scope.row.state === 4) && scope.row.deployStatus !== 5" style="color:#82c362;"></i>
-                                    <i class="icon iconfont icon-qidong table-action" :title="$t('projectMgt.deploy_button')" @click="beginDeploy(scope.row)" v-else-if="scope.row.deployStatus === 5" style="color:#82c362;"></i>
+                                    <i class="icon iconfont icon-qidong table-action" :title="$t('projectMgt.start_button')" @click="beginDeploy(scope.row)" v-else-if="scope.row.deployStatus === 5"></i>
                                     <i class="icon iconfont icon-tingzhi table-action" :title="$t('projectMgt.stop_button')" @click="stopDeploy(scope.row)" v-else-if="scope.row.state === 1" style="color:red;"></i>
                                     <i class="icon iconfont icon-qidong table-action disabled" v-else></i>
                                 </template>
@@ -94,30 +94,30 @@
                                         <el-dropdown-item>
                                             <a class="table-link" :href="`${unifiedLogUrl}?projectMark=${scope.row.mark}&authCode=${scope.row.authCode}`" target="_blank">
                                                 <i class="icon iconfont icon-rizhi table-action-more" :title="$t('projectMgt.unifiedLog')"></i>
-                                                {{$t('projectMgt.unifiedLog')}}
+                                                <span class="table-action-more-txt">{{$t('projectMgt.unifiedLog')}}</span>
                                             </a>
                                         </el-dropdown-item>
                                         <el-dropdown-item>
-                                            <a class="table-link" :href="`${unifiedLogUrl}?projectMark=${scope.row.mark}&authCode=${scope.row.authCode}`" target="_blank">
+                                            <a class="table-link" :href="`${unifiedConfigUrl}?projectMark=${scope.row.mark}&authCode=${scope.row.authCode}#/homePage`" target="_blank">
                                                 <i class="icon iconfont icon-peizhi table-action-more" :title="$t('projectMgt.unifiedConfig')"></i>
-                                                {{$t('projectMgt.unifiedConfig')}}
+                                                <span class="table-action-more-txt">{{$t('projectMgt.unifiedConfig')}}</span>
                                             </a>
                                         </el-dropdown-item>
                                         <el-dropdown-item>
                                             <template v-if="scope.row.rapStatus !== '2'">
                                                 <a class="table-link" href="javascript:;" v-if="scope.row.state === 1" @click="testPageMethod(scope.row)">
                                                     <i class="icon iconfont icon-ceshi table-action-more" :title="$t('testPage.autoTest_button')"></i>
-                                                    {{$t('testPage.autoTest_button')}}
+                                                    <span class="table-action-more-txt">{{$t('testPage.autoTest_button')}}</span>
                                                 </a>
                                                 <a class="table-link disabled" href="javascript:;" v-else>
                                                     <i class="icon iconfont icon-ceshi table-action-more disabled" :title="$t('testPage.autoTest_button')"></i>
-                                                    {{$t('testPage.autoTest_button')}}
+                                                    <span class="table-action-more-txt">{{$t('testPage.autoTest_button')}}</span>
                                                 </a>
                                             </template>
                                             <template v-else>
                                                 <a class="table-link" href="javascript:;" @click="goTestReport(scope.row)">
-                                                    <i class="icon iconfont icon-zidongceshijieguo table-action-more" :title="$t('projectMgt.testReport')"></i>
-                                                    {{$t('projectMgt.testReport')}}
+                                                    <i class="icon iconfont icon-chakan table-action-more" :title="$t('projectMgt.testReport')"></i>
+                                                    <div class="table-action-more-txt">{{$t('projectMgt.testReport')}}</div>
                                                 </a>
                                             </template>
                                         </el-dropdown-item>
@@ -468,7 +468,6 @@ export default {
                 this.CurrentProject = item
                 this.baseImageType = 'others'
             } else {
-                console.log('镜像字段为空，获取不到图表数据')
                 this.baseImageType = ''
                 this.$confirm('镜像字段为空，获取不到图表数据', '提示', {
                     confirmButtonText: '确定',
@@ -506,7 +505,6 @@ export default {
             this.EmailDialog = false
         },
         chartsDialogOnClose() {
-            console.log('进入关闭')
             this.chartsDialog = false
             // this.CurrentProject = {}
         }
@@ -570,25 +568,34 @@ export default {
 
 // 操作标签样式
 .table-link {
-  color: #016ad5;
+    color: #016ad5;
+}
+.table-link-disabled {
+    color: #5A90C7;
+    cursor: not-allowed;
 }
 .table-action {
-  margin-right: 22px;
-  font-family: PingFangSC-Medium;
-  font-size: 18px;
-  color: #016ad5;
-  letter-spacing: 0.86px;
-  text-align: left;
-  cursor: pointer;
+    margin-right: 22px;
+    font-family: PingFangSC-Medium;
+    font-size: 18px;
+    color: #016ad5;
+    letter-spacing: 0.86px;
+    text-align: left;
+    cursor: pointer;
 }
 .table-action-more {
-  margin-right: 10px;
-  font-family: PingFangSC-Medium;
-  font-size: 18px;
-  color: #016ad5;
-  letter-spacing: 0.86px;
-  text-align: left;
-  cursor: pointer;
+    margin-right: 10px;
+    font-family: PingFangSC-Medium;
+    font-size: 18px;
+    color: #016ad5;
+    letter-spacing: 0.86px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.table-action-more-txt {
+    position: relative;
+    top: -2px;
 }
 
 @include e(body) {

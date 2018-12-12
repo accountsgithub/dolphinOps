@@ -108,7 +108,7 @@
                     <div class="chart_box"><div class="chats" id="IOChart"></div></div>
                 </div>
             </el-col>
-            
+
         </el-row>
         <!-- 第二屏 -->
         <el-row :gutter="20" style="margin-top:60px;">
@@ -134,7 +134,7 @@
                     <div class="chart_box"><div class="chats" id="memoryInAscChart"></div></div>
                 </div>
             </el-col>
-            
+
         </el-row>
         <!-- 第三屏 -->
         <el-row :gutter="20">
@@ -350,7 +350,6 @@ export default {
         let that = this
         that.windowHeight = window.innerHeight
         that.env = JSON.parse(sessionStorage.getItem('env'))
-        console.log(that.env)
         // =========初始化========
         that.setHeight()
         that.settimer()
@@ -359,7 +358,7 @@ export default {
         // =======鼠标滚动时间监听==========
         if (document.addEventListener) {
             document.addEventListener('DOMMouseScroll', that.scrollFun, false);
-        }  
+        }
         window.onmousewheel = document.onmousewheel = that.scrollFun
         // ==========刷新轮询，5S一次=========
         this.interval = setInterval(() => {
@@ -388,7 +387,6 @@ export default {
             this.setHeight()
             this.resizeCharts()
             this.fullScreen = document.webkitIsFullScreen
-            console.log(0)
         },
         // 初始化表,渲染数据
         initEcharts() {
@@ -632,8 +630,7 @@ export default {
                     xAxis: result.xAxis
                 }
                 setBarData(that.echartsObj[6], optionTtansMission, 'bar')
-                that.echartsObj[6].on('click', function(param) {
-                    console.log(param)
+                that.echartsObj[6].on('click', function() {
                     that.$router.push('/projectMgt/exceptionPage')
                 })
             })

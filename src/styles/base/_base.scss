@@ -67,3 +67,10 @@ html {
     -moz-border-radius: 2em;
     border-radius: 2em;
 }
+
+// 屏蔽加载条
+[nprogress-hidden="1"] {
+    #nprogress {
+        display: none;
+    }
+}

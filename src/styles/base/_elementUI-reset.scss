@@ -104,7 +104,7 @@
     }
     .el_state_dot.status-begin {
         &:before {
-            background: #0000ff;
+            background: #82C362;
         }
     }
     .el_state_dot.status-error {
@@ -347,4 +347,8 @@
 .pagination {
     text-align: right;
     padding: 30px 40px 50px 0;
+}
+
+.progress-hidden {
+    
 }

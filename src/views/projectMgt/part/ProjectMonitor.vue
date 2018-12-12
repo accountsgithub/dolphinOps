@@ -401,7 +401,7 @@ export default {
             } else {
                 // this.refrash = '0'
             }
-            
+
         },
         'chartsDialog': function() {
             if (this.chartsDialog == true) {
@@ -418,7 +418,6 @@ export default {
         'refrash': function() {
             // 改变轮询策略
             let that = this
-            console.log('改变轮询策略1', new Date(), that.refrash)
             // 清楚前一个轮询
             clearInterval(that.setTimeout)
             // that.refrashflag = false
@@ -427,7 +426,6 @@ export default {
                 that.getTime()
             } else {
                 that.refrashflag = false
-                console.log('改变轮询策略3', new Date(), that.refrash)
             }
         }
     },
@@ -588,12 +586,11 @@ export default {
                 end: that.endTime,
                 step: 60
             }
-            let days = (that.endTime - that.startTime) / ( 60 * 60 * 24)
+            // let days = (that.endTime - that.startTime) / ( 60 * 60 * 24)
             // if (that.endTime - that.startTime) {
             //     that.refrash = 0
             //     return
             // }
-            console.log('space', days)
             // params.step = this.getStep()
             // console.log('refrash', that.refrash)
             let env = that.projectdetail.deployEnv
@@ -612,7 +609,6 @@ export default {
                 if (!that.refrashflag) {
                     return
                 }
-                console.log('22222222222refrash', new Date(), that.refrash)
                 let space = (that.selectTime[1] - that.selectTime[0]) / 1000
                 that.selectTime = [new Date() - space * 1000, new Date()]
                 var start = new Date(that.selectTime[0]);
@@ -633,7 +629,7 @@ export default {
                     // console.log('no')
                 }
             }, that.refrash == 0 ? '5000' : that.refrash * 1000)
-            
+
         },
         getStep(days) {
             if (days < 1) {
@@ -703,7 +699,7 @@ export default {
     top:10px;
     right: 50px;
     font-size: 12px;
-    
+
     >div{
         float: right;
         margin-right:10px;

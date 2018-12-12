@@ -12,7 +12,7 @@ const state = {
     dialog: false
 }
 
-export default{
+export default {
     state,
     actions,
     mutations
