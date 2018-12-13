@@ -137,7 +137,9 @@ export default {
         unifiedLog: 'Unified log',
         unifiedConfig: 'Unified configuration',
         customChart: 'Custom chart',
-        testReport: 'Test report'
+        testReport: 'Test report',
+        setUp: 'Set up',
+        monitorcharts: 'Monitor',
     },
     part: {
         // EmailList

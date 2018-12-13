@@ -45,7 +45,7 @@
                     <el-table-column prop="statusCode" :label="$t('exceptionPage.responseStatus_label')" align="center" min-width="10%"></el-table-column>
                     <el-table-column prop="respCnt" :label="$t('exceptionPage.responseCount_label')" align="center" min-width="10%"></el-table-column>
                 </el-table>
-                <el-pagination v-if="paginationData.total != 0" :current-page="paginationData.pageNo" class="pagination" @size-change="sizeChange" @current-change="currentChange" :page-size="paginationData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.total"></el-pagination>
+                <el-pagination v-if="paginationData.total != 0" :current-page="paginationData.pageNo + 1" class="pagination" @size-change="sizeChange" @current-change="currentChange" :page-size="paginationData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.total"></el-pagination>
             </div>
         </div>
     </el-row>
@@ -65,7 +65,7 @@ export default {
             projectList: [],
             // 分页数据集合
             paginationData: {
-                pageNo: 1,
+                pageNo: 0,
                 pageSize: 10,
                 total: 0,
                 totalPages: 0,
@@ -111,7 +111,7 @@ export default {
                     end: this.searchForm.time[1].valueOf() / 1000,
                     project: this.searchForm.project,
                     pageSize: this.paginationData.pageSize,
-                    pageNo: type == 'first' ? 1 : this.paginationData.pageNo
+                    pageNo: type == 'first' ? 0 : this.paginationData.pageNo
                 }
                 let params = Object.assign(jsonTemp)
                 this.getExceptionListApi(params).then(result => {
@@ -142,7 +142,7 @@ export default {
         },
         // 翻页方法
         currentChange(val) {
-            this.paginationData.pageNo = val
+            this.paginationData.pageNo = val - 1
             this.getExceptionListMethod()
         }
     }
