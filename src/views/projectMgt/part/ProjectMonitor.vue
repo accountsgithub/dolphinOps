@@ -115,6 +115,12 @@ export default {
             refrash: '5',
             refrashflag: true,
             pickerOptions: {
+                disabledDate(time) {
+                    let curDate = (new Date()).getTime();
+                    let three = 365 * 24 * 3600 * 1000;
+                    let threeMonths = curDate - three;
+                    return time.getTime() > Date.now() || time.getTime() < threeMonths;
+                },
                 shortcuts: [{
                     text: '最近15分钟',
                     onClick(picker) {
@@ -611,7 +617,6 @@ export default {
             //     return
             // }
             params.step = this.getStep(days)
-            console.log('params', params)
             let env = that.projectdetail.deployEnv
             let project = that.projectdetail.mark
             if (that.layerType === 'Tomcat') {
@@ -640,7 +645,6 @@ export default {
                     step: 60
                 }
                 let days = (that.endTime - that.startTime) / ( 60 * 60 * 24)
-                console.log('getStep', that.getStep(days))
                 params.step = that.getStep(days)
                 let env = that.projectdetail.deployEnv
                 let project = that.projectdetail.mark
@@ -654,7 +658,7 @@ export default {
             }, that.refrash == 0 ? '5000' : that.refrash * 1000)
 
         },
-        // 根据时间间隔，判断step长度
+        // 根据时间间隔，判断step长度,days最长为365
         getStep(days) {
             if (days <= 0.5) {
                 return 30
@@ -669,9 +673,9 @@ export default {
             }  else if (days > 30 && days <= 60) {
                 return 7200
             }  else if (days >60 && days <= 120) {
-                return 21600
+                return 14400
             } else {
-                return 36000
+                return 21600
             }
         }
     }
@@ -705,6 +709,9 @@ export default {
         }
         .el-dialog__headerbtn{
             top:15px;
+        }
+        .el-dialog__title{
+            font-weight: bold;
         }
     }
 .el-row {
