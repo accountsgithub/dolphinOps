@@ -637,7 +637,11 @@ export default {
                 let params = {
                     start: that.startTime,
                     end: that.endTime,
+                    step: 60
                 }
+                let days = (that.endTime - that.startTime) / ( 60 * 60 * 24)
+                console.log('getStep', that.getStep(days))
+                params.step = that.getStep(days)
                 let env = that.projectdetail.deployEnv
                 let project = that.projectdetail.mark
                 if (that.layerType === 'Tomcat') {
@@ -650,15 +654,24 @@ export default {
             }, that.refrash == 0 ? '5000' : that.refrash * 1000)
 
         },
+        // 根据时间间隔，判断step长度
         getStep(days) {
-            if (days < 1) {
+            if (days <= 0.5) {
+                return 30
+            } else if (days > 0.5 && days <= 1) {
                 return 60
-            } else if (days > 1 && days < 7) {
-                return 60 * 15
-            } else if (days > 7 && days < 30) {
-                return 60 * 30
+            } else if (days > 1 && days <= 3) {
+                return 1200
+            } else if (days > 3 && days <= 7) {
+                return 1800
+            }  else if (days > 7 && days <= 30) {
+                return 3600
+            }  else if (days > 30 && days <= 60) {
+                return 7200
+            }  else if (days >60 && days <= 120) {
+                return 21600
             } else {
-                return 60 * 60 * 4
+                return 36000
             }
         }
     }
