@@ -460,7 +460,7 @@ export default {
                 // console.log('tomcat弹出')
                 this.chartsDialog = true
                 this.CurrentProject = item
-                this.baseImageType = 'tomcat'
+                this.baseImageType = 'Tomcat'
             } else if (baseImageType === 'others') {
                 // console.log('orthers弹出')
                 this.chartsDialog = true

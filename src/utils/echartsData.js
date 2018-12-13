@@ -1,4 +1,4 @@
-import echarts from 'echarts'
+// import echarts from 'echarts'
 // 基础监控--line处理option中的数据
 export function updateChart(myChartLine, option) {
     // cpuChart初始化数据
@@ -17,8 +17,20 @@ export function updateChart(myChartLine, option) {
                         color: ['#F3F5FA']  
                     }
                 },
+                axisTick: {
+                    show: false
+                },
                 axisLabel: {
-                    formatter: item.formatter
+                    formatter: item.formatter,
+                    color: '#7B7F86'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#DCDFE6'
+                    }
+                },
+                nameTextStyle: {
+                    color: '#A3A8AF'
                 }
             }
             yAxis.push(yAxisItem)
@@ -33,7 +45,7 @@ export function updateChart(myChartLine, option) {
     if (option.series && option.series.length) {
         for (let i = 0; i < option.series.length; i++) {
             const item = option.series[i]
-            console.log('item', item)
+            // console.log('item', item)
             let seriesItem = new Object
             seriesItem = {
                 name: item.name,
@@ -49,6 +61,8 @@ export function updateChart(myChartLine, option) {
                     color: item.color,
                     opacity: '0.1'
                 },
+                symbolSize: 1,
+                formatter: item.formatter,
                 smooth: true,
                 data: item.data
             }
@@ -80,29 +94,29 @@ export function updateChart(myChartLine, option) {
         },
         legend: {
             show: true,
-            bottom: '5%',
+            bottom: '3%',
             icon: 'circle',
             itemGap: 40,
-            itemWidth: 10,
-            itemHeight: 10,
+            itemWidth: 8,
+            itemHeight: 8,
             data: option.legend
         },
         xAxis: {
             type: 'category',
             boundaryGap: false, // 坐标轴两边留白
-            splitLine: { // 网格线 x轴对应的是否显示
-                show: true,
+            // splitLine: { // 网格线 x轴对应的是否显示
+            //     show: true,
+            //     lineStyle: {
+            //         color: ['#F3F5FA']  
+            //     }
+            // },
+            axisLine: {
                 lineStyle: {
-                    color: ['#F3F5FA']  
+                    color: '#DCDFE6'
                 }
             },
             axisLabel: {
-                // formatter: (value, index) => {
-                //     console.log(value, index)
-                //     // var date = new Date(value);
-                //     // var texts = [date.getHours(), date.getMinutes(), date.getSeconds()];
-                //     // return texts.join(':');
-                // }  
+                color: '#7B7F86'
             },
             data: option.xAxis
         },
@@ -135,7 +149,7 @@ export function setChartData(seriesData) {
 }
 // 基础监控处理Y轴
 export function setYData(seriesData) {
-    console.log(seriesData)
+    // console.log(seriesData)
     let yAxis = []
     seriesData.map(item => {
         let yAxisItem = {
@@ -144,14 +158,14 @@ export function setYData(seriesData) {
         }
         yAxis.push(yAxisItem)
     })
-    console.log(yAxis)
+    // console.log(yAxis)
     return yAxis
 }
 // dashboard页面仪表盘处理option中数据
 export function setgaugeData(targit, res) {
     let optionData = {
         title: {
-            text: 'CPU使用情况',
+            text: res.title,
             top: '7%',
             left: 'center',
             color: '#fff',
@@ -162,7 +176,7 @@ export function setgaugeData(targit, res) {
             }
         },
         tooltip: {
-            formatter: '{a} <br/>{b} : {c}%'
+            formatter: '{a}%'
         },
         series: [{
             type: 'gauge',
@@ -171,10 +185,7 @@ export function setgaugeData(targit, res) {
             axisLine: {
                 show: false,
                 lineStyle: { // 属性lineStyle控制线条样式
-                    color: [
-                        [res / 100, new echarts.graphic.LinearGradient(0, 0, 1, 0, [{offset: 0, color: '#2a8eff'},{offset: 1, color: '#fb65ff'}])],
-                        [1, 'rgba(1, 147, 207, 0.3)']
-                    ],
+                    color: res.color,
                     width: 24
                 }
             },
@@ -200,7 +211,7 @@ export function setgaugeData(targit, res) {
             },
             data: [{
                 // name: 'CPU已使用',
-                value: res
+                value: res.value
             }]
         }]
     }
@@ -303,7 +314,7 @@ export function setOptionData(option, type) {
                     type: type,
                     barWidth: '40%',
                     barGap: index > 1 ? '-100%' : '2%',
-                    // formatter: item.formatter,
+                    formatter: item.formatter,
                     data: item.data
                 }
                 series.push(seriesItem)
@@ -317,7 +328,7 @@ export function setOptionData(option, type) {
                     type: type,
                     barWidth: '40%',
                     barGap: '-100%',
-                    // formatter: item.formatter,
+                    formatter: item.formatter,
                     data: item.data
                 }
                 series.push(seriesItem)
@@ -346,12 +357,18 @@ export function setLineData(targit, res, type) {
             trigger: 'axis',
             axisPointer: { // 坐标轴指示器，坐标轴触发有效
                 type: 'line' // 默认为直线，可选为：'line' | 'shadow'
-            }
+            },
+            // formatter: (data) => {
+            //     // for (var i = 0, length = data.length; i < length; i++) {
+            //     //     res = data[i].name 
+            //     // }
+            //     // return res
+            // }
         },
         color: ['#C0A54D', '#6553D2', '#2a8eff', '#86d258'],
         legend: {
             data: res.legend,
-            top: '10%',
+            bottom: '2%',
             textStyle: {
                 color: '#C1E5FF',
             },
@@ -363,8 +380,8 @@ export function setLineData(targit, res, type) {
         grid: {
             left: '5%',
             right: '5%',
-            bottom: '5%',
-            top: '20%',
+            bottom: '10%',
+            top: '15%',
             containLabel: true
         },
         xAxis: {
@@ -392,24 +409,60 @@ export function setLineData(targit, res, type) {
                 }
             },
             axisLine: {
+                show: false,
                 lineStyle: {
                     color: '#5170DA',
                     opacity: 0.1
                 }
+            },
+            axisTick: {
+                show: false
             },
         },
         series: series
     }
     setOption(targit, lineData)
 }
+// dashboard中的y轴处理
+export function setyAxis(data) {
+    // console.log('11111', data)
+    let yAxis = []
+    data.map(item => {
+        let newItem = {
+            'type': 'value',
+            'splitLine': {
+                lineStyle: {
+                    color: '#5170DA',
+                    opacity: 0.1
+                }
+            },
+            'axisTick': {
+                'show': false
+            },
+            'axisLine': {
+                'show': false,
+                'lineStyle': {
+                    'color': '#5170DA',
+                    'opacity': 0.1
+                }
+            },
+            'formatter': item.formatter,
+            // 'name': item.name
+        }
+        yAxis.push(newItem)
+    })
+    return yAxis
+}
 export function setBarData(targit, res, type) {
     let series = setOptionData(res, type)
+    // console.log('33333333333', setyAxis(res.yAxis))
+    let yAxis = setyAxis(res.yAxis)
     let showlegend = targit._dom.id // 项目异常情况legend参数
     // console.log('targit', targit._dom.id)
     let barData = {
         title: {
             text: res.title,
-            subtext: '(单位：ms;当前时间段所有响应时间/总次数)',
+            subtext: res.subtext,
             top: '3%',
             left: '3%',
             textStyle: {
@@ -425,7 +478,10 @@ export function setBarData(targit, res, type) {
             trigger: 'axis',
             axisPointer: { // 坐标轴指示器，坐标轴触发有效
                 type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-            }
+            },
+            // formatter: (data) => {
+            //     console.log(data)
+            // }
         },
         legend: {
             show: showlegend == 'warnChart' ? true : false,
@@ -465,21 +521,8 @@ export function setBarData(targit, res, type) {
                 }
             },
         }],
-        yAxis: [{
-            type: 'value',
-            splitLine: {
-                lineStyle: {
-                    color: '#5170DA',
-                    opacity: 0.1
-                }
-            },
-            axisLine: {
-                lineStyle: {
-                    color: '#5170DA',
-                    opacity: 0.1
-                }
-            },
-        }],
+        
+        yAxis: yAxis,
         series: series
     }
     // console.log(barData)
