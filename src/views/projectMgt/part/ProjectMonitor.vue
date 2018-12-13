@@ -1,10 +1,10 @@
 
 <template>
-    <el-dialog :title="this.layerType === 'others' ? '其他' : this.layerType " width="85%" :visible.sync="dialogVisible" id="layer">
+    <el-dialog :title="this.layerType === 'others' ? '其他' : this.layerType " width="70%" :visible.sync="dialogVisible" id="layer">
         <!-- 刷新条件 -->
         <div class="title">
             <div>
-                <a href="">查看更多图表</a>
+                <a :href="projectdetail.monitorUrl">查看更多图表</a>
             </div>
             <div>
                 <span>日期选择</span>
@@ -460,29 +460,8 @@ export default {
         // console.log('updated 111', document.getElementById('line1'))
         // 适配屏幕
         window.addEventListener('resize', () => {
-            // that.resizeCharts()
         })
-        if (this.layerType === 'Tomcat') {
-            // console.log('layerType', this.layerType)
-            // 初始化表1
-            // document.getElementById('line1').style.height = height / 2
-            this.line1 = echarts.init(document.getElementById('line1'))
-            // 初始化表2
-            this.line2 = echarts.init(document.getElementById('line2'))
-            // 初始化表3
-            this.line3 = echarts.init(document.getElementById('line3'))
-            // 初始化表4
-            this.line4 = echarts.init(document.getElementById('line4'))
-        } else if (this.layerType === 'others') {
-            // 初始化表5
-            this.line5 = echarts.init(document.getElementById('line5'))
-            // 初始化表6
-            this.line6 = echarts.init(document.getElementById('line6'))
-            // 初始化表7
-            this.line7 = echarts.init(document.getElementById('line7'))
-            // 初始化表8
-            this.line8 = echarts.init(document.getElementById('line8'))
-        }
+        this.initCharts()
     },
     destroyed() {
         this.refrash = '0'
@@ -495,6 +474,30 @@ export default {
         ]),
         updateChart,
         setChartData,
+        // 初始化图例
+        initCharts() {
+            if (this.layerType === 'Tomcat') {
+                // console.log('layerType', this.layerType)
+                // 初始化表1
+                // document.getElementById('line1').style.height = height / 2
+                this.line1 = echarts.init(document.getElementById('line1'))
+                // 初始化表2
+                this.line2 = echarts.init(document.getElementById('line2'))
+                // 初始化表3
+                this.line3 = echarts.init(document.getElementById('line3'))
+                // 初始化表4
+                this.line4 = echarts.init(document.getElementById('line4'))
+            } else if (this.layerType === 'others') {
+                // 初始化表5
+                this.line5 = echarts.init(document.getElementById('line5'))
+                // 初始化表6
+                this.line6 = echarts.init(document.getElementById('line6'))
+                // 初始化表7
+                this.line7 = echarts.init(document.getElementById('line7'))
+                // 初始化表8
+                this.line8 = echarts.init(document.getElementById('line8'))
+            }
+        },
         // tomcat项目
         getChartData(params, env, project) {
             let url1 = `/tomcat/${env}/${project}/cpu_usage`
@@ -723,6 +726,7 @@ export default {
 }
 .el-col {
   border-radius: 4px;
+  padding: 0 5px !important;
 }
 .bg-purple-dark {
   background: #99a9bf;
@@ -754,8 +758,8 @@ export default {
 }
 .echarts_content {
   background: #f0f4f8;
-  padding:15px;
-  height: 70vh;
+  padding:10px;
+//   height: 70vh;
 }
 
 .title{
@@ -785,7 +789,7 @@ export default {
 }
 .chart {
   width: 100%;
-  height: 32vh;
+  height: 33vh;
   background: #fff;
 }
 

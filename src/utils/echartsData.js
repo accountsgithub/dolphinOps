@@ -75,8 +75,11 @@ export function updateChart(myChartLine, option) {
     let setOption = {
         title: {
             text: option.title,
+            top: '2%',
+            left: '3%',
             textStyle: {
-                fontSize: 14
+                fontSize: 14,
+                color: '#49505C'
             }
         },
         tooltip: {
@@ -89,7 +92,7 @@ export function updateChart(myChartLine, option) {
             left: '5%',
             right: '5%',
             bottom: '15%',
-            top: '20%',
+            top: '22%',
             containLabel: true
         },
         legend: {
@@ -116,7 +119,12 @@ export function updateChart(myChartLine, option) {
                 }
             },
             axisLabel: {
-                color: '#7B7F86'
+                color: '#7B7F86',
+                formatter: (datas) => {
+                    let date = datas.split(' ')
+                    // console.log('date', date)
+                    return `${date[0]}\n${date[1]}`
+                },
             },
             data: option.xAxis
         },
@@ -170,10 +178,12 @@ export function setgaugeData(targit, res) {
             left: 'center',
             color: '#fff',
             textStyle: {
-                fontWeight: 'normal',
+                // fontWeight: 'normal',
                 color: '#fff',
-                width: '100%'
-            }
+                width: '100%',
+                // fontSize: 28,
+            },
+            // subtext: 'CPU已使用'
         },
         tooltip: {
             formatter: '{a}%'
@@ -204,14 +214,36 @@ export function setgaugeData(targit, res) {
                 width: '0'
             },
             detail: {
-                formatter: '{value}%',
+                fontWeight: 'bold',
+                formatter: [
+                    '{value}%',
+                    '{b|CPU已使用}'
+                ].join('\n'),
+                rich: {
+                    a: {
+                        color: '#fff',
+                        fontSize: '20',
+                        
+                    },
+                    b: {
+                        color: '#fff',
+                        fontSize: '12',
+                        height: 26,
+                    }
+                },
                 offsetCenter: [0, '5%'],
                 color: '#fff',
-                fontSize: '14'
+                fontSize: '20'
             },
             data: [{
                 // name: 'CPU已使用',
-                value: res.value
+                value: res.value,
+                x: 'center',
+                y: 'center',
+                itemStyle: {
+                    color: '#FFF',
+                    fontSize: '15'
+                }
             }]
         }]
     }
@@ -226,7 +258,7 @@ export function setPieData(targit, res) {
             x: 'center',
             y: 'center',
             textStyle: {
-                fontWeight: 'normal',
+                // fontWeight: 'normal',
                 color: '#fff',
                 fontSize: '20',
                 top: '10%'
@@ -234,6 +266,7 @@ export function setPieData(targit, res) {
             subtextStyle: {
                 fontWeight: 'normal',
                 color: '#fff',
+                top: '-5%'
             }
         },
         color: ['rgba(176, 212, 251, 1)'],
@@ -252,9 +285,10 @@ export function setPieData(targit, res) {
         },
 
         series: [{
-            name: '内存使用情况',
+            // name: '内存使用情况',
             type: 'pie',
             clockWise: true,
+            startAngle: -135,
             radius: ['35%', '50%'],
             color: res.color,
             itemStyle: {
@@ -274,7 +308,7 @@ export function setPieData(targit, res) {
             }, {
                 name: '剩余',
                 value: 100 - res.value,
-                color: '#ffe858',
+                // color: '#ffe858',
             }]
         }]
     }
@@ -467,7 +501,7 @@ export function setBarData(targit, res, type) {
             left: '3%',
             textStyle: {
                 color: '#fff',
-                fontWeight: 'normal',
+                // fontWeight: 'normal',
                 fontSize: '18'
             },
             subtextStyle: {
