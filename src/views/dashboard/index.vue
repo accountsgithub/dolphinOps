@@ -425,7 +425,7 @@ export default {
         setSize() {
             let height = (window.innerHeight - 160) / 2
             let width = window.innerWidth
-            console.log('width', width)
+            // console.log('width', width)
             if (width > 1440) {
                 this.spanNumCenter =  16 
                 this.spanNumother = 4
