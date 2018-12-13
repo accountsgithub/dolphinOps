@@ -25,7 +25,7 @@
                             <span :class="{'test-response-fail-style':true,'test-response-success-style':scope.row.responseCode == '0'}">{{testResultMethod(scope.row)}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="url" :label="$t('testPage.requestPath_label')">
+                    <el-table-column prop="url" min-width="200px" :label="$t('testPage.requestPath_label')">
                         <template slot-scope="scope">
                             <div slot="reference">
                                 <el-popover v-if="scope.row.url&&scope.row.url.length>20" trigger="hover" placement="top">
@@ -227,7 +227,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/styles/common.scss';
+/*@import '~@/styles/common.scss';*/
     /*页面介绍及基本按键div样式*/
     .page-title-style{
         height: 60px;
@@ -290,7 +290,7 @@ export default {
     .popover-style {
         font-family: PingFangSC-Regular;
         font-size: 12px;
-        color: #409EFF;
+        color: #606266;
         max-width: 600px;
         word-wrap: break-word;
         max-height: 100px;
