@@ -266,7 +266,7 @@ export default {
                                     opacity: 0.1
                                 }
                             },
-                            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                            data: ['7:11', '8:11', '9:11', '10:11', '11:11', '12:11', '13:11']
                         }
                     ],
                     yAxis: [
@@ -469,7 +469,15 @@ export default {
                 this.uselDisk = this.totalDisk * (res.diskUsedPercent / 100)
                 this.useMemory = this.totalMemory * (res.memoryUsedPercent / 100)
                 //cpu使用情况
-                setgaugeData(that.echartsObj[0], res.cpuUsedPercent)
+                let cpuUsedPercent = {
+                    title: 'CPU使用情况',
+                    value: res.cpuUsedPercent,
+                    color: [
+                        [res.cpuUsedPercent / 100, new echarts.graphic.LinearGradient(0, 0, 1, 0, [{offset: 0, color: '#2a8eff'},{offset: 1, color: '#fb65ff'}])],
+                        [1, '#093b72']
+                    ]
+                }
+                setgaugeData(that.echartsObj[0], cpuUsedPercent)
                 //磁盘使用情况
                 let diskUsedPercent = {
                     value: res.diskUsedPercent, // data
@@ -500,7 +508,8 @@ export default {
                     color: ['#C0A54D', '#6553D2'],
                     legend: legend,
                     series: result.series,
-                    xAxis: result.xAxis
+                    xAxis: result.xAxis,
+                    yAxis: result.yAxis
                 }
                 setLineData(that.echartsObj[4], optionTtansMission, 'line')
             })
@@ -522,10 +531,12 @@ export default {
             that.monitorApi(setParams).then(result => {
                 let optionTtansMission = {
                     title: 'CPU使用情况',
+                    subtext: '(单位：%)',
                     color: ['#1ea0f2'],
                     legend: ['CPU使用情况'],
                     series: result.series,
-                    xAxis: result.xAxis
+                    xAxis: result.xAxis,
+                    yAxis: result.yAxis
                 }
                 setBarData(this.echartsObj[7], optionTtansMission, 'bar')
             })
@@ -542,10 +553,12 @@ export default {
             that.monitorApi(setParams).then(result => {
                 let optionTtansMission = {
                     title: 'CPU使用情况',
+                    subtext: '(单位：%)',
                     color: ['#1ea0f2'],
                     legend: ['CPU使用情况'],
                     series: result.series,
-                    xAxis: result.xAxis
+                    xAxis: result.xAxis,
+                    yAxis: result.yAxis
                 }
                 // console.log('that.echartsObj[6]', that.echartsObj)
                 setBarData(that.echartsObj[8], optionTtansMission, 'bar')
@@ -563,10 +576,12 @@ export default {
             that.monitorApi(setParams).then(result => {
                 let optionTtansMission = {
                     title: '内存使用情况',
+                    subtext: '(单位：%)',
                     color: ['#b57edf'],
                     legend: ['内存使用情况'],
                     series: result.series,
-                    xAxis: result.xAxis
+                    xAxis: result.xAxis,
+                    yAxis: result.yAxis
                 }
                 setBarData(that.echartsObj[9], optionTtansMission, 'bar')
             })
@@ -583,10 +598,12 @@ export default {
             that.monitorApi(setParams).then(result => {
                 let optionTtansMission = {
                     title: '内存使用情况',
+                    subtext: '(单位：%)',
                     color: ['#b57edf'],
                     legend: ['内存使用情况'],
                     series: result.series,
-                    xAxis: result.xAxis
+                    xAxis: result.xAxis,
+                    yAxis: result.yAxis
                 }
                 // console.log('optionTtansMission', optionTtansMission)
                 // console.log('that.echartsObj[6]', that.echartsObj)
@@ -605,10 +622,12 @@ export default {
             that.monitorApi(setParams).then(result => {
                 let optionTtansMission = {
                     title: '平均响应时间',
+                    subtext: '(单位：ms;当前时间段所有响应时间/总次数)',
                     color: ['#09b7c6'],
                     legend: ['平均响应时间'],
                     series: result.series,
-                    xAxis: result.xAxis
+                    xAxis: result.xAxis,
+                    yAxis: result.yAxis
                 }
                 setBarData(that.echartsObj[5], optionTtansMission, 'bar')
             })
@@ -626,10 +645,12 @@ export default {
                 // console.log(result)
                 let optionTtansMission = {
                     title: '项目异常情况',
+                    subtext: '(单位：次)',
                     color: ['#FFDD65', '#FF906C'],
                     legend: ['4xx', '5xx'],
                     series: result.series,
-                    xAxis: result.xAxis
+                    xAxis: result.xAxis,
+                    yAxis: result.yAxis
                 }
                 setBarData(that.echartsObj[6], optionTtansMission, 'bar')
                 that.echartsObj[6].on('click', function() {
@@ -800,8 +821,8 @@ export default {
 .timer {
   font-size: 15px;
   color: #fff;
-  top:15px;
-  left:40px;
+  top: 25px;
+  left: 40px;
   position: absolute;
 }
 .titleImg {

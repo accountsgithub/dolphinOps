@@ -1,6 +1,6 @@
 
 <template>
-    <el-dialog :title="this.layerType === 'others' ? '其他' : this.layerType " width="85%" height="60%" :visible.sync="dialogVisible" id="layer">
+    <el-dialog :title="this.layerType === 'others' ? '其他' : this.layerType " width="85%" :visible.sync="dialogVisible" id="layer">
         <!-- 刷新条件 -->
         <div class="title">
             <div>
@@ -12,7 +12,7 @@
                     v-model="selectTime"
                     type="datetimerange"
                     :picker-options="pickerOptions"
-                    range-separator="至"
+                    range-separator="--"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
                     align="right"
@@ -32,7 +32,7 @@
         </div>
         <div class="echarts_content">
             <!-- tomcat -->
-            <div class="tomcat" v-show="layerType === 'tomcat'">
+            <div class="tomcat" v-show="layerType === 'Tomcat'">
                 <el-row :gutter="15">
                     <el-col :span="12">
                         <div class="grid-content bg-purple">
@@ -105,6 +105,12 @@ export default {
             }, {
                 value: '10',
                 label: '10s',
+            }, {
+                value: '30',
+                label: '30s',
+            }, {
+                value: '60',
+                label: '60s',
             }],
             refrash: '5',
             refrashflag: true,
@@ -294,7 +300,7 @@ export default {
                 }]
             },
             noTomcatTrans: {
-                title: '容器流入流量每秒访问次数',
+                title: '容器进出流量/每秒访问次数',
                 legend: ['容器流入流量', '容器流出流量', '每秒访问次数'],
                 xAxis: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
                 yAxis: [
@@ -394,7 +400,7 @@ export default {
     },
     watch: {
         'selectTime': function() {
-            clearInterval(this.setTimeout)
+            // clearInterval(this.setTimeout)
             if (this.selectTime[1] < new Date() - 5000) {
                 this.refrash = '0' // 不刷新
                 this.refrashflag = false
@@ -450,7 +456,7 @@ export default {
         window.addEventListener('resize', () => {
             // that.resizeCharts()
         })
-        if (this.layerType === 'tomcat') {
+        if (this.layerType === 'Tomcat') {
             // console.log('layerType', this.layerType)
             // 初始化表1
             // document.getElementById('line1').style.height = height / 2
@@ -498,9 +504,9 @@ export default {
             this.monitorApi(setParams).then(cpuChartData => {
                 this.optionCpu.xAxis = cpuChartData.xAxis
                 this.optionCpu.legend = setYData(cpuChartData.series).map(item => item.name)
-                // console.log(setYData(cpuChartData.series).map(item => item.name))
                 this.optionCpu.series = setChartData(cpuChartData.series)
-                this.optionCpu.yAxis = setYData(cpuChartData.series)
+                // this.optionCpu.yAxis = setYData(cpuChartData.series)
+                this.optionCpu.yAxis = cpuChartData.yAxis
                 updateChart(this.line1, this.optionCpu)
             })
             //tomcat项目--进出流量
@@ -508,7 +514,8 @@ export default {
             this.monitorApi(setParams).then(transmission => {
                 this.optionIO.xAxis = transmission.xAxis
                 this.optionIO.legend = setYData(transmission.series).map(item => item.name)
-                this.optionIO.yAxis = setYData(transmission.series)
+                // this.optionIO.yAxis = setYData(transmission.series)
+                this.optionIO.yAxis = transmission.yAxis
                 this.optionIO.series = setChartData(transmission.series)
                 updateChart(this.line2, this.optionIO)
             })
@@ -517,7 +524,8 @@ export default {
             this.monitorApi(setParams).then(fs_status => {
                 this.optionPan.xAxis = fs_status.xAxis
                 this.optionPan.legend = setYData(fs_status.series).map(item => item.name)
-                this.optionPan.yAxis = setYData(fs_status.series)
+                // this.optionPan.yAxis = setYData(fs_status.series)
+                this.optionPan.yAxis = fs_status.yAxis
                 this.optionPan.series = setChartData(fs_status.series)
                 updateChart(this.line3, this.optionPan)
             })
@@ -526,7 +534,8 @@ export default {
             this.monitorApi(setParams).then(jvm_memory => {
                 this.optionJVM.xAxis = jvm_memory.xAxis
                 this.optionJVM.legend = setYData(jvm_memory.series).map(item => item.name)
-                this.optionJVM.yAxis = setYData(jvm_memory.series)
+                // this.optionJVM.yAxis = setYData(jvm_memory.series)
+                this.optionJVM.yAxis = jvm_memory.yAxis
                 this.optionJVM.series = setChartData(jvm_memory.series)
                 updateChart(this.line4, this.optionJVM)
             })
@@ -546,6 +555,7 @@ export default {
             this.monitorApi(setParams).then(noTomcatCpu => {
                 // console.log(noTomcatCpu)
                 this.noTomcatCpu.xAxis = noTomcatCpu.xAxis
+                this.noTomcatCpu.yAxis = noTomcatCpu.yAxis
                 this.noTomcatCpu.legend = setYData(noTomcatCpu.series).map(item => item.name)
                 this.noTomcatCpu.series = setChartData(noTomcatCpu.series)
                 updateChart(this.line5, this.noTomcatCpu)
@@ -555,6 +565,7 @@ export default {
             this.monitorApi(setParams).then(noTomcatTrans => {
                 // console.log(noTomcatTrans)
                 this.noTomcatTrans.xAxis = noTomcatTrans.xAxis
+                this.noTomcatTrans.yAxis = noTomcatTrans.yAxis
                 this.noTomcatTrans.legend = setYData(noTomcatTrans.series).map(item => item.name)
                 this.noTomcatTrans.series = setChartData(noTomcatTrans.series)
                 updateChart(this.line6, this.noTomcatTrans)
@@ -564,6 +575,7 @@ export default {
             this.monitorApi(setParams).then(nofs_status => {
                 // console.log(nofs_status)
                 this.nofs_status.xAxis = nofs_status.xAxis
+                this.nofs_status.yAxis = nofs_status.yAxis
                 this.nofs_status.legend = setYData(nofs_status.series).map(item => item.name)
                 this.nofs_status.series = setChartData(nofs_status.series)
                 updateChart(this.line7, this.nofs_status)
@@ -573,6 +585,7 @@ export default {
             this.monitorApi(setParams).then(noTomcatJvm => {
                 // console.log(noTomcatJvm)
                 this.noTomcatJvm.xAxis = noTomcatJvm.xAxis
+                this.noTomcatJvm.yAxis = noTomcatJvm.yAxis
                 this.noTomcatJvm.legend = setYData(noTomcatJvm.series).map(item => item.name)
                 this.noTomcatJvm.series = setChartData(noTomcatJvm.series)
                 updateChart(this.line8, this.noTomcatJvm)
@@ -592,16 +605,16 @@ export default {
                 end: that.endTime,
                 step: 60
             }
-            // let days = (that.endTime - that.startTime) / ( 60 * 60 * 24)
+            let days = (that.endTime - that.startTime) / ( 60 * 60 * 24)
             // if (that.endTime - that.startTime) {
             //     that.refrash = 0
             //     return
             // }
-            // params.step = this.getStep()
-            // console.log('refrash', that.refrash)
+            params.step = this.getStep(days)
+            console.log('params', params)
             let env = that.projectdetail.deployEnv
             let project = that.projectdetail.mark
-            if (that.layerType === 'tomcat') {
+            if (that.layerType === 'Tomcat') {
                 that.getChartData(params, env, project)
             } else if (that.layerType === 'others') {
                 that.getNoTomcatData(params, env, project)
@@ -627,7 +640,7 @@ export default {
                 }
                 let env = that.projectdetail.deployEnv
                 let project = that.projectdetail.mark
-                if (that.layerType === 'tomcat') {
+                if (that.layerType === 'Tomcat') {
                     that.getChartData(params, env, project)
                 } else if (that.layerType === 'others') {
                     that.getNoTomcatData(params, env, project)
@@ -652,14 +665,41 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-.el-dialog .el-dialog__body {
-    padding: 0 !important;
-}
+// 弹窗样式重写
+    #layer  /deep/{
+        .el-dialog__header{
+            padding: 10px !important;
+        }
+        .el-dialog__body {
+            padding: 0px !important;
+        }
+       .el-input--suffix .el-input__inner{
+            height: 28px;
+            line-height: 28px;
+            width: 70px;
+        }
+        .el-input__icon{
+            line-height: 30px;
+            height: 30px;
+        }
+        .el-range-editor.el-input__inner{
+            height: 30px;
+            width: 320px;
+        }
+        .el-date-editor .el-range-separator{
+            line-height: 30px;
+            height: 30px;
+        }
+        .el-dialog__headerbtn{
+            top:15px;
+        }
+    }
 .el-row {
   margin-bottom: 15px;
   &:last-child {
     margin-bottom: 0;
   }
+  margin-top: 0px;
 }
 .el-col {
   border-radius: 4px;
@@ -697,13 +737,11 @@ export default {
   padding:15px;
   height: 70vh;
 }
-#layer /deep/.el-dialog__body {
-        padding: 0px;
-    }
+
 .title{
     overflow: hidden;
     position: absolute;
-    top:10px;
+    top:8px;
     right: 50px;
     font-size: 12px;
 
@@ -716,10 +754,12 @@ export default {
         a{
             display: block;
             color: #666666;
-            padding: 6px 15px;
+            padding: 0px 15px;
             background: #F9FBFD;
             border: 1px solid #E7E9F0;
             border-radius: 4px;
+            height:30px;
+            line-height: 30px;
         }
     }
 }
