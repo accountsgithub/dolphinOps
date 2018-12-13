@@ -56,7 +56,8 @@
                                v-if="scope.row.state !== 5"
                                @click="dialogInfo(scope.row)">{{scope.row.name}}
                             </a>
-                            <span class="table-link-disabled" v-else>{{scope.row.name}}</span>
+                            <span class="table-link-disabled"
+                                  v-else>{{scope.row.name}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="instanceNumber"
@@ -79,43 +80,79 @@
                         <template slot-scope="scope">
                             <div class="oper-col">
                                 <template>
-                                    <i class="icon iconfont icon-qidong table-action" :title="$t('projectMgt.start_button')" @click="startUp(scope.row)" v-if="(scope.row.state === 0 || scope.row.state === 4) && scope.row.deployStatus !== 5" style="color:#82c362;"></i>
-                                    <i class="icon iconfont icon-qidong table-action" :title="$t('projectMgt.start_button')" @click="beginDeploy(scope.row)" v-else-if="scope.row.deployStatus === 5"></i>
-                                    <i class="icon iconfont icon-tingzhi table-action" :title="$t('projectMgt.stop_button')" @click="stopDeploy(scope.row)" v-else-if="scope.row.state === 1" style="color:red;"></i>
-                                    <i class="icon iconfont icon-qidong table-action disabled" v-else></i>
+                                    <i class="icon iconfont icon-qidong table-action"
+                                       :title="$t('projectMgt.start_button')"
+                                       @click="startUp(scope.row)"
+                                       v-if="(scope.row.state === 0 || scope.row.state === 4) && scope.row.deployStatus !== 5"
+                                       style="color:#82C362;"></i>
+                                    <i class="icon iconfont icon-qidong table-action"
+                                       style="color:#82C362;"
+                                       :title="$t('projectMgt.start_button')"
+                                       @click="beginDeploy(scope.row)"
+                                       v-else-if="scope.row.deployStatus === 5"></i>
+                                    <i class="icon iconfont icon-tingzhi table-action"
+                                       :title="$t('projectMgt.stop_button')"
+                                       @click="stopDeploy(scope.row)"
+                                       v-else-if="scope.row.state === 1"
+                                       style="color:#fb4646;"></i>
+                                    <i class="icon iconfont icon-qidong table-action disabled"
+                                       v-else></i>
                                 </template>
-                                <i class="icon iconfont icon-shezhi table-action" :title="$t('projectMgt.change_button')" @click="dialogChange(scope.row)" v-if="scope.row.state !== 5"></i>
-                                <i class="icon iconfont icon-shezhi table-action disabled" :title="$t('projectMgt.change_button')" v-else></i>
-                                <i class="icon iconfont icon-jichujiankong table-action" :title="$t('projectMgt.monitorcharts')" @click="monitorcharts(scope.row)"></i>
+                                <i class="icon iconfont icon-shezhi table-action"
+                                   :title="$t('projectMgt.setUp')"
+                                   @click="dialogChange(scope.row)"
+                                   v-if="scope.row.state !== 5"></i>
+                                <i class="icon iconfont icon-shezhi table-action disabled"
+                                   v-else></i>
+                                <i class="icon iconfont icon-jichujiankong table-action"
+                                   :title="$t('projectMgt.monitorcharts')"
+                                   @click="monitorcharts(scope.row)"></i>
                                 <el-dropdown trigger="click">
                                     <i class="icon iconfont icon-gengduo table-action"></i>
-                                    <el-dropdown-menu slot="dropdown" class="more-ops">
+                                    <el-dropdown-menu slot="dropdown"
+                                                      class="more-ops">
                                         <el-dropdown-item>
-                                            <a class="table-link" :href="`${unifiedLogUrl}?projectMark=${scope.row.mark}&authCode=${scope.row.authCode}`" target="_blank">
-                                                <i class="icon iconfont icon-rizhi table-action-more" :title="$t('projectMgt.unifiedLog')"></i>
+                                            <a class="table-link"
+                                               :href="`${unifiedLogUrl}?projectMark=${scope.row.mark}&authCode=${scope.row.authCode}`"
+                                               target="_blank">
+                                                <i class="icon iconfont icon-rizhi table-action-more"
+                                                   :title="$t('projectMgt.unifiedLog')"></i>
                                                 <span class="table-action-more-txt">{{$t('projectMgt.unifiedLog')}}</span>
                                             </a>
                                         </el-dropdown-item>
                                         <el-dropdown-item>
-                                            <a class="table-link" :href="`${unifiedConfigUrl}?projectMark=${scope.row.mark}&authCode=${scope.row.authCode}#/homePage`" target="_blank">
-                                                <i class="icon iconfont icon-peizhi table-action-more" :title="$t('projectMgt.unifiedConfig')"></i>
+                                            <a class="table-link"
+                                               :href="`${unifiedConfigUrl}?projectMark=${scope.row.mark}&authCode=${scope.row.authCode}#/homePage`"
+                                               target="_blank">
+                                                <i class="icon iconfont icon-peizhi table-action-more"
+                                                   :title="$t('projectMgt.unifiedConfig')"></i>
                                                 <span class="table-action-more-txt">{{$t('projectMgt.unifiedConfig')}}</span>
                                             </a>
                                         </el-dropdown-item>
                                         <el-dropdown-item>
                                             <template v-if="scope.row.rapStatus !== '2'">
-                                                <a class="table-link" href="javascript:;" v-if="scope.row.state === 1" @click="testPageMethod(scope.row)">
-                                                    <i class="icon iconfont icon-ceshi table-action-more" :title="$t('testPage.autoTest_button')"></i>
+                                                <a class="table-link"
+                                                   href="javascript:;"
+                                                   v-if="scope.row.state === 1"
+                                                   @click="testPageMethod(scope.row)">
+                                                    <i class="icon iconfont icon-ceshi table-action-more"
+                                                       :title="$t('testPage.autoTest_button')"></i>
                                                     <span class="table-action-more-txt">{{$t('testPage.autoTest_button')}}</span>
                                                 </a>
-                                                <a class="table-link disabled" href="javascript:;" v-else>
-                                                    <i class="icon iconfont icon-ceshi table-action-more disabled" :title="$t('testPage.autoTest_button')"></i>
+                                                <a class="table-link disabled"
+                                                   href="javascript:;"
+                                                   v-else>
+                                                    <i class="icon iconfont icon-ceshi table-action-more disabled"
+                                                       :title="$t('testPage.autoTest_button')"></i>
                                                     <span class="table-action-more-txt">{{$t('testPage.autoTest_button')}}</span>
                                                 </a>
                                             </template>
                                             <template v-else>
-                                                <a class="table-link" href="javascript:;" @click="goTestReport(scope.row)">
-                                                    <i class="icon iconfont icon-chakan table-action-more" :title="$t('projectMgt.testReport')"></i>
+                                                <a class="table-link"
+                                                   href="javascript:;"
+                                                   @click="goTestReport(scope.row)">
+                                                    <i class="icon iconfont icon-chakan table-action-more"
+                                                       :title="$t('projectMgt.testReport')"></i>
                                                     <span class="table-action-more-txt">{{$t('projectMgt.testReport')}}</span>
                                                 </a>
                                             </template>
@@ -430,7 +467,7 @@ export default {
         },
         // 自动化测试
         testPageMethod(row) {
-            let params = Object.assign({mark: row.mark, path: encodeURIComponent(row.path)})
+            let params = Object.assign({ mark: row.mark, path: encodeURIComponent(row.path) })
             this.setTestActionApi(params).then(res => {
                 if (res.data && res.data.code == '0' && res.data.status == 200) {
                     this.$message({
@@ -559,42 +596,42 @@ export default {
 @import "~@/styles/common.scss";
 
 .oper-col .disabled {
-    color:#B8C0C9;
+  color: #b8c0c9;
 }
 .el-dropdown-menu /deep/ .disabled {
-    color:#979797;
+  color: #979797;
 }
 
 // 操作标签样式
 .table-link {
-    color: #016ad5;
+  color: #016ad5;
 }
 .table-link-disabled {
-    color: #5A90C7;
-    cursor: not-allowed;
+  color: #5a90c7;
+  cursor: not-allowed;
 }
 .table-action {
-    margin-right: 22px;
-    font-family: PingFangSC-Medium;
-    font-size: 18px;
-    color: #016ad5;
-    letter-spacing: 0.86px;
-    text-align: left;
-    cursor: pointer;
+  margin-right: 22px;
+  font-family: PingFangSC-Medium;
+  font-size: 18px;
+  color: #016ad5;
+  letter-spacing: 0.86px;
+  text-align: left;
+  cursor: pointer;
 }
 .table-action-more {
-    margin-right: 10px;
-    font-family: PingFangSC-Medium;
-    font-size: 18px;
-    color: #016ad5;
-    letter-spacing: 0.86px;
-    text-align: left;
-    cursor: pointer;
+  margin-right: 10px;
+  font-family: PingFangSC-Medium;
+  font-size: 18px;
+  color: #016ad5;
+  letter-spacing: 0.86px;
+  text-align: left;
+  cursor: pointer;
 }
 
 .table-action-more-txt {
-    position: relative;
-    top: -2px;
+  position: relative;
+  top: -2px;
 }
 
 @include e(body) {

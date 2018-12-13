@@ -148,6 +148,7 @@ export default {
         unifiedConfig: '统一配置',
         customChart: '自定义图表',
         testReport: '测试报告',
+        setUp: '设置',
     },
     part: {
         // EmailList
