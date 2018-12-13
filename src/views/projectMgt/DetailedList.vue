@@ -46,7 +46,7 @@
                                v-if="project.state !== 5">{{$t('projectMgt.modify')}}</el-button>
                 </div>
             </div>
-            <el-row :gutter="20">
+            <el-row :gutter="20" style="margin-top: 0;">
                 <el-form>
                     <el-col :span="3">
                         <el-form-item :label="$t('projectMgt.instanceNumber')">
