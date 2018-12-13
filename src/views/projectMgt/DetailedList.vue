@@ -839,7 +839,7 @@ export default {
   background: #82C362;
 }
 .prj-status-stop {
-  background: #fcae19;
+  background: #ADB0B2;
 }
 .prj-status-back {
   background: #E87575;

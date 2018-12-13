@@ -1,6 +1,5 @@
 <template>
     <el-dialog :title="$t('part.envEditTit')"
-               top="30vh"
                width="600px"
                :close-on-click-modal="false"
                :visible.sync="dialogVisible">
@@ -196,7 +195,9 @@
                              style="text-align: center">
                     <div style="width:450px; margin: 15px auto 0 auto;">
                         <el-form-item :label="$t('part.email')">
-                            <el-input v-model="envConfigForm.email" size="small" :placeholder="$t('part.emailPlaceholder')"></el-input>
+                            <el-input v-model="envConfigForm.email"
+                                      size="small"
+                                      :placeholder="$t('part.emailPlaceholder')"></el-input>
                         </el-form-item>
                     </div>
                 </el-tab-pane>
