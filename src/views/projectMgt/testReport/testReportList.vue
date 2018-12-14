@@ -14,6 +14,23 @@
                 <proportion-com :statusData="summaryData"></proportion-com>
             </div>
             <div v-show="testReportList.length > 0">
+                <div>
+                    <el-form :model="searchForm" ref="searchForm" :inline="true" size="small" label-width="100px">
+                        <el-form-item :label="$t('testPage.apiName_label')" prop="f_like_name">
+                            <el-input v-model="searchForm.f_like_name"></el-input>
+                        </el-form-item>
+                        <el-form-item :label="$t('testPage.testResult_label')" prop="f_eq_responseCode">
+                            <el-input v-model="searchForm.f_eq_responseCode"></el-input>
+                        </el-form-item>
+                        <el-form-item :label="$t('testPage.requestPath_label')" prop="f_like_url">
+                            <el-input v-model="searchForm.f_like_url"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <el-form-item>
+                        <el-button type="primary" @click="resetTestReportForm('searchForm')" class="tableLastButtonStyleW icon iconfont icon-ic-refresh">{{$t('common.reset')}}</el-button>
+                        <el-button type="primary" @click="getTestReportListMethod('first')" class="tableLastButtonStyleB icon iconfont icon-ic-search"> {{$t('common.search')}}</el-button>
+                    </el-form-item>
+                </div>
                 <el-table :data="testReportList"
                           class="list"
                           highlight-current-row
@@ -50,7 +67,7 @@
                                         <span size="medium">{{ scope.row.requestBody.substring(0,20) }}…</span>
                                     </div>
                                 </el-popover>
-                                <div v-else >
+                                <div v-else>
                                     <span class="overKeyWidth">{{ scope.row.requestBody }}</span>
                                 </div>
                             </div>
@@ -66,7 +83,7 @@
                                         <span size="medium">{{ scope.row.responseBody.substring(0,20) }}…</span>
                                     </div>
                                 </el-popover>
-                                <div v-else >
+                                <div v-else>
                                     <span class="overKeyWidth">{{ scope.row.responseBody }}</span>
                                 </div>
                             </div>
@@ -118,6 +135,12 @@ export default {
             summaryData: [],
             // 总流水号
             serialNo: '',
+            // 查询数据集合
+            searchForm: {
+                f_like_name: '',
+                f_eq_responseCode: 0,
+                f_like_url: ''
+            },
             // 分页数据集合
             paginationData: {
                 pageNo: 0,
@@ -181,6 +204,9 @@ export default {
                     })
                 }
             })
+        },
+        resetTestReportForm(name){
+            console.log(name)
         },
         // 查询测试报告数据列表
         getTestReportListMethod(type) {

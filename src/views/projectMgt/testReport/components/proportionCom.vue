@@ -15,19 +15,21 @@
                 <div class="success-tag-style">
                     <i class="icon iconfont icon-zidongceshijieguo"></i>
                 </div>
+                <span style="float: right; font-size: 20px; margin-top: -30px;">{{successCount}}</span>
             </div>
             <div class="line-div-style">
                 <div class="success-line-style">
-                    <div v-if="!(this.successValue.value == 0 || this.failValue.value == 0)"></div>
+                    <div v-if="!(successValue.value == 0 || failValue.value == 0)"></div>
                 </div>
                 <div class="fail-line-style">
-                    <div v-if="!(this.successValue.value == 0 || this.failValue.value == 0)"></div>
+                    <div v-if="!(successValue.value == 0 || failValue.value == 0)"></div>
                 </div>
             </div>
             <div class="fail-tag-style-white">
                 <div class="fail-tag-style">
                     <i class="icon iconfont icon-zidongceshijieguo"></i>
                 </div>
+                <span style="float: left; font-size: 20px; margin-top: -30px;">{{failCount}}</span>
             </div>
         </div>
     </div>
@@ -50,7 +52,9 @@ export default {
             failValue: {
                 name: '',
                 value: 0
-            }
+            },
+            successCount: 0,
+            failCount: 0
         }
     },
     watch: {
@@ -59,7 +63,11 @@ export default {
             let fValueTemp = (this.statusData[1].value/(this.statusData[0].value + this.statusData[1].value)*100).toFixed(1)
             this.successValue.value = sValueTemp
             this.failValue.value = fValueTemp
-            this.drawStatusLineMethod()
+            this.successCount = this.statusData[0].value
+            this.failCount = this.statusData[1].value
+            this.$nextTick(() => {
+                this.drawStatusLineMethod()
+            })
         }
     },
     methods: {
