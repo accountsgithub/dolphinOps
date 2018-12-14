@@ -41,7 +41,7 @@
                           stripe>
                     <el-table-column prop="project" :label="$t('exceptionPage.projectMark_label')" align="left" min-width="25%"></el-table-column>
                     <el-table-column prop="projectName" :label="$t('exceptionPage.projectName_label')" align="left" min-width="25%"></el-table-column>
-                    <el-table-column prop="uri" :label="$t('exceptionPage.url_label')" align="left" min-width="25%"></el-table-column>
+                    <!--<el-table-column prop="uri" :label="$t('exceptionPage.url_label')" align="left" min-width="25%"></el-table-column>-->
                     <el-table-column prop="statusCode" :label="$t('exceptionPage.responseStatus_label')" align="center" min-width="10%"></el-table-column>
                     <el-table-column prop="respCnt" :label="$t('exceptionPage.responseCount_label')" align="center" min-width="10%"></el-table-column>
                 </el-table>

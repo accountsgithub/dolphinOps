@@ -191,7 +191,7 @@
                                size="mini"
                                @click="addNewItem('ipAlias')">{{$t('part.addEnv')}}</el-button>
                 </el-tab-pane>
-                <el-tab-pane :label="$t('part.addEmail')"
+                <el-tab-pane :label="$t('part.editEmail')"
                              style="text-align: center">
                     <div style="width:450px; margin: 15px auto 0 auto;">
                         <el-form-item :label="$t('part.email')">
