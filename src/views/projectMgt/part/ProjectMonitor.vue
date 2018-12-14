@@ -1,10 +1,10 @@
 
 <template>
-    <el-dialog :title="this.layerType === 'others' ? '其他' : this.layerType " width="85%" :visible.sync="dialogVisible" id="layer">
+    <el-dialog :title="this.layerType === 'others' ? '其他' : this.layerType " width="70%" :visible.sync="dialogVisible" id="layer">
         <!-- 刷新条件 -->
         <div class="title">
             <div>
-                <a href="">查看更多图表</a>
+                <a :href="projectdetail.monitorUrl">查看更多图表</a>
             </div>
             <div>
                 <span>日期选择</span>
@@ -115,6 +115,12 @@ export default {
             refrash: '5',
             refrashflag: true,
             pickerOptions: {
+                disabledDate(time) {
+                    let curDate = (new Date()).getTime();
+                    let three = 365 * 24 * 3600 * 1000;
+                    let threeMonths = curDate - three;
+                    return time.getTime() > Date.now() || time.getTime() < threeMonths;
+                },
                 shortcuts: [{
                     text: '最近15分钟',
                     onClick(picker) {
@@ -454,29 +460,8 @@ export default {
         // console.log('updated 111', document.getElementById('line1'))
         // 适配屏幕
         window.addEventListener('resize', () => {
-            // that.resizeCharts()
         })
-        if (this.layerType === 'Tomcat') {
-            // console.log('layerType', this.layerType)
-            // 初始化表1
-            // document.getElementById('line1').style.height = height / 2
-            this.line1 = echarts.init(document.getElementById('line1'))
-            // 初始化表2
-            this.line2 = echarts.init(document.getElementById('line2'))
-            // 初始化表3
-            this.line3 = echarts.init(document.getElementById('line3'))
-            // 初始化表4
-            this.line4 = echarts.init(document.getElementById('line4'))
-        } else if (this.layerType === 'others') {
-            // 初始化表5
-            this.line5 = echarts.init(document.getElementById('line5'))
-            // 初始化表6
-            this.line6 = echarts.init(document.getElementById('line6'))
-            // 初始化表7
-            this.line7 = echarts.init(document.getElementById('line7'))
-            // 初始化表8
-            this.line8 = echarts.init(document.getElementById('line8'))
-        }
+        this.initCharts()
     },
     destroyed() {
         this.refrash = '0'
@@ -489,6 +474,30 @@ export default {
         ]),
         updateChart,
         setChartData,
+        // 初始化图例
+        initCharts() {
+            if (this.layerType === 'Tomcat') {
+                // console.log('layerType', this.layerType)
+                // 初始化表1
+                // document.getElementById('line1').style.height = height / 2
+                this.line1 = echarts.init(document.getElementById('line1'))
+                // 初始化表2
+                this.line2 = echarts.init(document.getElementById('line2'))
+                // 初始化表3
+                this.line3 = echarts.init(document.getElementById('line3'))
+                // 初始化表4
+                this.line4 = echarts.init(document.getElementById('line4'))
+            } else if (this.layerType === 'others') {
+                // 初始化表5
+                this.line5 = echarts.init(document.getElementById('line5'))
+                // 初始化表6
+                this.line6 = echarts.init(document.getElementById('line6'))
+                // 初始化表7
+                this.line7 = echarts.init(document.getElementById('line7'))
+                // 初始化表8
+                this.line8 = echarts.init(document.getElementById('line8'))
+            }
+        },
         // tomcat项目
         getChartData(params, env, project) {
             let url1 = `/tomcat/${env}/${project}/cpu_usage`
@@ -611,7 +620,6 @@ export default {
             //     return
             // }
             params.step = this.getStep(days)
-            console.log('params', params)
             let env = that.projectdetail.deployEnv
             let project = that.projectdetail.mark
             if (that.layerType === 'Tomcat') {
@@ -637,7 +645,10 @@ export default {
                 let params = {
                     start: that.startTime,
                     end: that.endTime,
+                    step: 60
                 }
+                let days = (that.endTime - that.startTime) / ( 60 * 60 * 24)
+                params.step = that.getStep(days)
                 let env = that.projectdetail.deployEnv
                 let project = that.projectdetail.mark
                 if (that.layerType === 'Tomcat') {
@@ -650,15 +661,24 @@ export default {
             }, that.refrash == 0 ? '5000' : that.refrash * 1000)
 
         },
+        // 根据时间间隔，判断step长度,days最长为365
         getStep(days) {
-            if (days < 1) {
+            if (days <= 0.5) {
+                return 30
+            } else if (days > 0.5 && days <= 1) {
                 return 60
-            } else if (days > 1 && days < 7) {
-                return 60 * 15
-            } else if (days > 7 && days < 30) {
-                return 60 * 30
+            } else if (days > 1 && days <= 3) {
+                return 1200
+            } else if (days > 3 && days <= 7) {
+                return 1800
+            }  else if (days > 7 && days <= 30) {
+                return 3600
+            }  else if (days > 30 && days <= 60) {
+                return 7200
+            }  else if (days >60 && days <= 120) {
+                return 14400
             } else {
-                return 60 * 60 * 4
+                return 21600
             }
         }
     }
@@ -693,6 +713,9 @@ export default {
         .el-dialog__headerbtn{
             top:15px;
         }
+        .el-dialog__title{
+            font-weight: bold;
+        }
     }
 .el-row {
   margin-bottom: 15px;
@@ -703,6 +726,7 @@ export default {
 }
 .el-col {
   border-radius: 4px;
+  padding: 0 5px !important;
 }
 .bg-purple-dark {
   background: #99a9bf;
@@ -734,8 +758,8 @@ export default {
 }
 .echarts_content {
   background: #f0f4f8;
-  padding:15px;
-  height: 70vh;
+  padding:10px;
+//   height: 70vh;
 }
 
 .title{
@@ -765,7 +789,7 @@ export default {
 }
 .chart {
   width: 100%;
-  height: 32vh;
+  height: 33vh;
   background: #fff;
 }
 

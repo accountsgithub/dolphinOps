@@ -23,18 +23,18 @@
             </el-col>
         </el-row>
         <!-- 第一屏 第一行 -->
-        <el-row :gutter="20">
-            <el-col :span="6" >
+        <el-row :gutter="20" class="first">
+            <el-col :span="5" >
                 <div class="grid-content bg-purple bg-dashboard _box">
                     <div class="chart_box">
                         <div class="chats" id="cpuChart"></div>
                     </div>
                     <div class="bottomText">
-                        <span><span>高频占用：<span style="color: #fb65ff;font-size:16px;">{{highCpuProject}}个</span></span></span>
+                        <span><span>高频占用：<span style="color: #fb65ff;font-size:16px;font-weight:bold">{{highCpuProject}}<span style="font-size:12px;font-weight:normal">个</span></span></span></span>
                     </div>
                 </div>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="14">
                 <div class="grid-content bg-purple bg-dashboard" style="border:none">
                     <div class="dashboardTitle">
                         <div>
@@ -76,35 +76,36 @@
                     </div>
                 </div>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="5">
                 <div class="grid-content bg-purple bg-dashboard _box">
                     <div class="chart_box"><div class="chats" id="PanChart"></div></div>
                     <p>磁盘使用情况</p>
                     <div class="bottomText">
-                        <span><span>磁盘已用：<span style="color: #735feb;font-size:16px;">{{uselDisk}}G</span></span></span>
-                        <span><span>磁盘总量：<span style="color: #247adf;font-size:16px;">{{totalDisk}}G</span></span></span>
+                        <span><span>磁盘已用：<span style="color: #735feb;font-size:16px;font-weight:bold">{{uselDisk}}<span style="font-size:12px;font-weight:normal">G</span></span></span></span>
+                        <span><span>磁盘总量：<span style="color: #247adf;font-size:16px;font-weight:bold">{{totalDisk}}<span style="font-size:12px;font-weight:normal">G</span></span></span></span>
                     </div>
                 </div>
             </el-col>
         </el-row>
         <!-- 第一屏 第二行 -->
         <el-row :gutter="20" style="position:relative;">
-            <el-col :span="6">
+            <el-col :span="spanNumother">
                 <div class="grid-content bg-purple bg-dashboard _box" >
                     <div class="chart_box"><div class="chats" id="memoryChart"></div></div>
                     <p>内存使用情况</p>
                     <div class="bottomText">
-                        <span><span>内存已用：<span style="color: #86d258;font-size:16px;">{{useMemory}}G</span></span></span>
-                        <span><span>内存总量：<span style="color: #e6b564;font-size:16px;">{{totalMemory}}G</span></span></span>
+                        <span><span>内存已用：<span style="color: #86d258;font-size:16px;font-weight:bold">{{useMemory}}<span style="font-size:12px;font-weight:normal">G</span></span></span></span>
+                        <span><span>内存总量：<span style="color: #e6b564;font-size:16px;font-weight:bold">{{totalMemory}}<span style="font-size:12px;font-weight:normal">G</span></span></span></span>
                     </div>
                 </div>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="spanNumCenter">
+                <div style="height:60px;    position: relative;z-index:33"></div>
                 <div class="grid-content bg-purple bg-dashboard _box">
-                    <div class="chart_box"><div class="chats" id="netWorkChart"></div></div>
+                    <div class="chart_box" style="height:80%"><div class="chats" id="netWorkChart"></div></div>
                 </div>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="spanNumother">
                 <div class="grid-content bg-purple bg-dashboard _box">
                     <div class="chart_box"><div class="chats" id="IOChart"></div></div>
                 </div>
@@ -180,6 +181,8 @@ export default {
             memoryChart: null,
             aveTimeChart: null,
             warnChart: null,
+            spanNumCenter: 14, 
+            spanNumother: 5, 
             echartsDom: [
                 'cpuChart',
                 'memoryChart',
@@ -220,10 +223,10 @@ export default {
                     title: {
                         text: '云存储实时IO流量情况',
                         left: 'center',
-                        top: '3%',
+                        top: '5%',
                         textStyle: {
                             color: '#fff',
-                            fontWeight: 'normal',
+                            // fontWeight: 'normal',
                             fontSize: '18'
                         }
                     },
@@ -235,7 +238,7 @@ export default {
                     },
                     legend: {
                         data: ['已用', '剩余'],
-                        top: '10%',
+                        top: '13%',
                         textStyle: {
                             color: '#C1E5FF',
                         },
@@ -247,7 +250,7 @@ export default {
                         left: '3%',
                         right: '3%',
                         bottom: '5%',
-                        top: '20%',
+                        top: '30%',
                         containLabel: true
                     },
                     color: ['#2a8eff', '#86d258'],
@@ -352,7 +355,7 @@ export default {
         that.windowHeight = window.innerHeight
         that.env = JSON.parse(sessionStorage.getItem('env'))
         // =========初始化========
-        that.setHeight()
+        that.setSize()
         that.settimer()
         //  =========适配屏幕==========
         window.addEventListener('resize', this.resizeWindow, false)
@@ -386,7 +389,7 @@ export default {
         ]),
         resizeWindow() {
             this.windowHeight = window.innerHeight
-            this.setHeight()
+            this.setSize()
             this.resizeCharts()
             this.fullScreen = document.webkitIsFullScreen
         },
@@ -420,11 +423,26 @@ export default {
             this.getIOData()
         },
         // 设置容器高度与margin
-        setHeight() {
+        setSize() {
             let height = (window.innerHeight - 160) / 2
+            // let width = window.innerWidth
+            // console.log('width', width)
+            // if (width > 1440) {
+            //     this.spanNumCenter =  16 
+            //     this.spanNumother = 4
+            // } else {
+            //     this.spanNumCenter =  12 
+            //     this.spanNumother = 6
+            // }
             // console.log('height', screen.availHeight, screen.height, window.innerHeight, height)
             this.echartsDom.forEach((item) => {
-                document.getElementById(item).style.height = `${height}px`
+                if (item === 'netWorkChart') {
+                    console.log('item', item)
+                    let newheight = height - 60
+                    document.getElementById(item).style.height = `${newheight}px`
+                } else {
+                    document.getElementById(item).style.height = `${height}px`
+                }
             })
             // 设置容器边框
             // setBorder(document.getElementById('cpuChart'))
@@ -466,8 +484,8 @@ export default {
                 this.highCpuProject = res.topCpuProjectCnt
                 this.totalDisk = res.totalDisk
                 this.totalMemory = res.totalMemory
-                this.uselDisk = this.totalDisk * (res.diskUsedPercent / 100)
-                this.useMemory = this.totalMemory * (res.memoryUsedPercent / 100)
+                this.uselDisk = (this.totalDisk * (res.diskUsedPercent / 100)).toFixed(2)
+                this.useMemory = (this.totalMemory * (res.memoryUsedPercent / 100)).toFixed(2)
                 //cpu使用情况
                 let cpuUsedPercent = {
                     title: 'CPU使用情况',
@@ -766,7 +784,7 @@ export default {
 }
 .bottomText > span {
   width: 45%;
-  height: 28px;
+//   height: 28px;
   line-height: 28px;
   margin: 0 auto;
   border: 1px #15356f solid;
@@ -830,9 +848,11 @@ export default {
 }
 .dashboardTitle {
   display: flex;
+  justify-content: space-between;
   & > div {
     flex: 1;
     padding: 0 15px;
+    max-width: 188px;
     color: #d5f0ff;
     & > p {
       padding: 0;
@@ -854,6 +874,10 @@ export default {
       }
     }
   }
+}
+.first {
+    position: relative;
+    z-index:22
 }
 .maimImg {
   & > img {
@@ -878,15 +902,17 @@ export default {
     position: relative;
     z-index: 2;
     background: #091549;
+    box-shadow: rgba(27,216,247,0.08) 0px 0px 36px -3px inset;
   }
   p{
     width: 100%;
     position: absolute;
-    top: 0;
+    top: 2%;
     z-index: 2;
     text-align: center;
     font-size: 18px;
     color: #fff;
+    font-weight: bold;
   }
   .chart_box {
     background: #091549;
@@ -944,16 +970,16 @@ export default {
     width: 10px;
     height: 50px;
     position: fixed;
-    top:48%;
-    right: 10px;
+    top:52%;
+    right: 16px;
     z-index: 22;
     span{
         display: block;
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         border-radius: 5px;
         background: #133166;
-        margin-bottom:10px;
+        margin-bottom:8px;
     }
     .active{
         background: #BBD3FF;
@@ -995,7 +1021,7 @@ body::-webkit-scrollbar {/*隐藏滚轮*/
   /* background: #d3dce6; */
   position: relative;
   z-index: 2;
-  border: 1px #0d2259 solid;
+  border: 2px #0d2259 solid;
   color: #d8d8d8;
   font-weight: normal;
 }
@@ -1016,12 +1042,44 @@ body::-webkit-scrollbar {/*隐藏滚轮*/
   padding: 30px 40px;
   background: #091649;
 }
-@media screen and (max-width: 1360px) {
+@media screen and (max-width: 1366px) {
+    .maimImg{
+        position: absolute !important;
+    }
+    .maimImg>img{
+        max-width: 600px !important;
+        display: block;
+        margin: 0 auto;
+        position: static !important;
+    }
+}
+@media screen and (max-width: 1440px) {
     .numBox {
     }
     .numBox .num{
-        margin-right:-5px !important;
-        transform: scale(0.7);
+        margin-right:0px !important;
+        transform: scale(0.9);
+    }
+    .maimImg{
+        position: absolute !important;
+    }
+    .maimImg>img{
+        max-width: 700px !important;
+        display: block;
+        margin: 0 auto;
+        position: static !important;
     }
 }
+@media screen and (max-width: 1920px) {
+    .maimImg{
+        position: absolute !important;
+    }
+    .maimImg>img{
+        max-width: 900px !important;
+        display: block;
+        margin: 0 auto;
+        position: static !important;
+    }
+}
+
 </style>
