@@ -106,7 +106,7 @@ export function updateChart(myChartLine, option) {
         },
         xAxis: {
             type: 'category',
-            boundaryGap: false, // 坐标轴两边留白
+            boundaryGap: false, // 坐标轴两边不留白
             // splitLine: { // 网格线 x轴对应的是否显示
             //     show: true,
             //     lineStyle: {
@@ -288,7 +288,7 @@ export function setPieData(targit, res) {
             // name: '内存使用情况',
             type: 'pie',
             clockWise: true,
-            startAngle: -135,
+            startAngle: -90,
             radius: ['35%', '50%'],
             color: res.color,
             itemStyle: {
@@ -497,6 +497,8 @@ export function setBarData(targit, res, type) {
         title: {
             text: res.title,
             subtext: res.subtext,
+            link: '#/projectMgt/exceptionPage',
+            target: 'self',
             top: '3%',
             left: '3%',
             textStyle: {
