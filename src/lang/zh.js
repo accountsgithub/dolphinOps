@@ -152,6 +152,7 @@ export default {
     },
     part: {
         // EmailList
+        editEmail: '变更邮箱',
         addEmail: '添加邮箱',
         email: '告警邮箱地址:', // 变更1
         emailPlaceholder: '请添加告警邮箱,多个地址请用逗号 (",") 分隔',
@@ -236,7 +237,8 @@ export default {
         autoTest_button: '自动化测试',
         linkReasonPage_button: '跳转查询失败接口原因',
         testActionSuccess_message: '自动化测试成功',
-        testActionFail_message: '自动化测试失败'
+        testActionFail_message: '自动化测试失败',
+        testResult_placeholder: '请选择测试结果'
     },
     // 异常情况页 变更1
     exceptionPage: {

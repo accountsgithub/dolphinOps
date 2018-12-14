@@ -1,5 +1,5 @@
 <template>
-    <el-row>
+    <el-row style="margin-top: 0">
         <div v-loading="isLoading"
              style="background-color: #ffffff">
             <div class="page-title-style">
@@ -13,19 +13,49 @@
             <div v-show="summaryData.length > 0" class="status-div-style">
                 <proportion-com :statusData="summaryData"></proportion-com>
             </div>
-            <div v-show="testReportList.length > 0">
+            <div v-show="testReportList.length > 0 || summaryData.length > 0">
+                <div>
+                    <el-form :model="searchForm" ref="searchForm" :inline="true" size="small" label-width="100px">
+                        <div style="display: flex;flex-wrap: nowrap;justify-content: space-between">
+                            <div>
+                                <el-form-item :label="$t('testPage.apiName_label')" prop="f_like_name">
+                                    <el-input v-model="searchForm.f_like_name"></el-input>
+                                </el-form-item>
+                                <el-form-item :label="$t('testPage.testResult_label')" prop="f_eq_responseCode">
+                                    <el-select v-model="searchForm.f_eq_responseCode" clearable :placeholder="$t('testPage.testResult_placeholder')">
+                                        <el-option
+                                            v-for="item in options"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item :label="$t('testPage.requestPath_label')" prop="f_like_url">
+                                    <el-input v-model="searchForm.f_like_url"></el-input>
+                                </el-form-item>
+                            </div>
+                            <div>
+                                <el-form-item style="margin-right: 20px;">
+                                    <el-button type="primary" @click="getTestReportListMethod('first')" class="tableLastButtonStyleB icon iconfont icon-ic-search"> {{$t('common.search_button')}}</el-button>
+                                    <el-button type="primary" @click="resetTestReportForm('searchForm')" class="tableLastButtonStyleW icon iconfont icon-ic-refresh">{{$t('common.reset_button')}}</el-button>
+                                </el-form-item>
+                            </div>
+                        </div>
+                    </el-form>
+                </div>
                 <el-table :data="testReportList"
                           class="list"
                           highlight-current-row
                           style="width: 100%"
                           stripe>
-                    <el-table-column prop="name" :label="$t('testPage.apiName_label')"></el-table-column>
-                    <el-table-column prop="responseCode" :label="$t('testPage.testResult_label')" align="center">
+                    <el-table-column prop="name" :label="$t('testPage.apiName_label')" align="left"></el-table-column>
+                    <el-table-column prop="responseCode" :label="$t('testPage.testResult_label')" align="left">
                         <template class="test-fail-style" slot-scope="scope">
                             <span :class="{'test-response-fail-style':true,'test-response-success-style':scope.row.responseCode == '0'}">{{testResultMethod(scope.row)}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="url" min-width="200px" :label="$t('testPage.requestPath_label')">
+                    <el-table-column prop="url" min-width="200px" :label="$t('testPage.requestPath_label')" align="left">
                         <template slot-scope="scope">
                             <div slot="reference">
                                 <el-popover v-if="scope.row.url&&scope.row.url.length>20" trigger="hover" placement="top">
@@ -40,8 +70,8 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="httpMethod" :label="$t('testPage.requestType_label')" align="center"></el-table-column>
-                    <el-table-column prop="requestBody" :label="$t('testPage.requestValue_label')">
+                    <el-table-column prop="httpMethod" :label="$t('testPage.requestType_label')" align="left"></el-table-column>
+                    <el-table-column prop="requestBody" min-width="200px" align="left" :label="$t('testPage.requestValue_label')">
                         <template slot-scope="scope">
                             <div slot="reference">
                                 <el-popover v-if="scope.row.requestBody&&scope.row.requestBody.length>20" trigger="hover" placement="top">
@@ -50,14 +80,14 @@
                                         <span size="medium">{{ scope.row.requestBody.substring(0,20) }}…</span>
                                     </div>
                                 </el-popover>
-                                <div v-else >
+                                <div v-else>
                                     <span class="overKeyWidth">{{ scope.row.requestBody }}</span>
                                 </div>
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="responseStatus" :label="$t('testPage.responseStatus_label')" align="center"></el-table-column>
-                    <el-table-column prop="responseBody" :label="$t('testPage.responseValue_label')">
+                    <el-table-column prop="responseStatus" :label="$t('testPage.responseStatus_label')" align="right"></el-table-column>
+                    <el-table-column prop="responseBody" min-width="200px" :label="$t('testPage.responseValue_label')" align="left">
                         <template slot-scope="scope">
                             <div slot="reference">
                                 <el-popover v-if="scope.row.responseBody&&scope.row.responseBody.length>20" trigger="hover" placement="top">
@@ -66,13 +96,13 @@
                                         <span size="medium">{{ scope.row.responseBody.substring(0,20) }}…</span>
                                     </div>
                                 </el-popover>
-                                <div v-else >
+                                <div v-else>
                                     <span class="overKeyWidth">{{ scope.row.responseBody }}</span>
                                 </div>
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="message" :label="$t('testPage.exceptionInfo_label')">
+                    <el-table-column prop="message" min-width="200px" :label="$t('testPage.exceptionInfo_label')" align="left">
                         <template slot-scope="scope">
                             <div slot="reference">
                                 <el-popover v-if="scope.row.message&&scope.row.message.length>20" trigger="hover" placement="top">
@@ -87,7 +117,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="$t('testPage.operation')" width="200" align="center">
+                    <el-table-column :label="$t('testPage.operation')" width="200" align="left">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" target="_blank" :href="downloadApiDetailMethod(scope.row)">{{$t('testPage.downloadApiDetail_button')}}</a>
                         </template>
@@ -118,6 +148,12 @@ export default {
             summaryData: [],
             // 总流水号
             serialNo: '',
+            // 查询数据集合
+            searchForm: {
+                f_like_name: '',
+                f_eq_responseCode: null,
+                f_like_url: ''
+            },
             // 分页数据集合
             paginationData: {
                 pageNo: 0,
@@ -125,7 +161,17 @@ export default {
                 total: 0,
                 totalPages: 0,
                 pagerCount: 6
-            }
+            },
+            options: [
+                {
+                    value: 1,
+                    label: this.$t('testPage.success_message')
+                },
+                {
+                    value: 2,
+                    label: this.$t('testPage.fail_message')
+                }
+            ]
         }
     },
     mounted() {
@@ -166,6 +212,10 @@ export default {
         },
         // 执行测试方法
         testActionMethod() {
+            this.$message({
+                type: 'success',
+                message: this.$t('testPage.testActionSuccess_message')
+            })
             let params = Object.assign({mark: this.$route.params.mark, path: localStorage.getItem('path')})
             this.setTestActionApi(params).then(res => {
                 if (res.code == '0' && res.status == 200) {
@@ -182,6 +232,10 @@ export default {
                 }
             })
         },
+        resetTestReportForm(name) {
+            this.$refs[name].resetFields()
+            this.getTestReportListMethod('first')
+        },
         // 查询测试报告数据列表
         getTestReportListMethod(type) {
             this.isLoading = true
@@ -189,7 +243,11 @@ export default {
                 pageNo: type == 'first' ? 0 : this.paginationData.pageNo,
                 pageSize: this.paginationData.pageSize,
                 f_eq_mark: this.$route.params.mark,
-                f_eq_serialNo: this.serialNo
+                f_eq_serialNo: this.serialNo,
+                f_like_name: this.searchForm.f_like_name,
+                f_eq_responseCode: (this.searchForm.f_eq_responseCode == 1) ? 0 : null,
+                f_not_responseCode: (this.searchForm.f_eq_responseCode == 2) ? 0 : null,
+                f_like_url: this.searchForm.f_like_url
             }
             let params = Object.assign(jsonTemp)
             this.getTestReportListApi(params).then(result => {
