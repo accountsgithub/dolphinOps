@@ -497,6 +497,8 @@ export function setBarData(targit, res, type) {
         title: {
             text: res.title,
             subtext: res.subtext,
+            link: '#/projectMgt/exceptionPage',
+            target: 'self',
             top: '3%',
             left: '3%',
             textStyle: {

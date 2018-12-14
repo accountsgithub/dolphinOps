@@ -673,9 +673,9 @@ export default {
                     yAxis: result.yAxis
                 }
                 setBarData(that.echartsObj[6], optionTtansMission, 'bar')
-                that.echartsObj[6].on('click', function() {
-                    that.$router.push('/projectMgt/exceptionPage')
-                })
+                // that.echartsObj[6].on('click', function() {
+                //     that.$router.push('/projectMgt/exceptionPage')
+                // })
             })
 
         },

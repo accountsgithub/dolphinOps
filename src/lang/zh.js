@@ -152,7 +152,7 @@ export default {
     },
     part: {
         // EmailList
-        editEmail: '变更邮箱',
+        editEmail: '告警邮箱',
         addEmail: '添加邮箱',
         email: '告警邮箱地址:', // 变更1
         emailPlaceholder: '请添加告警邮箱,多个地址请用逗号 (",") 分隔',
