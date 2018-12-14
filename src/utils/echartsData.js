@@ -106,7 +106,7 @@ export function updateChart(myChartLine, option) {
         },
         xAxis: {
             type: 'category',
-            boundaryGap: false, // 坐标轴两边留白
+            boundaryGap: false, // 坐标轴两边不留白
             // splitLine: { // 网格线 x轴对应的是否显示
             //     show: true,
             //     lineStyle: {

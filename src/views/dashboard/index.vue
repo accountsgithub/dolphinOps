@@ -233,11 +233,11 @@ export default {
                     tooltip: {
                         trigger: 'axis',
                         axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                            type: 'line'        // 默认为直线，可选为：'line' | 'shadow'
                         }
                     },
                     legend: {
-                        data: ['已用', '剩余'],
+                        data: ['昨天', '今天'],
                         top: '13%',
                         textStyle: {
                             color: '#C1E5FF',
@@ -257,6 +257,7 @@ export default {
                     xAxis: [
                         {
                             type: 'category',
+                            boundaryGap: false,
                             splitLine: {
                                 lineStyle: {
                                     color: '#5170DA',
@@ -275,6 +276,9 @@ export default {
                     yAxis: [
                         {
                             type: 'value',
+                            axisTick: {
+                                show: false
+                            },
                             splitLine: {
                                 lineStyle: {
                                     color: '#5170DA',
@@ -291,24 +295,22 @@ export default {
                     ],
                     series: [
                         {
-                            name: '已用',
-                            type: 'bar',
-                            barWidth: '20%',
+                            name: '昨天',
+                            type: 'line',
+                            smooth: true,
+                            areaStyle: {
+                                opacity: '0.1'
+                            },
                             data: [320, 332, 301, 334, 390, 330, 320],
-                            // itemStyle: {
-                            //     normal: {color: '#2a8eff'},
-                            // },
                         },
                         {
-                            name: '剩余',
-                            type: 'bar',
-                            stack: '广告',
-                            barGap: '10%',
-                            barWidth: '20%',
+                            name: '今天',
+                            type: 'line',
+                            smooth: true,
+                            areaStyle: {
+                                opacity: '0.1'
+                            },
                             data: [120, 132, 101, 134, 90, 230, 210],
-                            // itemStyle: {
-                            //     normal: {color: '#86d258'},
-                            // },
                         },
 
                     ]
@@ -1042,12 +1044,12 @@ body::-webkit-scrollbar {/*隐藏滚轮*/
   padding: 30px 40px;
   background: #091649;
 }
-@media screen and (max-width: 1366px) {
+@media screen and (max-width: 1920px) {
     .maimImg{
         position: absolute !important;
     }
     .maimImg>img{
-        max-width: 600px !important;
+        max-width: 900px !important;
         display: block;
         margin: 0 auto;
         position: static !important;
@@ -1070,16 +1072,15 @@ body::-webkit-scrollbar {/*隐藏滚轮*/
         position: static !important;
     }
 }
-@media screen and (max-width: 1920px) {
+@media screen and (max-width: 1366px) {
     .maimImg{
         position: absolute !important;
     }
     .maimImg>img{
-        max-width: 900px !important;
+        max-width: 600px !important;
         display: block;
         margin: 0 auto;
         position: static !important;
     }
 }
-
 </style>

@@ -7,9 +7,12 @@
                 <a :href="projectdetail.monitorUrl">查看更多图表</a>
             </div>
             <div>
-                <span>日期选择</span>
+                <span>日期选择：</span>
+                <span style="margin：0">{{showPickerText}}</span>
+                <!-- <span style="margin：0">{{showPicker}}</span> -->
                 <el-date-picker
                     v-model="selectTime"
+                    v-show="showPicker"
                     type="datetimerange"
                     :picker-options="pickerOptions"
                     range-separator="--"
@@ -95,6 +98,7 @@ import { updateChart, setChartData, setYData } from '@/utils/echartsData.js'
 import echarts from 'echarts'
 export default {
     data() {
+        let that = this
         return {
             refrashOptions: [{
                 value: '0',
@@ -114,6 +118,8 @@ export default {
             }],
             refrash: '5',
             refrashflag: true,
+            showPicker: true,
+            showPickerText: '最近15分钟',
             pickerOptions: {
                 disabledDate(time) {
                     let curDate = (new Date()).getTime();
@@ -128,6 +134,8 @@ export default {
                         const start = new Date();
                         start.setTime(start.getTime() - 900 * 1000)
                         picker.$emit('pick', [start, end]);
+                        that.showPickerText = '最近15分钟'
+                        that.showPicker = 'false'
                     }
                 }, {
                     text: '最近30分钟',
@@ -136,6 +144,8 @@ export default {
                         const start = new Date();
                         start.setTime(start.getTime() - 1800 * 1000)
                         picker.$emit('pick', [start, end]);
+                        that.showPickerText = '最近30分钟'
+                        that.showPicker = 'false'
                     }
                 }, {
                     text: '最近1小时',
@@ -144,6 +154,8 @@ export default {
                         const start = new Date();
                         start.setTime(start.getTime() - 3600 * 1000)
                         picker.$emit('pick', [start, end]);
+                        that.showPickerText = '最近1小时'
+                        that.showPicker = 'false'
                     }
                 }, {
                     text: '今日',
@@ -156,6 +168,8 @@ export default {
                         start.setSeconds(0)
                         start.setTime(start)
                         picker.$emit('pick', [start, end])
+                        that.showPickerText = '今日'
+                        that.showPicker = 'false'
                     }
                 }, {
                     text: '昨日',
@@ -172,6 +186,8 @@ export default {
                         end.setMinutes(59)
                         end.setSeconds(59)
                         end.setTime(end)
+                        that.showPickerText = '昨日'
+                        that.showPicker = 'false'
                         picker.$emit('pick', [start, end])
                     }
                 }, {
@@ -180,6 +196,8 @@ export default {
                         const end = new Date();
                         const start = new Date();
                         start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                        that.showPickerText = '最近一周'
+                        that.showPicker = 'false'
                         picker.$emit('pick', [start, end]);
                     }
                 }]
@@ -498,6 +516,9 @@ export default {
                 this.line8 = echarts.init(document.getElementById('line8'))
             }
         },
+        setpicker() {
+            console.log('hello')
+        },
         // tomcat项目
         getChartData(params, env, project) {
             let url1 = `/tomcat/${env}/${project}/cpu_usage`
@@ -614,6 +635,10 @@ export default {
                 end: that.endTime,
                 step: 60
             }
+            // if (that.endTime == new Date()) {
+            //     this.showPicker = false
+            //     console.log('hello')
+            // }
             let days = (that.endTime - that.startTime) / ( 60 * 60 * 24)
             // if (that.endTime - that.startTime) {
             //     that.refrash = 0
@@ -637,17 +662,17 @@ export default {
                     return
                 }
                 let space = (that.selectTime[1] - that.selectTime[0]) / 1000
-                that.selectTime = [new Date() - space * 1000, new Date()]
-                var start = new Date(that.selectTime[0]);
-                var end = new Date(that.selectTime[1]);
-                that.startTime = Math.ceil(start.getTime() / 1000)
-                that.endTime = Math.ceil(end.getTime() / 1000)
+                let selectTime = [new Date() - space * 1000, new Date()]
+                var start = new Date(selectTime[0]);
+                var end = new Date(selectTime[1]);
+                let startTime = Math.ceil(start.getTime() / 1000)
+                let endTime = Math.ceil(end.getTime() / 1000)
                 let params = {
-                    start: that.startTime,
-                    end: that.endTime,
+                    start: startTime,
+                    end: endTime,
                     step: 60
                 }
-                let days = (that.endTime - that.startTime) / ( 60 * 60 * 24)
+                let days = (endTime - startTime) / ( 60 * 60 * 24)
                 params.step = that.getStep(days)
                 let env = that.projectdetail.deployEnv
                 let project = that.projectdetail.mark
@@ -704,7 +729,7 @@ export default {
         }
         .el-range-editor.el-input__inner{
             height: 30px;
-            width: 320px;
+            width: 325px;
         }
         .el-date-editor .el-range-separator{
             line-height: 30px;
