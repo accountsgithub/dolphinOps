@@ -254,14 +254,14 @@ export function setPieData(targit, res) {
     let pieData = {
         title: {
             text: `${res.value}%`,
-            subtext: `${res.name}使用情况`,
+            subtext: `${res.name}已使用`,
             x: 'center',
             y: 'center',
             textStyle: {
                 // fontWeight: 'normal',
                 color: '#fff',
                 fontSize: '20',
-                top: '10%'
+                top: '13%'
             },
             subtextStyle: {
                 fontWeight: 'normal',
@@ -380,7 +380,7 @@ export function setLineData(targit, res, type) {
     let lineData = {
         title: {
             text: res.title,
-            top: '3%',
+            top: '5%',
             left: '5%',
             textStyle: {
                 color: '#fff',
@@ -415,7 +415,7 @@ export function setLineData(targit, res, type) {
             left: '5%',
             right: '5%',
             bottom: '10%',
-            top: '15%',
+            top: '22%',
             containLabel: true
         },
         xAxis: {

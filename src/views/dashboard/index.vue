@@ -23,8 +23,8 @@
             </el-col>
         </el-row>
         <!-- 第一屏 第一行 -->
-        <el-row :gutter="20">
-            <el-col :span="spanNumother" >
+        <el-row :gutter="20" class="first">
+            <el-col :span="5" >
                 <div class="grid-content bg-purple bg-dashboard _box">
                     <div class="chart_box">
                         <div class="chats" id="cpuChart"></div>
@@ -34,7 +34,7 @@
                     </div>
                 </div>
             </el-col>
-            <el-col :span="spanNumCenter">
+            <el-col :span="14">
                 <div class="grid-content bg-purple bg-dashboard" style="border:none">
                     <div class="dashboardTitle">
                         <div>
@@ -76,7 +76,7 @@
                     </div>
                 </div>
             </el-col>
-            <el-col :span="spanNumother">
+            <el-col :span="5">
                 <div class="grid-content bg-purple bg-dashboard _box">
                     <div class="chart_box"><div class="chats" id="PanChart"></div></div>
                     <p>磁盘使用情况</p>
@@ -100,8 +100,9 @@
                 </div>
             </el-col>
             <el-col :span="spanNumCenter">
+                <div style="height:60px;    position: relative;z-index:33"></div>
                 <div class="grid-content bg-purple bg-dashboard _box">
-                    <div class="chart_box"><div class="chats" id="netWorkChart"></div></div>
+                    <div class="chart_box" style="height:80%"><div class="chats" id="netWorkChart"></div></div>
                 </div>
             </el-col>
             <el-col :span="spanNumother">
@@ -222,7 +223,7 @@ export default {
                     title: {
                         text: '云存储实时IO流量情况',
                         left: 'center',
-                        top: '3%',
+                        top: '5%',
                         textStyle: {
                             color: '#fff',
                             // fontWeight: 'normal',
@@ -249,7 +250,7 @@ export default {
                         left: '3%',
                         right: '3%',
                         bottom: '5%',
-                        top: '22%',
+                        top: '30%',
                         containLabel: true
                     },
                     color: ['#2a8eff', '#86d258'],
@@ -424,15 +425,24 @@ export default {
         // 设置容器高度与margin
         setSize() {
             let height = (window.innerHeight - 160) / 2
-            let width = window.innerWidth
+            // let width = window.innerWidth
             // console.log('width', width)
-            if (width > 1440) {
-                this.spanNumCenter =  16 
-                this.spanNumother = 4
-            }
+            // if (width > 1440) {
+            //     this.spanNumCenter =  16 
+            //     this.spanNumother = 4
+            // } else {
+            //     this.spanNumCenter =  12 
+            //     this.spanNumother = 6
+            // }
             // console.log('height', screen.availHeight, screen.height, window.innerHeight, height)
             this.echartsDom.forEach((item) => {
-                document.getElementById(item).style.height = `${height}px`
+                if (item === 'netWorkChart') {
+                    console.log('item', item)
+                    let newheight = height - 60
+                    document.getElementById(item).style.height = `${newheight}px`
+                } else {
+                    document.getElementById(item).style.height = `${height}px`
+                }
             })
             // 设置容器边框
             // setBorder(document.getElementById('cpuChart'))
@@ -865,6 +875,10 @@ export default {
     }
   }
 }
+.first {
+    position: relative;
+    z-index:22
+}
 .maimImg {
   & > img {
     width: 100%;
@@ -893,7 +907,7 @@ export default {
   p{
     width: 100%;
     position: absolute;
-    top: 0;
+    top: 2%;
     z-index: 2;
     text-align: center;
     font-size: 18px;
@@ -956,7 +970,7 @@ export default {
     width: 10px;
     height: 50px;
     position: fixed;
-    top:48%;
+    top:52%;
     right: 16px;
     z-index: 22;
     span{
@@ -1028,12 +1042,44 @@ body::-webkit-scrollbar {/*隐藏滚轮*/
   padding: 30px 40px;
   background: #091649;
 }
+@media screen and (max-width: 1366px) {
+    .maimImg{
+        position: absolute !important;
+    }
+    .maimImg>img{
+        max-width: 600px !important;
+        display: block;
+        margin: 0 auto;
+        position: static !important;
+    }
+}
 @media screen and (max-width: 1440px) {
     .numBox {
     }
     .numBox .num{
-        margin-right:-2px !important;
-        transform: scale(0.8);
+        margin-right:0px !important;
+        transform: scale(0.9);
+    }
+    .maimImg{
+        position: absolute !important;
+    }
+    .maimImg>img{
+        max-width: 700px !important;
+        display: block;
+        margin: 0 auto;
+        position: static !important;
     }
 }
+@media screen and (max-width: 1920px) {
+    .maimImg{
+        position: absolute !important;
+    }
+    .maimImg>img{
+        max-width: 900px !important;
+        display: block;
+        margin: 0 auto;
+        position: static !important;
+    }
+}
+
 </style>
