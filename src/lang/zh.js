@@ -235,10 +235,14 @@ export default {
         executeTime_label: '执行时间',
         apiCount_label: '接口笔数',
         autoTest_button: '自动化测试',
-        linkReasonPage_button: '跳转查询失败接口原因',
+        linkReasonPage_button: '查看明细',
         testActionSuccess_message: '自动化测试成功',
         testActionFail_message: '自动化测试失败',
-        testResult_placeholder: '请选择测试结果'
+        apiName_placeholder: '请输入接口名称',
+        testResult_placeholder: '请选择测试结果',
+        requestPath_placeholder: '请输入请求地址',
+        download_button: '下载',
+        testAgain_button: '重新测试'
     },
     // 异常情况页 变更1
     exceptionPage: {
