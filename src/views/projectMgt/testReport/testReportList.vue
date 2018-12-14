@@ -205,7 +205,7 @@ export default {
                 }
             })
         },
-        resetTestReportForm(name){
+        resetTestReportForm(name) {
             console.log(name)
         },
         // 查询测试报告数据列表
