@@ -381,6 +381,7 @@ export default {
     destroyed() {
         this.currentPage = 0
         window.removeEventListener('resize', this.resizeWindow, false);
+        window.removeEventListener('DOMMouseScroll', this.scrollFun, false);
         clearInterval(this.interval)
         // this.scrollTo(0)
     },
