@@ -288,7 +288,7 @@ export function setPieData(targit, res) {
             // name: '内存使用情况',
             type: 'pie',
             clockWise: true,
-            startAngle: -135,
+            startAngle: -90,
             radius: ['35%', '50%'],
             color: res.color,
             itemStyle: {
