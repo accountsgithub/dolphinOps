@@ -66,8 +66,8 @@
                     <el-col :span="11">
                         <el-form-item :label="$t('projectMgt.pathHerf')">
                             <a class="pathHerf"
-                               :href="getPath(project.path)"
-                               target="_blank">{{getPath(project.path)}}</a>
+                               :href="project.path"
+                               target="_blank">{{project.path}}</a>
                         </el-form-item>
                     </el-col>
                 </el-form>
@@ -360,11 +360,6 @@ export default {
     },
     /*eslint-disable*/
   methods: {
-    getPath (path) {
-      if (path && /\[(.*)\]?/g.test(path)) {
-        return JSON.parse(path)[0]
-      }
-    },
     openTerminal (podName) {
       this.dialogVisible = true
       this.currentPodName = podName
