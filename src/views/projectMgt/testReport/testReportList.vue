@@ -7,7 +7,7 @@
                 <div style="margin-right: 20px;">
                     <el-button class="tableLastButtonStyleW" @click="linkHistoryMethod">{{$t('testPage.showHistoryRecord_button')}}</el-button>
                     <el-dropdown class="avatar-container" trigger="hover">
-                        <el-button :disabled="!serialNo" class="tableLastButtonStyleW" @click="downloadAllDetailMethod"><i class="icon iconfont icon-ic-loaddown" style="font-size: 14px;"></i></el-button>
+                        <el-button :disabled="!serialNo" class="tableLastButtonStyleW" style="padding: 0 10px;" @click="downloadAllDetailMethod"><i class="icon iconfont icon-ic-loaddown" style="font-size: 14px;"></i></el-button>
                         <el-dropdown-menu class="user-dropdown" slot="dropdown">
                             <el-dropdown-item divided>
                                 <span>{{this.$t('testPage.download_button')}}</span>
@@ -15,7 +15,7 @@
                         </el-dropdown-menu>
                     </el-dropdown>
                     <el-dropdown class="avatar-container" trigger="hover">
-                        <el-button class="tableLastButtonStyleW" @click="testActionMethod"><i class="icon iconfont icon-ceshi" style="font-size: 16px;"></i></el-button>
+                        <el-button class="tableLastButtonStyleW" @click="testActionMethod" style="padding: 0 10px;"><i class="icon iconfont icon-ceshi" style="font-size: 14px;"></i></el-button>
                         <el-dropdown-menu class="user-dropdown1" slot="dropdown">
                             <el-dropdown-item divided>
                                 <span>{{this.$t('testPage.testAgain_button')}}</span>
@@ -394,5 +394,20 @@ export default {
 }
 /deep/.el-dropdown-menu__item {
     padding: 0 15px;
+}
+/deep/.tableLastButtonStyleW {
+    font-family: PingFangSC-Semibold;
+    font-size: 12px;
+    color: #666666;
+    background: #f9fbfd;
+    border: 1px solid #e7e9f0;
+    border-radius: 4px;
+    padding: 0 10px 0 10px;
+    height: 32px;
+    line-height: 0 !important;
+    margin-left: 10px;
+    & > span {
+        margin-left: 0;
+    }
 }
 </style>

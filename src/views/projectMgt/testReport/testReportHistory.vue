@@ -10,7 +10,7 @@
                           highlight-current-row
                           style="width: 100%"
                           stripe>
-                    <el-table-column prop="name" :label="$t('testPage.apiName_label')" align="center">
+                    <el-table-column prop="name" :label="$t('testPage.executeTime_label')" align="left">
                         <template slot-scope="scope">
                             {{timestampToTimeFun(scope.row.createTime)}}
                         </template>
@@ -18,7 +18,7 @@
                     <el-table-column prop="interfaceCount" :label="$t('testPage.apiCount_label')" align="right"></el-table-column>
                     <el-table-column prop="successCount" :label="$t('testPage.summarySuccess_label')" align="right"></el-table-column>
                     <el-table-column prop="failCount" :label="$t('testPage.summaryFail_label')" align="right"></el-table-column>
-                    <el-table-column :label="$t('testPage.operation')" width="300" align="center">
+                    <el-table-column :label="$t('testPage.operation')" width="150" align="left">
                         <template slot-scope="scope">
                             <a class="tableActionStyle" target="_blank" @click="linkReasonPageMethod(scope.row)">{{$t('testPage.linkReasonPage_button')}}</a>
                         </template>
@@ -61,6 +61,7 @@ export default {
             let jsonTemp = {
                 pageNo: type == 'first' ? 0 : this.paginationData.pageNo,
                 pageSize: this.paginationData.pageSize,
+                'sorts[0].name': 'createTime',
                 f_eq_mark: this.$route.params.mark
             }
             let params = Object.assign(jsonTemp)
