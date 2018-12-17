@@ -4,10 +4,24 @@
              style="background-color: #ffffff">
             <div class="page-title-style">
                 <span>Requests Summary</span>
-                <div>
+                <div style="margin-right: 20px;">
                     <el-button class="tableLastButtonStyleW" @click="linkHistoryMethod">{{$t('testPage.showHistoryRecord_button')}}</el-button>
-                    <el-button :disabled="!serialNo" class="tableLastButtonStyleW" @click="downloadAllDetailMethod"><i class="icon iconfont icon-ic-loaddown" style="font-size: 14px;"></i></el-button>
-                    <el-button class="tableLastButtonStyleW" @click="testActionMethod"><i class="icon iconfont icon-ceshi" style="font-size: 16px;"></i></el-button>
+                    <el-dropdown class="avatar-container" trigger="hover">
+                        <el-button :disabled="!serialNo" class="tableLastButtonStyleW" @click="downloadAllDetailMethod"><i class="icon iconfont icon-ic-loaddown" style="font-size: 14px;"></i></el-button>
+                        <el-dropdown-menu class="user-dropdown" slot="dropdown">
+                            <el-dropdown-item divided>
+                                <span>{{this.$t('testPage.download_button')}}</span>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <el-dropdown class="avatar-container" trigger="hover">
+                        <el-button class="tableLastButtonStyleW" @click="testActionMethod"><i class="icon iconfont icon-ceshi" style="font-size: 16px;"></i></el-button>
+                        <el-dropdown-menu class="user-dropdown1" slot="dropdown">
+                            <el-dropdown-item divided>
+                                <span>{{this.$t('testPage.testAgain_button')}}</span>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
                 </div>
             </div>
             <div v-show="summaryData.length > 0" class="status-div-style">
@@ -19,7 +33,7 @@
                         <div style="display: flex;flex-wrap: nowrap;justify-content: space-between">
                             <div>
                                 <el-form-item :label="$t('testPage.apiName_label')" prop="f_like_name">
-                                    <el-input v-model="searchForm.f_like_name"></el-input>
+                                    <el-input v-model="searchForm.f_like_name" :placeholder="$t('testPage.apiName_placeholder')"></el-input>
                                 </el-form-item>
                                 <el-form-item :label="$t('testPage.testResult_label')" prop="f_eq_responseCode">
                                     <el-select v-model="searchForm.f_eq_responseCode" clearable :placeholder="$t('testPage.testResult_placeholder')">
@@ -32,7 +46,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item :label="$t('testPage.requestPath_label')" prop="f_like_url">
-                                    <el-input v-model="searchForm.f_like_url"></el-input>
+                                    <el-input v-model="searchForm.f_like_url" :placeholder="$t('testPage.requestPath_placeholder')"></el-input>
                                 </el-form-item>
                             </div>
                             <div>
@@ -214,11 +228,11 @@ export default {
         testActionMethod() {
             this.$message({
                 type: 'success',
-                message: this.$t('testPage.testActionSuccess_message')
+                message: this.$t('testPage.testActioning_message')
             })
             let params = Object.assign({mark: this.$route.params.mark, path: localStorage.getItem('path')})
             this.setTestActionApi(params).then(res => {
-                if (res.code == '0' && res.status == 200) {
+                if (res.data.code == '0' && res.data.status == 200) {
                     this.$message({
                         type: 'success',
                         message: this.$t('testPage.testActionSuccess_message')
@@ -303,7 +317,7 @@ export default {
         color: #686F79;
         letter-spacing: 0;
     }.page-title-style div{
-         margin-right: 22px;
+         margin-right: 0px;
      }
     /*状态条div样式*/
     .status-div-style {
@@ -360,5 +374,25 @@ export default {
 }
 .test-response-success-style {
     color: #82C362;
+}
+.user-dropdown{
+    margin-top: -12px;
+    width: 60px;
+    /deep/.el-dropdown-menu{
+        padding: 0;
+    }
+}
+.user-dropdown1{
+    margin-top: -12px;
+    width: 85px;
+    /deep/.el-dropdown-menu{
+        padding: 0;
+    }
+}
+/deep/.el-dropdown-menu__item--divided {
+    margin-top: 0;
+}
+/deep/.el-dropdown-menu__item {
+    padding: 0 15px;
 }
 </style>
