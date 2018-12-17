@@ -39,11 +39,12 @@
                           highlight-current-row
                           style="width: 100%"
                           stripe>
-                    <el-table-column prop="project" :label="$t('exceptionPage.projectMark_label')" align="left" min-width="25%"></el-table-column>
-                    <el-table-column prop="projectName" :label="$t('exceptionPage.projectName_label')" align="left" min-width="25%"></el-table-column>
+                    <el-table-column prop="project" :label="$t('exceptionPage.projectMark_label')" align="left" min-width="23%"></el-table-column>
+                    <el-table-column prop="projectName" :label="$t('exceptionPage.projectName_label')" align="left" min-width="23%"></el-table-column>
                     <!--<el-table-column prop="uri" :label="$t('exceptionPage.url_label')" align="left" min-width="25%"></el-table-column>-->
-                    <el-table-column prop="statusCode" :label="$t('exceptionPage.responseStatus_label')" align="center" min-width="10%"></el-table-column>
-                    <el-table-column prop="respCnt" :label="$t('exceptionPage.responseCount_label')" align="center" min-width="10%"></el-table-column>
+                    <el-table-column prop="statusCode" :label="$t('exceptionPage.responseStatus_label')" align="left" min-width="23%"></el-table-column>
+                    <el-table-column prop="respCnt" :label="$t('exceptionPage.responseCount_label')" align="right" min-width="23%"></el-table-column>
+                    <el-table-column align="center" min-width="10%"></el-table-column>
                 </el-table>
                 <el-pagination v-if="paginationData.total != 0" :current-page="paginationData.pageNo + 1" class="pagination" @size-change="sizeChange" @current-change="currentChange" :page-size="paginationData.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.total"></el-pagination>
             </div>
@@ -125,7 +126,6 @@ export default {
                             type: 'error',
                             message: this.$t('exceptionPage.searchError_message')
                         })
-                        this.exceptionList = []
                     }
                 })
             }

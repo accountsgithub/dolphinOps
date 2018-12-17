@@ -72,8 +72,6 @@ export default {
                     this.paginationData.pageNo = result.pageNo
                     this.paginationData.pageSize = result.pageSize
                     this.paginationData.total = result.total
-                } else {
-                    this.testHistoryList = []
                 }
             })
         },
