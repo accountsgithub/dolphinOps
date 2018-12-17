@@ -16,7 +16,7 @@
                     </el-form-item>
                     <el-form-item :label="$t('exceptionPage.projectName_label')" prop="project">
                         <el-select v-model="searchForm.project" clearable filterable :placeholder="$t('exceptionPage.projectName_placeholder')">
-                            <el-option v-for="(item, index) in projectList" :key="index" :value="item" :label="item">
+                            <el-option v-for="(item) in projectList" :key="item.mark" :value="item.mark" :label="item.name">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -76,7 +76,8 @@ export default {
     },
     mounted() {
         this.getExceptionListMethod('first')
-        this.getEnvMethod()
+        this.getProjectListMethod() // 查询项目下拉列表
+        // this.getEnvMethod()
     },
     methods: {
         ...mapActions([
@@ -94,8 +95,8 @@ export default {
             })
         },
         // 获取下拉项目列表
-        getProjectListMethod(params) {
-            this.getProjectListApi(params).then(res => {
+        getProjectListMethod() {
+            this.getProjectListApi().then(res => {
                 this.projectList = res.result
             })
         },
