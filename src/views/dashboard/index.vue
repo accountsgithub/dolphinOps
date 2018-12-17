@@ -181,8 +181,8 @@ export default {
             memoryChart: null,
             aveTimeChart: null,
             warnChart: null,
-            spanNumCenter: 14, 
-            spanNumother: 5, 
+            spanNumCenter: 14,
+            spanNumother: 5,
             echartsDom: [
                 'cpuChart',
                 'memoryChart',
@@ -381,6 +381,7 @@ export default {
     destroyed() {
         this.currentPage = 0
         window.removeEventListener('resize', this.resizeWindow, false);
+        window.removeEventListener('DOMMouseScroll', this.scrollFun, false);
         clearInterval(this.interval)
         // this.scrollTo(0)
     },
@@ -430,16 +431,16 @@ export default {
             // let width = window.innerWidth
             // console.log('width', width)
             // if (width > 1440) {
-            //     this.spanNumCenter =  16 
+            //     this.spanNumCenter =  16
             //     this.spanNumother = 4
             // } else {
-            //     this.spanNumCenter =  12 
+            //     this.spanNumCenter =  12
             //     this.spanNumother = 6
             // }
             // console.log('height', screen.availHeight, screen.height, window.innerHeight, height)
             this.echartsDom.forEach((item) => {
                 if (item === 'netWorkChart') {
-                    console.log('item', item)
+                    // console.log('item', item)
                     let newheight = height - 60
                     document.getElementById(item).style.height = `${newheight}px`
                 } else {
