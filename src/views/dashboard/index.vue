@@ -342,10 +342,12 @@ export default {
             startTime: 0,
             endTime: 0,
             width: '',
+            markObj: [],
             interval: null // 循环刷新参数
         }
     },
     created() {
+        this.getMarkList()
         // console.log('created 111', document.getElementById('cpuChart'))
     },
     before() {
@@ -359,6 +361,7 @@ export default {
         that.windowHeight = window.innerHeight
         that.width = window.innerWidth
         that.env = JSON.parse(sessionStorage.getItem('env'))
+        this.markObj = JSON.parse(sessionStorage.getItem('mark'))
         // =========初始化========
         that.setSize()
         that.settimer()
@@ -425,9 +428,9 @@ export default {
             if (this.width < 1440) {
                 num = 14
                 numHelf = 8
-            } else if (this.width > 1440 && this.width < 1920) {
+            } else if (this.width >= 1440 && this.width < 1920) {
                 num = 16
-                numHelf = 10
+                numHelf = 8
             } else {
                 num = 20
                 numHelf = 12
@@ -468,6 +471,20 @@ export default {
             // 设置容器边框
             // setBorder(document.getElementById('cpuChart'))
             this.updateIndexData(this.env)
+        },
+        // 获取项目标识
+        getMarkList() {
+            let setParams = {
+                url: 'common/projectMap',
+                params: ''
+            }
+            this.monitorApi(setParams).then(result => {
+                sessionStorage.setItem('mark', JSON.stringify(result))
+            })
+        },
+        serchMark(name) {
+            let that = this
+            return that.markObj[name] != undefined ? that.markObj[name] : name
         },
         //center中心数据
         getOverview(env) {
@@ -573,13 +590,16 @@ export default {
             }
             let that = this
             that.monitorApi(setParams).then(result => {
+                let xAxis = result.xAxis.map(item => {
+                    return that.serchMark(item)
+                })
                 let optionTtansMission = {
                     title: 'CPU使用情况',
                     subtext: '(单位：%)',
                     color: ['#1ea0f2'],
                     legend: ['CPU使用情况'],
                     series: result.series,
-                    xAxis: result.xAxis,
+                    xAxis: xAxis,
                     yAxis: result.yAxis
                 }
                 setBarData(this.echartsObj[7], optionTtansMission, 'bar')
@@ -595,13 +615,16 @@ export default {
             }
             let that = this
             that.monitorApi(setParams).then(result => {
+                let xAxis = result.xAxis.map(item => {
+                    return that.serchMark(item)
+                })
                 let optionTtansMission = {
                     title: 'CPU使用情况',
                     subtext: '(单位：%)',
                     color: ['#1ea0f2'],
                     legend: ['CPU使用情况'],
                     series: result.series,
-                    xAxis: result.xAxis,
+                    xAxis: xAxis,
                     yAxis: result.yAxis
                 }
                 // console.log('that.echartsObj[6]', that.echartsObj)
@@ -618,13 +641,16 @@ export default {
             }
             let that = this
             that.monitorApi(setParams).then(result => {
+                let xAxis = result.xAxis.map(item => {
+                    return that.serchMark(item)
+                })
                 let optionTtansMission = {
                     title: '内存使用情况',
                     subtext: '(单位：%)',
                     color: ['#b57edf'],
                     legend: ['内存使用情况'],
                     series: result.series,
-                    xAxis: result.xAxis,
+                    xAxis: xAxis,
                     yAxis: result.yAxis
                 }
                 setBarData(that.echartsObj[9], optionTtansMission, 'bar')
@@ -640,13 +666,16 @@ export default {
             }
             let that = this
             that.monitorApi(setParams).then(result => {
+                let xAxis = result.xAxis.map(item => {
+                    return that.serchMark(item)
+                })
                 let optionTtansMission = {
                     title: '内存使用情况',
                     subtext: '(单位：%)',
                     color: ['#b57edf'],
                     legend: ['内存使用情况'],
                     series: result.series,
-                    xAxis: result.xAxis,
+                    xAxis: xAxis,
                     yAxis: result.yAxis
                 }
                 // console.log('optionTtansMission', optionTtansMission)
@@ -664,13 +693,16 @@ export default {
             }
             let that = this
             that.monitorApi(setParams).then(result => {
+                let xAxis = result.xAxis.map(item => {
+                    return that.serchMark(item)
+                })
                 let optionTtansMission = {
                     title: '平均响应时间',
                     subtext: '(单位：ms;当前时间段所有响应时间/总次数)',
                     color: ['#09b7c6'],
                     legend: ['平均响应时间'],
                     series: result.series,
-                    xAxis: result.xAxis,
+                    xAxis: xAxis,
                     yAxis: result.yAxis
                 }
                 setBarData(that.echartsObj[5], optionTtansMission, 'bar')
@@ -678,6 +710,7 @@ export default {
         },
         //项目异常情况
         getErrInASC(env, num) {
+
             let setParamsTop = {
                 url: `/comparison/${env}/errors/top`,
                 params: {
@@ -686,6 +719,9 @@ export default {
             }
             let that = this
             that.monitorApi(setParamsTop).then(result => {
+                let xAxis = result.xAxis.map(item => {
+                    return that.serchMark(item)
+                })
                 // console.log(result)
                 let optionTtansMission = {
                     title: '项目异常情况',
@@ -693,7 +729,7 @@ export default {
                     color: ['#FFDD65', '#FF906C'],
                     legend: ['4xx', '5xx'],
                     series: result.series,
-                    xAxis: result.xAxis,
+                    xAxis: xAxis,
                     yAxis: result.yAxis
                 }
                 setBarData(that.echartsObj[6], optionTtansMission, 'bar')
@@ -890,6 +926,8 @@ export default {
   display: flex;
   justify-content: space-between;
   margin-bottom: 4%;
+  margin: 0 auto;
+  max-width: 950px;
   & > div {
     flex: 1;
     padding: 0 15px;
@@ -1088,12 +1126,18 @@ body::-webkit-scrollbar {/*隐藏滚轮*/
 @media screen and (max-width: 1920px) {
     .maimImg{
         position: absolute !important;
+        margin-top: 30px;
     }
     .maimImg>img{
-        max-width: 750px !important;
+        max-width: 850px !important;
         display: block;
         margin: 0 auto;
         position: static !important;
+    }
+}
+@media screen and (max-height: 940px) {
+    .maimImg>img{
+        max-width: 720px !important;
     }
 }
 @media screen and (max-width: 1440px) {
@@ -1105,9 +1149,10 @@ body::-webkit-scrollbar {/*隐藏滚轮*/
     }
     .maimImg{
         position: absolute !important;
+        margin-top: 25px;
     }
     .maimImg>img{
-        max-width: 630px !important;
+        max-width: 600px !important;
         display: block;
         margin: 0 auto;
         position: static !important;
@@ -1115,22 +1160,30 @@ body::-webkit-scrollbar {/*隐藏滚轮*/
     .bottomText{
            bottom: 5% !important; 
     }
-    .bottomText > span{
+    .bottomText > span:nth-child(1){
         width: 34% !important;
+        right: -15px;
+    }
+    .bottomText > span:nth-child(2){
+        width: 34% !important;
+        left: -15px;
     }
 }
+
 @media screen and (max-width: 1366px) {
     .maimImg{
         position: absolute !important;
+        margin-top: 20px;
     }
     .bottomText{
            bottom: 2% !important; 
     }
     .maimImg>img{
-        max-width: 570px !important;
+        max-width: 530px !important;
         display: block;
         margin: 0 auto;
         position: static !important;
     }
 }
+
 </style>

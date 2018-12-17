@@ -286,7 +286,7 @@ export function setPieData(targit, res) {
             type: 'pie',
             clockWise: true,
             startAngle: -90,
-            radius: ['37%', '50%'],
+            radius: ['36%', '50%'],
             color: res.color,
             itemStyle: {
                 normal: {
@@ -352,7 +352,7 @@ export function setLineData(targit, res, type) {
         color: ['#C0A54D', '#6553D2', '#2a8eff', '#86d258'],
         legend: {
             data: res.legend,
-            bottom: '2%',
+            bottom: '1%',
             textStyle: {
                 color: '#C1E5FF',
             },
@@ -453,7 +453,8 @@ export function setOptionData(option, type) {
                 seriesItem = {
                     name: option.legend[index],
                     type: type,
-                    barWidth: '20px',
+                    barWidth: option.series[0].data.length < 8 ? '10%' : '20px', // 获取到的数据不足请求的数据
+                    // barWidth: '20px',
                     barCategoryGap: '42px',
                     // barGap: index > 1 ? '-100%' : '2%',
                     barGap: '42px',
@@ -518,7 +519,7 @@ export function setBarData(targit, res, type) {
             data: res.legend,
             top: '10%',
             orient: 'horizontal', // 'vertical'
-            x: '85%', // 'center' | 'left' | {number},
+            x: '91%', // 'center' | 'left' | {number},
             y: 'top', // 'center' | 'bottom' | {number}
             textStyle: {
                 color: '#C1E5FF',
@@ -530,8 +531,8 @@ export function setBarData(targit, res, type) {
         grid: {
             left: '3%',
             right: '3%',
-            bottom: '5%',
-            top: '20%',
+            bottom: '3%',
+            top: '22%',
             containLabel: true
         },
         color: res.color,
@@ -546,7 +547,7 @@ export function setBarData(targit, res, type) {
             },
             axisLabel: {  // X轴倾斜显示
                 interval: 0,  
-                rotate: 20  
+                rotate: 20 
             },
             axisLine: {
                 lineStyle: {
@@ -568,8 +569,6 @@ export function setOption(targit, optionData) {
 export function setXData(xAxisData, format) {
     let xAxis = []
     xAxisData.map(item => {
-        console.log(item, format)
-        console.log(date.date(item).format(format))
         xAxis.push(date.date(item).format(format))
     })
     return xAxis
