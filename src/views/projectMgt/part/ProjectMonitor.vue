@@ -211,7 +211,7 @@ export default {
             optionCpu: {
                 title: 'CPU使用率',
                 legend: ['cup使用率'],
-                // xAxis: ['衬衫','羊毛衫','雪纺衫','裤子','高跟鞋','袜子'],
+                // xAxis: ['1545031050','1545031055','1545031060','1545031065','1545031070','1545031075'],
                 xAxis: [],
                 yAxis: [
                     {
@@ -460,7 +460,6 @@ export default {
         }
     },
     created() {
-        // console.log('created 111', document.getElementById('line1'))
     },
     before() {
         // console.log('before 111', document.getElementById('line1'))
@@ -533,7 +532,8 @@ export default {
             // tomcat项目--CPU使用率
             this.monitorApi(setParams).then(cpuChartData => {
                 this.optionCpu.xAxis = cpuChartData.xAxis
-                this.optionCpu.legend = setYData(cpuChartData.series).map(item => item.name)
+                // this.optionCpu.xAxis = setXData(this.optionCpu.xAxis, formatX)
+                // this.optionCpu.legend = setYData(cpuChartData.series).map(item => item.name)
                 this.optionCpu.series = setChartData(cpuChartData.series)
                 // this.optionCpu.yAxis = setYData(cpuChartData.series)
                 this.optionCpu.yAxis = cpuChartData.yAxis
@@ -639,18 +639,18 @@ export default {
             //     this.showPicker = false
             //     console.log('hello')
             // }
-            let days = (that.endTime - that.startTime) / ( 60 * 60 * 24)
+            let days = that.endTime - that.startTime
             // if (that.endTime - that.startTime) {
             //     that.refrash = 0
             //     return
             // }
-            params.step = this.getStep(days)
+            params.step = this.getStep(days).step
             let env = that.projectdetail.deployEnv
             let project = that.projectdetail.mark
             if (that.layerType === 'Tomcat') {
-                that.getChartData(params, env, project)
+                that.getChartData(params, env, project, that.getStep(days).xAxisFotmat)
             } else if (that.layerType === 'others') {
-                that.getNoTomcatData(params, env, project)
+                that.getNoTomcatData(params, env, project, that.getStep(days).xAxisFotmat)
             } else {
                 // console.log('no')
             }
@@ -673,13 +673,13 @@ export default {
                     step: 60
                 }
                 let days = (endTime - startTime) / ( 60 * 60 * 24)
-                params.step = that.getStep(days)
+                params.step = that.getStep(days).step
                 let env = that.projectdetail.deployEnv
                 let project = that.projectdetail.mark
                 if (that.layerType === 'Tomcat') {
-                    that.getChartData(params, env, project)
+                    that.getChartData(params, env, project, that.getStep(days).xAxisFotmat)
                 } else if (that.layerType === 'others') {
-                    that.getNoTomcatData(params, env, project)
+                    that.getNoTomcatData(params, env, project, that.getStep(days).xAxisFotmat)
                 } else {
                     // console.log('no')
                 }
@@ -688,23 +688,54 @@ export default {
         },
         // 根据时间间隔，判断step长度,days最长为365
         getStep(days) {
-            if (days <= 0.5) {
-                return 30
-            } else if (days > 0.5 && days <= 1) {
-                return 60
-            } else if (days > 1 && days <= 3) {
-                return 1200
-            } else if (days > 3 && days <= 7) {
-                return 1800
-            }  else if (days > 7 && days <= 30) {
-                return 3600
-            }  else if (days > 30 && days <= 60) {
-                return 7200
-            }  else if (days >60 && days <= 120) {
-                return 14400
+            let day = days / ( 60 * 60 * 24)
+            let step 
+            if (day <= 0.5) {
+                step = 30
+            } else if (day > 0.5 && day <= 1) {
+                step = 60
+            } else if (day > 1 && day <= 3) {
+                step = 1200
+            } else if (day > 3 && day <= 7) {
+                step = 1800
+            }  else if (day > 7 && day <= 30) {
+                step = 3600
+            }  else if (day > 30 && day <= 60) {
+                step = 7200
+            }  else if (day >60 && day <= 120) {
+                step = 14400
             } else {
-                return 21600
+                step = 21600
             }
+            // 格式化x轴
+            let formatX = this.TimeFormat(10, days)
+            let format = {
+                step: step,
+                xAxisFotmat: formatX
+            }
+            return format
+        },
+        TimeFormat(ticks, range) {
+            if (range && ticks) { // ticks是屏幕宽/柱子宽度px = 两个柱子之间的间隔（多少秒之间的聚合）
+                let secPerTick = range / ticks / 1000;
+                let oneDay = 86400000;
+                let oneYear = 31536000000;
+                if (secPerTick <= 45) {
+                    // return 'H:M:S';
+                    return 'H:M:S';
+                }
+                if (secPerTick <= 7200 || range <= oneDay) {
+                    return 'H:M';
+                }
+                if (secPerTick <= 80000) {
+                    return 'm/d H:M';
+                }
+                if (secPerTick <= 2419200 || range <= oneYear) {
+                    return 'm/d';
+                }
+                return 'Y-m';
+            }
+            return 'H:M';
         }
     }
 }

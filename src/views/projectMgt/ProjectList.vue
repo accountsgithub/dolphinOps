@@ -507,8 +507,10 @@ export default {
                 this.baseImageType = ''
                 this.$confirm('镜像字段为空，获取不到图表数据', '提示', {
                     confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
+                    // cancelButtonText: '取消',
+                    type: 'warning',
+                    showCancelButton: false,
+                    center: true
                 })
             }
         },

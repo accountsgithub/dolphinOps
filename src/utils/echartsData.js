@@ -1,4 +1,5 @@
 // import echarts from 'echarts'
+import date from '@/utils/date.js'
 // 基础监控--line处理option中的数据
 export function updateChart(myChartLine, option) {
     // cpuChart初始化数据
@@ -21,7 +22,7 @@ export function updateChart(myChartLine, option) {
                     show: false
                 },
                 axisLabel: {
-                    formatter: item.formatter,
+                    // formatter: item.formatter,
                     color: '#7B7F86'
                 },
                 axisLine: {
@@ -38,7 +39,6 @@ export function updateChart(myChartLine, option) {
     } else {
         yAxis = []
     }
-    // console.log('yAxis', yAxis)
 
     // 处理series
     let series = new Array
@@ -106,6 +106,7 @@ export function updateChart(myChartLine, option) {
         },
         xAxis: {
             type: 'category',
+            // type: 'time',
             boundaryGap: false, // 坐标轴两边不留白
             // splitLine: { // 网格线 x轴对应的是否显示
             //     show: true,
@@ -131,8 +132,6 @@ export function updateChart(myChartLine, option) {
         yAxis: yAxis,
         series: series
     }
-    // console.log('setOption', setOption)
-    // setOption(myChartLine, setOption)
     myChartLine.setOption(setOption, true)
 }
 // 基础监控--处理series
@@ -162,7 +161,7 @@ export function setYData(seriesData) {
     seriesData.map(item => {
         let yAxisItem = {
             name: item.name,
-            formatter: item.formatter
+            // formatter: item.formatter
         }
         yAxis.push(yAxisItem)
     })
@@ -256,17 +255,15 @@ export function setPieData(targit, res) {
             text: `${res.value}%`,
             subtext: `${res.name}已使用`,
             x: 'center',
-            y: 'center',
+            y: '43%',
             textStyle: {
                 // fontWeight: 'normal',
                 color: '#fff',
                 fontSize: '20',
-                top: '13%'
             },
             subtextStyle: {
                 fontWeight: 'normal',
                 color: '#fff',
-                top: '-5%'
             }
         },
         color: ['rgba(176, 212, 251, 1)'],
@@ -289,7 +286,7 @@ export function setPieData(targit, res) {
             type: 'pie',
             clockWise: true,
             startAngle: -90,
-            radius: ['35%', '50%'],
+            radius: ['37%', '50%'],
             color: res.color,
             itemStyle: {
                 normal: {
@@ -315,6 +312,116 @@ export function setPieData(targit, res) {
     // console.log(targit, pieData)
     setOption(targit, pieData)
 }
+
+// 网络流量
+export function setLineData(targit, res, type) {
+    // console.log('series res', res)
+    let series = setOptionData(res, type)
+    let yAxis = setyAxis(res.yAxis)
+    let subtext
+    if (yAxis.length === 1) { // 单位的判断
+        subtext = yAxis[0].formatter.split('{value}')[1]
+        // console.log('subtext', subtext)
+    }
+    let lineData = {
+        title: {
+            text: res.title,
+            subtext: `单位: ${subtext}`,
+            top: '5%',
+            left: '5%',
+            textStyle: {
+                color: '#fff',
+                fontWeight: 'normal',
+            },
+            subtextStyle: {
+                color: '#4E9ED8'
+            }
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                type: 'line' // 默认为直线，可选为：'line' | 'shadow'
+            },
+            // formatter: (data) => {
+            //     // for (var i = 0, length = data.length; i < length; i++) {
+            //     //     res = data[i].name 
+            //     // }
+            //     // return res
+            // }
+        },
+        color: ['#C0A54D', '#6553D2', '#2a8eff', '#86d258'],
+        legend: {
+            data: res.legend,
+            bottom: '2%',
+            textStyle: {
+                color: '#C1E5FF',
+            },
+            icon: 'circle',
+            itemWidth: 10,
+            itemHeight: 10,
+            itemGap: 40
+        },
+        grid: {
+            left: '5%',
+            right: '5%',
+            bottom: '10%',
+            top: '30%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            splitLine: {
+                lineStyle: {
+                    color: '#5170DA',
+                    opacity: 0.1
+                }
+            },
+            axisLine: {
+                lineStyle: {
+                    color: '#5170DA',
+                    opacity: 0.1
+                }
+            },
+            data: res.xAxis
+        },
+        yAxis: yAxis,
+        series: series
+    }
+    // console.log('lineData', lineData)
+    setOption(targit, lineData)
+}
+// dashboard中bar的y轴处理
+export function setyAxis(data) {
+    let yAxis = []
+    data.map(item => {
+        let newItem = {
+            // 'type': 'value',
+            'splitLine': {
+                lineStyle: {
+                    color: '#5170DA',
+                    opacity: 0.1
+                }
+            },
+            'axisTick': {
+                'show': false
+            },
+            'axisLine': {
+                'show': false,
+                'lineStyle': {
+                    'color': '#5170DA',
+                    'opacity': 0.1
+                }            
+            },
+            'formatter': item.formatter,
+            // 'name': item.name
+        }
+        yAxis.push(newItem)
+    })
+    // console.log('11111', yAxis)
+    return yAxis
+}
+
 export function setOptionData(option, type) {
     let series = new Array
     if (type == 'line') {
@@ -346,8 +453,10 @@ export function setOptionData(option, type) {
                 seriesItem = {
                     name: option.legend[index],
                     type: type,
-                    barWidth: '40%',
-                    barGap: index > 1 ? '-100%' : '2%',
+                    barWidth: '20px',
+                    barCategoryGap: '42px',
+                    // barGap: index > 1 ? '-100%' : '2%',
+                    barGap: '42px',
                     formatter: item.formatter,
                     data: item.data
                 }
@@ -360,7 +469,8 @@ export function setOptionData(option, type) {
                 seriesItem = {
                     name: option.legend[index],
                     type: type,
-                    barWidth: '40%',
+                    barWidth: '20px',
+                    barCategoryGap: '42px',
                     barGap: '-100%',
                     formatter: item.formatter,
                     data: item.data
@@ -373,126 +483,10 @@ export function setOptionData(option, type) {
     }
     return series
 }
-export function setLineData(targit, res, type) {
-    // console.log('series res', res)
-    let series = setOptionData(res, type)
-    // console.log('series', series)
-    let lineData = {
-        title: {
-            text: res.title,
-            top: '5%',
-            left: '5%',
-            textStyle: {
-                color: '#fff',
-                fontWeight: 'normal',
-            }
-        },
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: { // 坐标轴指示器，坐标轴触发有效
-                type: 'line' // 默认为直线，可选为：'line' | 'shadow'
-            },
-            // formatter: (data) => {
-            //     // for (var i = 0, length = data.length; i < length; i++) {
-            //     //     res = data[i].name 
-            //     // }
-            //     // return res
-            // }
-        },
-        color: ['#C0A54D', '#6553D2', '#2a8eff', '#86d258'],
-        legend: {
-            data: res.legend,
-            bottom: '2%',
-            textStyle: {
-                color: '#C1E5FF',
-            },
-            icon: 'circle',
-            itemWidth: 10,
-            itemHeight: 10,
-            itemGap: 40
-        },
-        grid: {
-            left: '5%',
-            right: '5%',
-            bottom: '10%',
-            top: '22%',
-            containLabel: true
-        },
-        xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            splitLine: {
-                lineStyle: {
-                    color: '#5170DA',
-                    opacity: 0.1
-                }
-            },
-            axisLine: {
-                lineStyle: {
-                    color: '#5170DA',
-                    opacity: 0.1
-                }
-            },
-            data: res.xAxis
-        },
-        yAxis: {
-            splitLine: {
-                lineStyle: {
-                    color: '#5170DA',
-                    opacity: 0.1
-                }
-            },
-            axisLine: {
-                show: false,
-                lineStyle: {
-                    color: '#5170DA',
-                    opacity: 0.1
-                }
-            },
-            axisTick: {
-                show: false
-            },
-        },
-        series: series
-    }
-    setOption(targit, lineData)
-}
-// dashboard中的y轴处理
-export function setyAxis(data) {
-    // console.log('11111', data)
-    let yAxis = []
-    data.map(item => {
-        let newItem = {
-            'type': 'value',
-            'splitLine': {
-                lineStyle: {
-                    color: '#5170DA',
-                    opacity: 0.1
-                }
-            },
-            'axisTick': {
-                'show': false
-            },
-            'axisLine': {
-                'show': false,
-                'lineStyle': {
-                    'color': '#5170DA',
-                    'opacity': 0.1
-                }
-            },
-            'formatter': item.formatter,
-            // 'name': item.name
-        }
-        yAxis.push(newItem)
-    })
-    return yAxis
-}
 export function setBarData(targit, res, type) {
     let series = setOptionData(res, type)
-    // console.log('33333333333', setyAxis(res.yAxis))
     let yAxis = setyAxis(res.yAxis)
     let showlegend = targit._dom.id // 项目异常情况legend参数
-    // console.log('targit', targit._dom.id)
     let barData = {
         title: {
             text: res.title,
@@ -550,6 +544,10 @@ export function setBarData(targit, res, type) {
                     opacity: 0.1
                 }
             },
+            axisLabel: {  // X轴倾斜显示
+                interval: 0,  
+                rotate: 20  
+            },
             axisLine: {
                 lineStyle: {
                     color: '#5170DA',
@@ -566,4 +564,13 @@ export function setBarData(targit, res, type) {
 }
 export function setOption(targit, optionData) {
     targit.setOption(optionData, true)
+}
+export function setXData(xAxisData, format) {
+    let xAxis = []
+    xAxisData.map(item => {
+        console.log(item, format)
+        console.log(date.date(item).format(format))
+        xAxis.push(date.date(item).format(format))
+    })
+    return xAxis
 }

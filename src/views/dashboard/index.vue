@@ -1,5 +1,5 @@
 <template>
-    <div class="main_content">
+    <div class="main_content" id="dashboard">
         <!-- 标题 -->
         <el-row :gutter="20">
             <el-col :span="24">
@@ -286,6 +286,7 @@ export default {
                                 }
                             },
                             axisLine: {
+                                show: false,
                                 lineStyle: {
                                     color: '#5170DA',
                                     opacity: 0.1
@@ -340,6 +341,7 @@ export default {
             fullScreen: false, // 是否全屏
             startTime: 0,
             endTime: 0,
+            width: '',
             interval: null // 循环刷新参数
         }
     },
@@ -355,6 +357,7 @@ export default {
     mounted() {
         let that = this
         that.windowHeight = window.innerHeight
+        that.width = window.innerWidth
         that.env = JSON.parse(sessionStorage.getItem('env'))
         // =========初始化========
         that.setSize()
@@ -392,6 +395,7 @@ export default {
         ]),
         resizeWindow() {
             this.windowHeight = window.innerHeight
+            this.width = window.innerWidth
             this.setSize()
             this.resizeCharts()
             this.fullScreen = document.webkitIsFullScreen
@@ -414,21 +418,35 @@ export default {
             if (env == null) {
                 return
             }
+            // 判断数据数组长度,根据分辨率判断bar显示的num
+            let numHelf
+            let num
+            // console.log('this.width', this.width)
+            if (this.width < 1440) {
+                num = 14
+                numHelf = 8
+            } else if (this.width > 1440 && this.width < 1920) {
+                num = 16
+                numHelf = 10
+            } else {
+                num = 20
+                numHelf = 12
+            }
             this.getchartData(env)
             this.getOverview(env)
             this.getTransMission(env)
-            this.getCpuInDESC(env)
-            this.getCpuInAsc(env)
-            this.getMemoryInDESC(env)
-            this.getMemoryInASC(env)
-            this.getAvgInASC(env)
-            this.getErrInASC(env)
+            this.getCpuInDESC(env, numHelf)
+            this.getCpuInAsc(env, numHelf)
+            this.getMemoryInDESC(env, numHelf)
+            this.getMemoryInASC(env, numHelf)
+            this.getAvgInASC(env, num)
+            this.getErrInASC(env, num)
             this.getIOData()
         },
         // 设置容器高度与margin
         setSize() {
             let height = (window.innerHeight - 160) / 2
-            // let width = window.innerWidth
+            this.width = window.innerWidth
             // console.log('width', width)
             // if (width > 1440) {
             //     this.spanNumCenter =  16 
@@ -440,7 +458,7 @@ export default {
             // console.log('height', screen.availHeight, screen.height, window.innerHeight, height)
             this.echartsDom.forEach((item) => {
                 if (item === 'netWorkChart') {
-                    console.log('item', item)
+                    // console.log('item', item)
                     let newheight = height - 60
                     document.getElementById(item).style.height = `${newheight}px`
                 } else {
@@ -468,12 +486,17 @@ export default {
                 this.accessPercent = result.accessPercent
                 this.releasePercent = result.releasePercent
                 this.containerPercent = result.containerPercent
+                
                 // 百分比文字样式
-                this.release = this.releasePercent.replace(this.reg, '') >= 0
-                this.container = this.containerPercent.replace(this.reg, '') >= 0
-                this.node = this.nodePercent.replace(this.reg, '') >= 0
-                this.access = this.accessPercent.replace(this.reg, '') >= 0
-                // console.log(this.release, this.container, this.node, this.access)
+                this.release = result.releasePercent.replace(this.reg, '') >= 0
+                this.container = result.containerPercent.replace(this.reg, '') >= 0
+                this.node = result.nodePercent.replace(this.reg, '') >= 0
+                this.access = result.accessPercent.replace(this.reg, '') >= 0
+                let that = this
+                that.nodePercent = that.node ? result.nodePercent : that.nodePercent.substr(1)
+                that.accessPercent = that.access ? result.accessPercent : that.accessPercent.substr(1)
+                that.releasePercent = that.release ? result.releasePercent : that.releasePercent.substr(1)
+                that.containerPercent = that.container ? result.containerPercent : that.containerPercent.substr(1)
             })
         },
         // 获取仪表盘、饼图数据
@@ -541,11 +564,11 @@ export default {
             setOption(this.echartsObj[3], this.echartsData[0])
         },
         //CPU使用升序
-        getCpuInAsc(env) {
+        getCpuInAsc(env, numHelf) {
             let setParams = {
                 url: `/comparison/${env}/cpu/top`,
                 params: {
-                    num: '15'
+                    num: numHelf
                 }
             }
             let that = this
@@ -563,11 +586,11 @@ export default {
             })
         },
         //CPU使用降序
-        getCpuInDESC(env) {
+        getCpuInDESC(env, numHelf) {
             let setParams = {
                 url: `/comparison/${env}/cpu/bottom`,
                 params: {
-                    num: '15'
+                    num: numHelf
                 }
             }
             let that = this
@@ -586,11 +609,11 @@ export default {
             })
         },
         //Memory使用降序
-        getMemoryInDESC(env) {
+        getMemoryInDESC(env, numHelf) {
             let setParams = {
                 url: `/comparison/${env}/memory/bottom`,
                 params: {
-                    num: '15'
+                    num: numHelf
                 }
             }
             let that = this
@@ -608,11 +631,11 @@ export default {
             })
         },
         //Memory使用升序
-        getMemoryInASC(env) {
+        getMemoryInASC(env, numHelf) {
             let setParams = {
                 url: `/comparison/${env}/memory/top`,
                 params: {
-                    num: '15'
+                    num: numHelf
                 }
             }
             let that = this
@@ -632,11 +655,11 @@ export default {
             })
         },
         //平均响应时间--升序
-        getAvgInASC(env) {
+        getAvgInASC(env, num) {
             let setParams = {
                 url: `/comparison/${env}/responseAvg/top`,
                 params: {
-                    num: '30'
+                    num: num
                 }
             }
             let that = this
@@ -654,11 +677,11 @@ export default {
             })
         },
         //项目异常情况
-        getErrInASC(env) {
+        getErrInASC(env, num) {
             let setParamsTop = {
                 url: `/comparison/${env}/errors/top`,
                 params: {
-                    num: '30'
+                    num: num
                 }
             }
             let that = this
@@ -755,7 +778,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+@media screen and (max-width: 1440px) {
+    #dashboard /deep/{
+        .el-col-5{
+            width: 23%;
+        }
+        .el-col-14{
+            width: 54%;
+        }
+    }
+}
 .topTitle {
   border: none;
   position: fixed;
@@ -767,8 +799,13 @@ export default {
   padding: 0 20px;
 }
 .numBox {
+    display: flex;
+    justify-content: space-between;
   .num {
-    padding: 4px 6px;
+    padding: 3px 4px;
+    flex: 1;
+    text-align: center;
+    max-width: 22px;
     background: #0d6ed3;
     color: #fff !important;
     font-size: 18px !important;
@@ -852,6 +889,7 @@ export default {
 .dashboardTitle {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 4%;
   & > div {
     flex: 1;
     padding: 0 15px;
@@ -990,9 +1028,11 @@ export default {
 }
 </style>
 <style>
+
 body::-webkit-scrollbar {/*隐藏滚轮*/
     display: none;
 }
+
 .el-row {
   /* margin-bottom: 30px; */
   margin-top: 30px;
@@ -1050,7 +1090,7 @@ body::-webkit-scrollbar {/*隐藏滚轮*/
         position: absolute !important;
     }
     .maimImg>img{
-        max-width: 900px !important;
+        max-width: 750px !important;
         display: block;
         margin: 0 auto;
         position: static !important;
@@ -1067,18 +1107,27 @@ body::-webkit-scrollbar {/*隐藏滚轮*/
         position: absolute !important;
     }
     .maimImg>img{
-        max-width: 700px !important;
+        max-width: 630px !important;
         display: block;
         margin: 0 auto;
         position: static !important;
+    }
+    .bottomText{
+           bottom: 5% !important; 
+    }
+    .bottomText > span{
+        width: 34% !important;
     }
 }
 @media screen and (max-width: 1366px) {
     .maimImg{
         position: absolute !important;
     }
+    .bottomText{
+           bottom: 2% !important; 
+    }
     .maimImg>img{
-        max-width: 600px !important;
+        max-width: 570px !important;
         display: block;
         margin: 0 auto;
         position: static !important;
