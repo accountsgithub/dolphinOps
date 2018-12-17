@@ -181,8 +181,8 @@ export default {
             memoryChart: null,
             aveTimeChart: null,
             warnChart: null,
-            spanNumCenter: 14, 
-            spanNumother: 5, 
+            spanNumCenter: 14,
+            spanNumother: 5,
             echartsDom: [
                 'cpuChart',
                 'memoryChart',
@@ -452,10 +452,10 @@ export default {
             this.width = window.innerWidth
             // console.log('width', width)
             // if (width > 1440) {
-            //     this.spanNumCenter =  16 
+            //     this.spanNumCenter =  16
             //     this.spanNumother = 4
             // } else {
-            //     this.spanNumCenter =  12 
+            //     this.spanNumCenter =  12
             //     this.spanNumother = 6
             // }
             // console.log('height', screen.availHeight, screen.height, window.innerHeight, height)
