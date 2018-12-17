@@ -517,7 +517,7 @@ export default {
             }
         },
         setpicker() {
-            console.log('hello')
+            // console.log('hello')
         },
         // tomcat项目
         getChartData(params, env, project) {
@@ -713,7 +713,8 @@ export default {
 // 弹窗样式重写
     #layer  /deep/{
         .el-dialog__header{
-            padding: 10px !important;
+            padding: 10px 20px !important;
+            font-size: 16px;
         }
         .el-dialog__body {
             padding: 0px !important;
