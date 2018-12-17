@@ -237,6 +237,7 @@ export default {
         autoTest_button: '自动化测试',
         linkReasonPage_button: '查看明细',
         testActionSuccess_message: '自动化测试成功',
+        testActioning_message: '正在进行自动化测试，请稍后…',
         testActionFail_message: '自动化测试失败',
         apiName_placeholder: '请输入接口名称',
         testResult_placeholder: '请选择测试结果',

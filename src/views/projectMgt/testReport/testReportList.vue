@@ -228,11 +228,12 @@ export default {
         testActionMethod() {
             this.$message({
                 type: 'success',
-                message: this.$t('testPage.testActionSuccess_message')
+                message: this.$t('testPage.testActioning_message')
             })
             let params = Object.assign({mark: this.$route.params.mark, path: localStorage.getItem('path')})
             this.setTestActionApi(params).then(res => {
-                if (res.code == '0' && res.status == 200) {
+                debugger
+                if (res.data.code == '0' && res.data.status == 200) {
                     this.$message({
                         type: 'success',
                         message: this.$t('testPage.testActionSuccess_message')
