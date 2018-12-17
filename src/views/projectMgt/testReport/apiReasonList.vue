@@ -32,7 +32,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="httpMethod" :label="$t('testPage.requestType_label')" align="center"></el-table-column>
-                    <el-table-column prop="requestBody" :label="$t('testPage.requestValue_label')">
+                    <el-table-column prop="requestBody" min-width="200px" :label="$t('testPage.requestValue_label')">
                         <template slot-scope="scope">
                             <div slot="reference">
                                 <el-popover v-if="scope.row.requestBody&&scope.row.requestBody.length>20" trigger="hover" placement="top">
@@ -48,7 +48,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="responseStatus" :label="$t('testPage.responseStatus_label')" align="center"></el-table-column>
-                    <el-table-column prop="responseBody" :label="$t('testPage.responseValue_label')">
+                    <el-table-column prop="responseBody" min-width="200px" :label="$t('testPage.responseValue_label')">
                         <template slot-scope="scope">
                             <div slot="reference">
                                 <el-popover v-if="scope.row.responseBody&&scope.row.responseBody.length>20" trigger="hover" placement="top">
@@ -63,7 +63,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="message" :label="$t('testPage.exceptionInfo_label')">
+                    <el-table-column prop="message" min-width="200px" :label="$t('testPage.exceptionInfo_label')">
                         <template slot-scope="scope">
                             <div slot="reference">
                                 <el-popover v-if="scope.row.message&&scope.row.message.length>20" trigger="hover" placement="top">
