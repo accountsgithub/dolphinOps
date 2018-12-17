@@ -232,7 +232,6 @@ export default {
             })
             let params = Object.assign({mark: this.$route.params.mark, path: localStorage.getItem('path')})
             this.setTestActionApi(params).then(res => {
-                debugger
                 if (res.data.code == '0' && res.data.status == 200) {
                     this.$message({
                         type: 'success',
