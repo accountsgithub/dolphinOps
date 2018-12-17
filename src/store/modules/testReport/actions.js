@@ -44,8 +44,8 @@ export default {
         )
     },
     // 获取下拉项目列表
-    getProjectListApi(data, params) {
-        return axios.get(`${api.PROJECTLIST + params.env  }/projects`).then(
+    getProjectListApi() {
+        return axios.get(api.PROJECTLIST).then(
             response => response.data
         ).catch(
             response => response.data
