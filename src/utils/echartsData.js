@@ -59,7 +59,7 @@ export function updateChart(myChartLine, option) {
                 },
                 areaStyle: {
                     color: item.color,
-                    opacity: '0.1'
+                    opacity: i >= 2 ? '0' : '0.1' // 第三条数据，没有区域颜色
                 },
                 symbolSize: 1,
                 formatter: item.formatter,
@@ -547,7 +547,8 @@ export function setBarData(targit, res, type) {
             },
             axisLabel: {  // X轴倾斜显示
                 interval: 0,  
-                rotate: 20 
+                rotate: 20,
+                width: 40
             },
             axisLine: {
                 lineStyle: {
