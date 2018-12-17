@@ -98,15 +98,24 @@
                                     <i class="icon iconfont icon-qidong table-action disabled"
                                        v-else></i>
                                 </template>
-                                <i class="icon iconfont icon-shezhi table-action"
-                                   :title="$t('projectMgt.setUp')"
-                                   @click="dialogChange(scope.row)"
-                                   v-if="scope.row.state !== 5"></i>
-                                <i class="icon iconfont icon-shezhi table-action disabled"
-                                   v-else></i>
-                                <i class="icon iconfont icon-jichujiankong table-action"
-                                   :title="$t('projectMgt.monitorcharts')"
-                                   @click="monitorcharts(scope.row)"></i>
+                                <template>
+                                    <i class="icon iconfont icon-shezhi table-action"
+                                       :title="$t('projectMgt.setUp')"
+                                       @click="dialogChange(scope.row)"
+                                       v-if="scope.row.state !== 5"></i>
+                                    <i class="icon iconfont icon-shezhi table-action disabled"
+                                       v-else></i>
+                                </template>
+                                <template>
+                                    <i class="icon iconfont icon-jichujiankong table-action"
+                                       :title="$t('projectMgt.monitorcharts')"
+                                       v-if="scope.row.state !== 5"
+                                       @click="monitorcharts(scope.row)"></i>
+                                    <i class="icon iconfont icon-jichujiankong table-action disabled"
+                                       :title="$t('projectMgt.monitorcharts')"
+                                       v-else></i>
+                                </template>
+
                                 <el-dropdown trigger="click">
                                     <i class="icon iconfont icon-gengduo table-action"
                                        style="margin-right:5px;"></i>
@@ -115,8 +124,17 @@
                                         <el-dropdown-item>
                                             <a class="table-link"
                                                :href="`${unifiedLogUrl}?projectMark=${scope.row.mark}&authCode=${scope.row.authCode}#/log/index`"
+                                               v-if="scope.row.state !== 5"
                                                target="_blank">
                                                 <i class="icon iconfont icon-rizhi table-action-more"
+                                                   :title="$t('projectMgt.unifiedLog')"></i>
+                                                <span class="table-action-more-txt">{{$t('projectMgt.unifiedLog')}}</span>
+                                            </a>
+                                            <a class="table-link disabled"
+                                               href="javascript:;"
+                                               v-else
+                                               target="_blank">
+                                                <i class="icon iconfont icon-rizhi table-action-more disabled"
                                                    :title="$t('projectMgt.unifiedLog')"></i>
                                                 <span class="table-action-more-txt">{{$t('projectMgt.unifiedLog')}}</span>
                                             </a>
