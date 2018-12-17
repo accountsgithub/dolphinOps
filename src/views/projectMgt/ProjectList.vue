@@ -108,12 +108,13 @@
                                    :title="$t('projectMgt.monitorcharts')"
                                    @click="monitorcharts(scope.row)"></i>
                                 <el-dropdown trigger="click">
-                                    <i class="icon iconfont icon-gengduo table-action"></i>
+                                    <i class="icon iconfont icon-gengduo table-action"
+                                       style="margin-right:5px;"></i>
                                     <el-dropdown-menu slot="dropdown"
                                                       class="more-ops">
                                         <el-dropdown-item>
                                             <a class="table-link"
-                                               :href="`${unifiedLogUrl}?projectMark=${scope.row.mark}&authCode=${scope.row.authCode}`"
+                                               :href="`${unifiedLogUrl}?projectMark=${scope.row.mark}&authCode=${scope.row.authCode}#/log/index`"
                                                target="_blank">
                                                 <i class="icon iconfont icon-rizhi table-action-more"
                                                    :title="$t('projectMgt.unifiedLog')"></i>
